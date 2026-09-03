@@ -32,38 +32,69 @@
       font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
-    
-    /* ท่าทางยกส้นเท้า Soleus Push-up (SPU) 1.2 วินาทีต่อรอบ สำหรับมื้อแป้ง */
-    @keyframes soleusLift {
+    /* แอนิเมชันยกส้นเท้า Soleus Push-up (SPU) 1.2 วินาที: จำลองการยกส้นเท้าขึ้นสูง ปลายเท้าติดพื้น */
+    @keyframes soleusFootMotion {
       0%, 100% {
-        transform: translateY(0px) rotate(0deg);
+        transform: rotate(0deg);
+        transform-origin: 28px 76px;
       }
       50% {
-        transform: translateY(-16px) rotate(-4deg);
+        transform: rotate(-24deg);
+        transform-origin: 28px 76px;
       }
     }
-
-    .tap-pacer-active {
-      animation: soleusLift 1.2s infinite cubic-bezier(0.4, 0.0, 0.2, 1);
+    .soleus-foot-animated {
+      animation: soleusFootMotion 1.2s infinite cubic-bezier(0.4, 0.0, 0.2, 1);
     }
 
-    /* แอนิเมชันฝึกกะบังลม หายใจเข้า 4 วินาที (ขยาย) - หายใจออก 6 วินาที (ยุบ) สำหรับมื้อโปรตีน */
-    @keyframes diaphragmBreathe {
-      0%, 100% { transform: scale(0.9); opacity: 0.7; }
-      40% { transform: scale(1.22); opacity: 1; }
-      100% { transform: scale(0.9); opacity: 0.7; }
+    /* แอนิเมชันเรืองแสงกล้ามเนื้อน่องโซเลียสขณะออกแรงยก */
+    @keyframes calfMuscleGlow {
+      0%, 100% {
+        opacity: 0.35;
+        filter: drop-shadow(0 0 0px rgba(245, 158, 11, 0));
+      }
+      50% {
+        opacity: 1;
+        filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.9));
+      }
     }
-    .breath-pacer-active {
-      animation: diaphragmBreathe 10s infinite ease-in-out;
+    .calf-glow-animated {
+      animation: calfMuscleGlow 1.2s infinite cubic-bezier(0.4, 0.0, 0.2, 1);
     }
 
-    /* แอนิเมชันจังหวะเดินช้า (Slow Stroll Pacer) สลับก้าวเท้า 1.6 วินาที สำหรับมื้อหนัก/ของมัน */
-    @keyframes slowStroll {
-      0%, 100% { transform: translateX(-10px) rotate(-4deg); }
-      50% { transform: translateX(10px) rotate(4deg); }
+    /* แอนิเมชันฝึกกะบังลม หายใจเข้า 4 วินาที (ขยาย) และหายใจออก 6 วินาที (ยุบตัว) รวม 10 วินาที */
+    @keyframes lungBreathCycle {
+      0% {
+        transform: scale(0.85);
+        opacity: 0.65;
+      }
+      40% {
+        transform: scale(1.18);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0.85);
+        opacity: 0.65;
+      }
     }
-    .stroll-pacer-active {
-      animation: slowStroll 1.6s infinite ease-in-out;
+    .lung-breath-animated {
+      animation: lungBreathCycle 10s infinite ease-in-out;
+    }
+
+    /* แอนิเมชันก้าวเดินช้า สลับเท้าซ้าย-ขวา ทอดน่องผ่อนคลาย (65 BPM ~ 1.85 วินาทีต่อรอบ) */
+    @keyframes stepLeftFoot {
+      0%, 100% { opacity: 0.3; transform: scale(0.95); }
+      50% { opacity: 1; transform: scale(1.12); }
+    }
+    @keyframes stepRightFoot {
+      0%, 100% { opacity: 1; transform: scale(1.12); }
+      50% { opacity: 0.3; transform: scale(0.95); }
+    }
+    .step-left-animated {
+      animation: stepLeftFoot 1.8s infinite ease-in-out;
+    }
+    .step-right-animated {
+      animation: stepRightFoot 1.8s infinite ease-in-out;
     }
 
     /* วงแหวนคลื่นพลังงานจังหวะ */
@@ -236,29 +267,149 @@
         </p>
       </div>
 
-      <!-- วิดเจ็ตนำจังหวะเฉพาะมื้ออาหาร + ระบบจับเวลาทำกิจกรรมและคำสั่งบอกหยุด (Dynamic Visual Pacer & Session Coach) -->
-      <div id="pacer-container" class="py-4 px-3 flex flex-col items-center justify-center space-y-3 bg-slate-900/80 rounded-xl border border-slate-800 relative transition-all duration-300">
+      <!-- วิดเจ็ตแสดงกิจกรรมตามมื้ออาหารแบบเจาะลึก (Interactive Activity Demonstration & Session Coach) -->
+      <div id="pacer-container" class="py-4 px-3.5 flex flex-col items-center justify-center space-y-4 bg-slate-900/90 rounded-2xl border border-slate-800 relative transition-all duration-300">
         
-        <!-- ส่วนหัวบอกระยะเวลาที่เหมาะสมของกิจกรรม -->
-        <div class="w-full flex items-center justify-between px-1 text-xs">
-          <span class="font-bold text-slate-300 flex items-center gap-1.5">
-            <span>⏱️</span> ระยะเวลาที่แนะนำรอบนี้:
-          </span>
-          <span id="session-target-badge" class="font-extrabold text-amber-400 bg-amber-500/15 px-2.5 py-0.5 rounded-md border border-amber-500/30">
+        <!-- ส่วนหัวบอกกิจกรรมและเป้าหมายเวลา -->
+        <div class="w-full flex items-center justify-between px-1 text-xs border-b border-slate-800/80 pb-2.5">
+          <div class="flex items-center gap-2">
+            <span id="activity-type-icon" class="text-base">🦶</span>
+            <span id="activity-type-name" class="font-bold text-slate-200 text-xs sm:text-sm">กิจกรรม: กระดกส้นเท้านั่งทำงาน</span>
+          </div>
+          <span id="session-target-badge" class="font-bold text-amber-400 bg-amber-500/15 px-2.5 py-1 rounded-lg border border-amber-500/30 text-[11px] sm:text-xs">
             5 – 10 นาที
           </span>
         </div>
 
-        <div class="relative flex items-center justify-center my-1">
-          <div id="pacer-ring" class="absolute w-24 h-24 rounded-2xl bg-amber-500/10 pulse-ring"></div>
-          <div id="pacer-circle" class="w-16 h-16 rounded-2xl border-2 border-amber-400/80 bg-amber-500/20 flex flex-col items-center justify-center shadow-lg shadow-amber-500/20 tap-pacer-active relative z-10 transition-all duration-300">
-            <span id="pacer-icon" class="text-3xl" role="img" aria-label="Action Icon">🦶</span>
+        <!-- พื้นที่แสดงแอนิเมชันการทำกิจกรรมจำลองตามจริง (Dynamic Activity Showcase) -->
+        <div id="activity-visual-area" class="w-full bg-slate-950/80 border border-slate-800/90 rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden min-h-[170px]">
+          
+          <!-- แบบที่ 1: มื้อข้าว/แป้ง (Soleus Push-up - แสดงขา น่อง และเท้าที่ยกส้นขึ้น-ลงจริง) -->
+          <div id="visual-carb" class="w-full flex flex-col items-center justify-center space-y-3">
+            <div class="relative w-48 h-28 flex items-center justify-center">
+              <!-- แสงเรืองรองเบื้องหลังกล้ามเนื้อน่อง -->
+              <div class="absolute w-28 h-28 rounded-full bg-amber-500/10 pulse-ring pointer-events-none"></div>
+              
+              <!-- เวกเตอร์จำลองท่านั่ง ขา และการยกส้นเท้า Soleus Push-up -->
+              <svg viewBox="0 0 200 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                <!-- เส้นระดับพื้นห้องทำงาน -->
+                <line x1="20" y1="105" x2="180" y2="105" stroke="#334155" stroke-width="3" stroke-linecap="round"/>
+                <text x="175" y="116" font-size="8" fill="#64748b" text-anchor="end">พื้นห้องทำงาน</text>
+
+                <!-- ขาท่อนบน (ต้นขาขนานพื้นในท่านั่ง) -->
+                <line x1="40" y1="22" x2="115" y2="22" stroke="#475569" stroke-width="12" stroke-linecap="round"/>
+                
+                <!-- หัวเข่า -->
+                <circle cx="115" cy="22" r="8" fill="#64748b"/>
+
+                <!-- ขาท่อนล่าง (หน้าแข้ง) -->
+                <line x1="115" y1="22" x2="115" y2="82" stroke="#475569" stroke-width="10" stroke-linecap="round"/>
+
+                <!-- กล้ามเนื้อน่อง Soleus (เรืองแสงสีส้ม-ทองตามจังหวะยก) -->
+                <path d="M 115,30 Q 140,55 116,78" fill="none" stroke="#f59e0b" stroke-width="9" stroke-linecap="round" class="calf-glow-animated"/>
+                
+                <!-- ป้ายชี้ตำแหน่งกล้ามเนื้อ Soleus -->
+                <g class="calf-glow-animated">
+                  <line x1="135" y1="52" x2="162" y2="40" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="2,2"/>
+                  <rect x="156" y="28" width="40" height="18" rx="4" fill="#0f172a" stroke="#f59e0b" stroke-width="1"/>
+                  <text x="176" y="40" font-size="7.5" font-weight="bold" fill="#fcd34d" text-anchor="middle">กล้ามเนื้อน่อง</text>
+                </g>
+
+                <!-- ข้อเท้าและเท้าที่ขยับยกส้นขึ้น-ลงตามจังหวะ 1.2 วินาที -->
+                <g class="soleus-foot-animated">
+                  <!-- ข้อเท้า -->
+                  <circle cx="115" cy="82" r="6" fill="#94a3b8"/>
+                  <!-- หลังเท้าไปถึงปลายเท้า (ปลายเท้าตรึงอยู่ที่ x=52, y=103) -->
+                  <path d="M 115,82 L 130,95 L 56,104" fill="none" stroke="#cbd5e1" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+                  <!-- ส้นเท้า -->
+                  <circle cx="130" cy="95" r="5" fill="#f59e0b"/>
+                </g>
+
+                <!-- จุดตรึงปลายเท้าแตะพื้น (Ground Anchor) -->
+                <circle cx="56" cy="104" r="4.5" fill="#10b981"/>
+                <text x="56" y="116" font-size="7.5" fill="#34d399" text-anchor="middle">ปลายเท้าแตะพื้น</text>
+              </svg>
+            </div>
+
+            <!-- แถบกำกับจังหวะการขยับส้นเท้า -->
+            <div class="w-full bg-slate-900/90 py-1.5 px-3 rounded-xl border border-amber-500/25 flex items-center justify-between text-xs">
+              <span class="text-amber-400 font-bold flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                <span>จังหวะการทำ:</span>
+              </span>
+              <span class="text-slate-200 font-semibold">ยกส้นเท้าขึ้นสูง ➔ แตะลงเบาๆ (1.2 วินาที)</span>
+            </div>
           </div>
+
+          <!-- แบบที่ 2: มื้อโปรตีน (Diaphragmatic Breathing - แสดงวงแหวนกะบังลมและปอดขยาย/ยุบตัวตามเวลา 4s เข้า / 6s ออก) -->
+          <div id="visual-protein" class="w-full hidden flex-col items-center justify-center space-y-3">
+            <div class="relative w-44 h-32 flex items-center justify-center">
+              <!-- วงแหวนนำการหายใจ (ขยายตามจังหวะ 4 วิ / ยุบตัว 6 วิ) -->
+              <div class="absolute w-28 h-28 rounded-full border-2 border-dashed border-sky-400/40 lung-breath-animated"></div>
+              <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-sky-600/30 to-teal-400/20 border-2 border-sky-400 flex flex-col items-center justify-center shadow-lg shadow-sky-500/20 lung-breath-animated z-10">
+                <span class="text-3xl">🫁</span>
+              </div>
+            </div>
+
+            <!-- แถบกำกับจังหวะลมหายใจแบบเรียลไทม์ -->
+            <div class="w-full bg-slate-900/90 py-2 px-3 rounded-xl border border-sky-500/30 text-center space-y-1">
+              <div class="text-xs sm:text-sm font-bold text-sky-300 flex items-center justify-center gap-2">
+                <span class="animate-pulse">🌬️</span>
+                <span id="breath-phase-text">หายใจเข้าท้องพอง (4 วินาที) ➔ ผ่อนออกช้าๆ (6 วินาที)</span>
+              </div>
+              <div class="text-[11px] text-slate-400">กะบังลมจะทำหน้าที่บีบรัดรอบหูรูดหลอดอาหารเพื่อสกัดกั้นกรด</div>
+            </div>
+          </div>
+
+          <!-- แบบที่ 3: มื้อหนัก/มันจัด (Slow Stroll - แสดงจังหวะก้าวเดินสลับเท้าซ้าย-ขวา ทอดน่องช้าๆ 65 BPM) -->
+          <div id="visual-heavy" class="w-full hidden flex-col items-center justify-center space-y-3">
+            <div class="w-full py-3 px-4 flex items-center justify-center gap-6">
+              <!-- รอยเท้าซ้าย -->
+              <div class="flex flex-col items-center gap-1 step-left-animated">
+                <div class="w-10 h-14 rounded-2xl bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center text-xl shadow-md shadow-emerald-500/20">
+                  🦶
+                </div>
+                <span class="text-[11px] font-bold text-emerald-300">ก้าวซ้าย</span>
+              </div>
+
+              <!-- เครื่องหมายบอกทิศทางการเคลื่อนตัว -->
+              <div class="flex flex-col items-center text-slate-500 text-xs font-mono">
+                <span>•••</span>
+                <span class="text-emerald-400 font-bold text-sm">65 BPM</span>
+                <span>•••</span>
+              </div>
+
+              <!-- รอยเท้าขวา -->
+              <div class="flex flex-col items-center gap-1 step-right-animated">
+                <div class="w-10 h-14 rounded-2xl bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center text-xl shadow-md shadow-emerald-500/20">
+                  🦶
+                </div>
+                <span class="text-[11px] font-bold text-emerald-300">ก้าวขวา</span>
+              </div>
+            </div>
+
+            <!-- แถบกำกับจังหวะการเดินช้า -->
+            <div class="w-full bg-slate-900/90 py-1.5 px-3 rounded-xl border border-emerald-500/30 flex items-center justify-between text-xs">
+              <span class="text-emerald-400 font-bold flex items-center gap-1.5">
+                <span>🚶‍♂️</span>
+                <span>จังหวะการเดิน:</span>
+              </span>
+              <span class="text-slate-200 font-semibold">ก้าวสั้น ทอดน่องสบายๆ ห้ามจ้ำอ้าว</span>
+            </div>
+          </div>
+
         </div>
 
-        <div class="text-center space-y-1 w-full">
-          <div id="pacer-title" class="text-sm sm:text-base font-bold text-slate-100">จังหวะกระดกส้นเท้า (Soleus Pacer - 1.2s)</div>
-          <p id="pacer-hint" class="text-xs sm:text-sm text-slate-300 leading-normal">ปลายเท้าแตะพื้น ยกเฉพาะส้นเท้าตามจังหวะ • หน้าท้องไม่เกร็ง (Zero-IAP)</p>
+        <!-- รายการข้อปฏิบัติท่าทางที่ถูกต้องของกิจกรรมนี้ (Checklist Guide) -->
+        <div class="w-full bg-slate-950/60 p-3 rounded-xl border border-slate-800 text-left">
+          <div class="text-xs font-bold text-slate-300 mb-1.5 flex items-center gap-1.5">
+            <span class="text-amber-400">💡</span> ข้อปฏิบัติที่ถูกต้องของกิจกรรมนี้:
+          </div>
+          <ul id="activity-guide-list" class="text-xs text-slate-300 space-y-1 leading-relaxed">
+            <li class="flex items-start gap-1.5"><span class="text-emerald-400 font-bold">✓</span> <span>ปลายเท้าทั้งสองข้างแตะพื้นตลอดเวลา ยกเฉพาะส้นเท้าขึ้นให้สุด</span></li>
+            <li class="flex items-start gap-1.5"><span class="text-emerald-400 font-bold">✓</span> <span>หน้าท้องผ่อนคลาย ไม่เกร็งกล้ามเนื้อท้อง เพื่อไม่ให้เพิ่มแรงดันบีบกระเพาะ</span></li>
+            <li class="flex items-start gap-1.5"><span class="text-emerald-400 font-bold">✓</span> <span>สามารถนั่งทำงานหรือพิมพ์งานไปด้วยได้ตามปกติ</span></li>
+          </ul>
         </div>
 
         <!-- แผงจับเวลาทำกิจกรรมและปุ่มสั่งเริ่ม/หยุด (Session Timer Bar) -->
@@ -272,11 +423,11 @@
           </div>
           
           <div class="flex gap-2">
-            <button type="button" id="session-btn" onclick="toggleSessionTimer()" class="flex-1 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm active:scale-95 transition-all shadow-md shadow-amber-500/20 flex items-center justify-center gap-1.5">
+            <button type="button" id="session-btn" onclick="toggleSessionTimer()" class="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs sm:text-sm active:scale-95 transition-all shadow-md shadow-amber-500/20 flex items-center justify-center gap-1.5">
               <span>▶</span>
               <span id="session-btn-label">เริ่มจับเวลาทำ</span>
             </button>
-            <button type="button" onclick="resetSessionTimer()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs active:scale-95 transition-all border border-slate-700" title="รีเซ็ตเวลารอบนี้">
+            <button type="button" onclick="resetSessionTimer()" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs active:scale-95 transition-all border border-slate-700" title="รีเซ็ตเวลารอบนี้">
               ↺
             </button>
           </div>
@@ -345,38 +496,65 @@
     let sessionTimerInterval = null;
     let isSessionRunning = false;
 
-    // ข้อมูลระยะเวลาและเกณฑ์การหยุดของแต่ละมื้อ
+    // ข้อมูลกิจกรรม คำแนะนำ และสคริปต์เสียงพูดภาษาไทยธรรมชาติที่นุ่มนวล ชัดเจน (Smooth Thai Voice Scripts)
     const sessionMealConfigs = {
       carb: {
+        activityName: "กิจกรรม: กระดกส้นเท้านั่งทำงาน",
+        activityIcon: "🦶",
         durationSeconds: 600, // 10 นาที
         badgeText: "5 – 10 นาที",
+        guideItems: [
+          "ปลายเท้าทั้งสองข้างแตะพื้นตลอดเวลา แล้วยกเฉพาะส้นเท้าขึ้นให้สุด",
+          "หน้าท้องผ่อนคลาย ไม่เกร็งกล้ามเนื้อท้อง เพื่อไม่ให้เพิ่มแรงดันบีบกระเพาะ",
+          "สามารถนั่งทำงานหรือพิมพ์งานไปด้วยได้ตามปกติ"
+        ],
         stopSignals: [
           "เมื่อทำครบ 10 นาที (ระบบจะส่งเสียงเตือนอัตโนมัติ)",
           "เมื่อรู้สึกหายง่วงและสมองกลับมาโฟกัสงานได้แล้ว",
           "หากเริ่มรู้สึกตึงหรือเมื่อยกล้ามเนื้อน่อง ให้หยุดพักและจิบน้ำทันที",
-          "เมื่อเวลาหลังอาหารผ่านพ้น 60 นาที (พ้นช่วง Peak Glucose)"
+          "เมื่อเวลาหลังอาหารผ่านพ้น 60 นาที (พ้นช่วงน้ำตาลขึ้นสูงสุด)"
         ],
-        completionVoice: "ครบ 10 นาทีแล้วค่ะ ระบบช่วยเปิดประตูรับน้ำตาลเรียบร้อยแล้ว สามารถหยุดพักกล้ามเนื้อน่องและกลับไปทำงานได้เลยค่ะ"
+        startVoice: "เริ่มจับเวลาสิบนาทีค่ะ, ให้ปลายเท้าวางแตะพื้น, แล้วยกเฉพาะส้นเท้าขึ้นลงตามจังหวะภาพนะคะ. หากหายง่วงหรือเริ่มเมื่อยน่องก่อน, สามารถกดหยุดพักได้ทันทีค่ะ",
+        completionVoice: "ครบกำหนดเวลาสิบนาทีแล้วค่ะ, กล้ามเนื้อน่องช่วยดึงน้ำตาลไปใช้เรียบร้อยแล้วค่ะ. หยุดพักขาและนั่งทำงานต่อได้อย่างสบายใจเลยนะคะ",
+        adviceVoice: "สูตรดึงน้ำตาลเข้ากล้ามเนื้อน่องค่ะ, สำหรับมื้อข้าวหรือแป้ง, ให้วางปลายเท้าแตะพื้นแล้วกระดกส้นเท้าขึ้นลงตามจังหวะ. กล้ามเนื้อน่องจะช่วยเปิดช่องรับน้ำตาลไปเผาผลาญทันที, ช่วยตัดวงจรความง่วงนอน, โดยไม่สร้างแรงกดในช่องท้อง, ปลอดภัยต่อกระเพาะอาหารค่ะ"
       },
       protein: {
+        activityName: "กิจกรรม: ฝึกหายใจด้วยกะบังลม",
+        activityIcon: "🫁",
         durationSeconds: 300, // 5 นาที
         badgeText: "3 – 5 นาที (ประมาณ 20 รอบ)",
+        guideItems: [
+          "นั่งยืดลำตัวตรง อกผาย หลังชิดพนักพิง ไม่นั่งหลังค่อม",
+          "สูดหายใจเข้าช้าๆ ทางจมูกให้ท้องพองออก สี่วินาที",
+          "ผ่อนลมหายใจออกยาวๆ ทางปากให้ท้องยุบลง หกวินาที เพื่อให้กะบังลมรัดหูรูดหลอดอาหาร"
+        ],
         stopSignals: [
           "เมื่อฝึกหายใจครบ 5 นาที ให้หยุดนับลมหายใจและหายใจตามธรรมชาติ",
           "หากเริ่มรู้สึกวิงเวียนศีรษะจากการหายใจลึก ให้หยุดทันที",
           "สิ่งที่ต้องทำต่อ: ยังคงนั่งหลังตรง อกผาย จนครบ 60 นาทีเพื่อกันกรดไหลย้อน"
         ],
-        completionVoice: "ครบ 5 นาทีแล้วค่ะ หยุดตั้งใจนับลมหายใจได้แล้วค่ะ ให้นั่งหลังตรงยืดอกทำงานต่อตามปกตินะคะ"
+        startVoice: "เริ่มจับเวลาห้านาทีค่ะ, ให้นั่งยืดตัวตรง, สูดหายใจเข้าช้าๆ ทางจมูกสี่วินาที, และผ่อนลมหายใจออกยาวๆ หกวินาทีตามวงกลมสีฟ้านะคะ. หากเริ่มเวียนหัวให้หยุดพักได้ทันทีค่ะ",
+        completionVoice: "ครบห้านาทีแล้วค่ะ, สามารถหยุดตั้งใจนับลมหายใจได้แล้วค่ะ. ให้นั่งหลังตรงยืดอกทำงานต่อตามปกติ เพื่อป้องกันกรดไหลย้อนนะคะ",
+        adviceVoice: "สูตรฝึกกะบังลมรัดหูรูดหลอดอาหารค่ะ, มื้อโปรตีนต้องการกรดเข้มข้นในการย่อยสูง, ไม่ต้องกระดกเท้านะคะ, แต่ต้องนั่งยืดลำตัวตรง, และฝึกหายใจเข้าสี่วินาที, ผ่อนออกหกวินาทีตามวงกลมสีฟ้า, เพื่อให้กล้ามเนื้อกะบังลมช่วยหนีบรัดหูรูดหลอดอาหาร, ป้องกันน้ำย่อยไหลย้อนขึ้นมาที่คอหอยค่ะ"
       },
       heavy: {
+        activityName: "กิจกรรม: ก้าวเดินช้าทอดน่อง",
+        activityIcon: "🚶‍♂️",
         durationSeconds: 600, // 10 นาที
         badgeText: "5 – 10 นาที (ไม่เกิน 15 นาที)",
+        guideItems: [
+          "ลุกขึ้นยืน ยืดกระดูกสันหลังให้ตรง ไม่งอพับช่วงเอว",
+          "ก้าวเดินสั้นๆ ช้าๆ อย่างผ่อนคลายตามจังหวะเท้าซ้าย-ขวา",
+          "ห้ามจ้ำอ้าว ห้ามเดินเร็ว และห้ามเดินจนเหนื่อยหอบ"
+        ],
         stopSignals: [
           "เมื่อเดินช้าครบ 10 นาที ให้กลับมานั่งทำงานในท่าตัวตรง",
           "หยุดทันทีเมื่อเริ่มรู้สึก 'จุก เสียด แน่น' ที่ชายโครง",
           "ห้ามก้าวเดินเร็วหรือจ้ำอ้าว และห้ามเดินจนเหนื่อยหอบ"
         ],
-        completionVoice: "ครบ 10 นาทีแล้วค่ะ เพียงพอสำหรับการกระตุ้นทางเดินอาหารแล้วค่ะ กลับมานั่งทำงานในท่าตัวตรงได้เลยค่ะ"
+        startVoice: "เริ่มจับเวลาสิบนาทีค่ะ, ให้ลุกขึ้นยืนหรือก้าวเดินช้าๆ ทอดน่องตามจังหวะก้าวเท้าซ้ายขวานะคะ. เดินสบายๆ ไม่ต้องรีบ, หากเริ่มรู้สึกจุกแน่นให้หยุดพักทันทีค่ะ",
+        completionVoice: "ครบสิบนาทีแล้วค่ะ, เพียงพอสำหรับการช่วยให้ทางเดินอาหารเคลื่อนตัวแล้วค่ะ. กลับมานั่งทำงานในท่าตัวตรงได้เลยนะคะ",
+        adviceVoice: "สูตรเดินช้ากระตุ้นทางเดินอาหารค่ะ, มื้อหนักหรือของมันทำให้กระเพาะบีบตัวช้าลง, การนั่งเฉยๆ จะทำให้อืดแน่น, แนะนำให้ลุกขึ้นยืนยืดตัว, หรือเดินก้าวช้าๆ ทอดน่องตามจังหวะ, เพื่อช่วยให้อาหารเคลื่อนตัวลงสู่ลำไส้เล็ก, โดยไม่ทำให้จุกแน่นค่ะ"
       }
     };
 
@@ -396,7 +574,7 @@
       heavy: 'ไขมันสูง & บุฟเฟต์'
     };
 
-    // เล่นเสียงสัญญาณกระดิ่งสั้นๆ (Ding-Dong) ก่อนที่ระบบจะพูดเตือน
+    // เล่นเสียงสัญญาณกระดิ่งนุ่มนวล (Soft Warm Chime) ก่อนที่ระบบจะพูดเตือน
     function playChimeAlert() {
       try {
         const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
@@ -404,56 +582,83 @@
         const chimeCtx = new AudioCtxClass();
         const now = chimeCtx.currentTime;
 
-        // โน้ตแรก ความถี่ 659.25Hz (E5)
+        // โน้ตแรก ความถี่ 523.25Hz (C5) นุ่มนวล
         const o1 = chimeCtx.createOscillator();
         const g1 = chimeCtx.createGain();
         o1.type = 'sine';
-        o1.frequency.setValueAtTime(659.25, now);
-        g1.gain.setValueAtTime(0.08, now);
-        g1.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+        o1.frequency.setValueAtTime(523.25, now);
+        g1.gain.setValueAtTime(0.001, now);
+        g1.gain.exponentialRampToValueAtTime(0.06, now + 0.04);
+        g1.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
         o1.connect(g1);
         g1.connect(chimeCtx.destination);
         o1.start(now);
-        o1.stop(now + 0.22);
+        o1.stop(now + 0.28);
 
-        // โน้ตที่สอง ความถี่ 880Hz (A5)
+        // โน้ตที่สอง ความถี่ 783.99Hz (G5) ให้ความรู้สึกสดชื่น
         const o2 = chimeCtx.createOscillator();
         const g2 = chimeCtx.createGain();
         o2.type = 'sine';
-        o2.frequency.setValueAtTime(880, now + 0.14);
-        g2.gain.setValueAtTime(0.1, now + 0.14);
-        g2.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+        o2.frequency.setValueAtTime(783.99, now + 0.12);
+        g2.gain.setValueAtTime(0.001, now + 0.12);
+        g2.gain.exponentialRampToValueAtTime(0.07, now + 0.16);
+        g2.gain.exponentialRampToValueAtTime(0.0001, now + 0.48);
         o2.connect(g2);
         g2.connect(chimeCtx.destination);
-        o2.start(now + 0.14);
-        o2.stop(now + 0.5);
+        o2.start(now + 0.12);
+        o2.stop(now + 0.48);
       } catch (err) {
         console.debug("Chime playback error: ", err);
       }
     }
 
-    // ฟังก์ชันสั่งงานเสียงพูดภาษาไทย (Thai Speech Synthesis)
+    // ค้นหาเสียงพากย์ภาษาไทยที่ดีที่สุดในอุปกรณ์ (Natural / Siri / Google Thai Voice Picker)
+    function getBestThaiVoice() {
+      if (!('speechSynthesis' in window)) return null;
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices || voices.length === 0) return null;
+
+      // กรองเฉพาะเสียงภาษาไทย
+      const thaiVoices = voices.filter(v => v.lang === 'th-TH' || v.lang.includes('th'));
+      if (thaiVoices.length === 0) return null;
+
+      // จัดลำดับความคมชัดเป็นธรรมชาติ: ค้นหาเสียง Siri, Google, Premium, หรือ Enhanced ก่อน
+      const preferredVoice = thaiVoices.find(v => 
+        v.name.includes('Siri') || 
+        v.name.includes('Premium') || 
+        v.name.includes('Enhanced') || 
+        v.name.includes('Natural') || 
+        v.name.includes('Kanya') || 
+        v.name.includes('Google') || 
+        v.name.includes('Premwadee') || 
+        v.name.includes('Niwat')
+      );
+
+      return preferredVoice || thaiVoices[0];
+    }
+
+    // ฟังก์ชันสั่งงานเสียงพูดภาษาไทยแบบ Smooth เป็นธรรมชาติ ไม่กระตุก
     function speakThai(message) {
       if (!voiceCoachEnabled || !('speechSynthesis' in window)) return;
       try {
-        window.speechSynthesis.cancel(); // หยุดเสียงพูดเดิมที่ค้างอยู่
-        playChimeAlert(); // เล่นเสียงเตือนก่อนพูด
+        window.speechSynthesis.cancel(); // ล้างคิวเสียงพูดเดิมที่อาจคั่งค้าง
+        playChimeAlert(); // เล่นกระดิ่งนุ่มนวลก่อนพูด
 
         setTimeout(() => {
           const utter = new SpeechSynthesisUtterance(message);
           utter.lang = 'th-TH';
-          utter.rate = 1.0; // ความเร็วมาตรฐาน ฟังสบาย
-          utter.pitch = 1.05; // โทนเสียงสดใสเป็นมิตร
+          
+          // ปรับความเร็วและโทนเสียงให้มีความนุ่มนวลและจังหวะผ่อนคลายเหมือนโค้ชจริง
+          utter.rate = 0.92; // ช้าลงเล็กน้อยจาก 1.0 เพื่อให้ออกเสียงภาษาไทยได้ชัดเจน ไม่รัว
+          utter.pitch = 1.0; // โทนเสียงระดับธรรมชาติ
 
-          // ค้นหาเสียงภาษาไทยที่ติดตั้งอยู่ในระบบของอุปกรณ์
-          const voices = window.speechSynthesis.getVoices();
-          const thaiVoice = voices.find(v => v.lang === 'th-TH' || v.lang.includes('th'));
-          if (thaiVoice) {
-            utter.voice = thaiVoice;
+          const bestVoice = getBestThaiVoice();
+          if (bestVoice) {
+            utter.voice = bestVoice;
           }
 
           window.speechSynthesis.speak(utter);
-        }, 280);
+        }, 260);
       } catch (err) {
         console.error("Speech Synthesis Error: ", err);
       }
@@ -466,7 +671,7 @@
       if (voiceCoachEnabled) {
         btn.innerText = "🔊 เปิดอยู่";
         btn.className = "px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs sm:text-sm font-bold active:scale-95 transition-all";
-        speakThai("เปิดเสียงพูดแจ้งเตือนเรียบร้อยค่ะ");
+        speakThai("เปิดระบบเสียงพูดโค้ชเรียบร้อยแล้วค่ะ");
       } else {
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
         btn.innerText = "🔇 ปิดเสียง";
@@ -474,12 +679,11 @@
       }
     }
 
-    // ปุ่มสำหรับกดฟังเสียงแนะนำปัจจุบันได้ตลอดเวลา
+    // ปุ่มสำหรับกดฟังเสียงแนะนำปัจจุบันได้ตลอดเวลา ด้วยสคริปต์ภาษาไทยที่ลื่นไหล
     function speakCurrentAdvice() {
-      const title = document.getElementById('res-title').innerText;
-      const desc = document.getElementById('res-desc').innerText;
-      const posture = document.getElementById('posture-desc').innerText;
-      speakThai(`${title} ค่ะ ... ${desc} ... ข้อควรระวัง: ${posture}`);
+      const config = sessionMealConfigs[currentMeal];
+      const posture = "ข้อควรจำในการนั่งทำงานค่ะ: ยืดลำตัวขึ้นตรง, อกเปิดกว้าง, ไม่นั่งหลังค่อมหรือฟุบโต๊ะนะคะ";
+      speakThai(`${config.adviceVoice}. ${posture}`);
     }
 
     // สลับระหว่างโหมด Live Timer กับ Manual Slider
@@ -518,15 +722,10 @@
         btn.classList.add('bg-slate-800', 'hover:bg-slate-700', 'text-amber-300', 'border', 'border-slate-700');
         label.innerText = "⏸ พักเวลา";
 
-        // เสียงพูดแนะนำเมื่อเริ่มทำกิจกรรม
+        // เสียงพูดแนะนำภาษาไทยธรรมชาติเมื่อเริ่มทำกิจกรรม
         if (sessionRemainingSeconds === sessionTotalSeconds) {
-          if (currentMeal === 'carb') {
-            speakThai("เริ่มจับเวลาสิบนาทีค่ะ กระดกส้นเท้าตามจังหวะ หากหายง่วงหรือเมื่อยน่องก่อน สามารถกดหยุดได้ทันทีนะคะ");
-          } else if (currentMeal === 'protein') {
-            speakThai("เริ่มจับเวลาห้านาทีค่ะ ฝึกหายใจเข้าลึกสี่วิ และออกหกวิ หากเวียนหัวให้หยุดทันทีนะคะ");
-          } else if (currentMeal === 'heavy') {
-            speakThai("เริ่มจับเวลาเดินช้าสิบนาทีค่ะ ก้าวช้าๆ ทอดน่อง หากเริ่มจุกแน่นให้หยุดทันทีนะคะ");
-          }
+          const config = sessionMealConfigs[currentMeal];
+          speakThai(config.startVoice);
         }
 
         sessionTimerInterval = setInterval(() => {
@@ -583,7 +782,7 @@
 
       const btn = document.getElementById('session-btn');
       const label = document.getElementById('session-btn-label');
-      btn.className = "flex-1 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm active:scale-95 transition-all shadow-md shadow-amber-500/20 flex items-center justify-center gap-1.5";
+      btn.className = "flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs sm:text-sm active:scale-95 transition-all shadow-md shadow-amber-500/20 flex items-center justify-center gap-1.5";
       label.innerText = "เริ่มจับเวลาทำ";
     }
 
@@ -617,25 +816,37 @@
 
       document.getElementById('meal-badge').innerText = mealTitles[m];
       
-      // อัปเดตการตั้งค่าเวลารอบกิจกรรมและเกณฑ์จุดหยุดทำของมื้อใหม่
+      // อัปเดตข้อมูลกิจกรรมและข้อปฏิบัติ
       const config = sessionMealConfigs[m];
+      document.getElementById('activity-type-name').innerText = config.activityName;
+      document.getElementById('activity-type-icon').innerText = config.activityIcon;
       document.getElementById('session-target-badge').innerText = config.badgeText;
       
+      // อัปเดตข้อปฏิบัติถูกต้อง
+      const guideList = document.getElementById('activity-guide-list');
+      guideList.innerHTML = config.guideItems.map(item => 
+        `<li class="flex items-start gap-1.5"><span class="text-emerald-400 font-bold">✓</span> <span>${item}</span></li>`
+      ).join('');
+
+      // อัปเดตสัญญาณเตือนที่ควรหยุด
       const stopList = document.getElementById('stop-signals-list');
       stopList.innerHTML = config.stopSignals.map(sig => `<li>${sig}</li>`).join('');
 
       // รีเซ็ตเวลานับถอยหลังรอบกิจกรรมใหม่ตามมื้อ
       resetSessionTimer();
 
+      // สลับการแสดงผลแอนิเมชันของกิจกรรมให้ตรงกับมื้อ
+      updateActivityVisualDisplay(m);
+
       evaluateMetabolicAndGERD(passedTime);
 
-      // พูดชื่อมื้อและคำแนะนำเริ่มต้นสั้นๆ เมื่อผู้ใช้เปลี่ยนมื้อ
+      // พูดชื่อมื้อและคำแนะนำเริ่มต้นด้วยน้ำเสียงนุ่มนวล
       if (m === 'carb') {
-        speakThai("มื้อข้าวหรือแป้งค่ะ แนะนำกระดกส้นเท้า 5 ถึง 10 นาทีเพื่อดึงน้ำตาลเข้ากล้ามเนื้อน่องนะคะ");
+        speakThai("เลือกมื้อข้าวหรือแป้งค่ะ, แนะนำให้ทำท่ากระดกส้นเท้าเพื่อดึงน้ำตาลเข้ากล้ามเนื้อน่องนะคะ");
       } else if (m === 'protein') {
-        speakThai("มื้อเน้นโปรตีนค่ะ ไม่ต้องกระดกเท้า ให้ฝึกหายใจ 3 ถึง 5 นาที และนั่งหลังตรงเพื่อรัดหูรูดกระเพาะนะคะ");
+        speakThai("เลือกมื้อโปรตีนสูงค่ะ, ไม่ต้องกระดกเท้านะคะ, ให้ฝึกหายใจเข้าออกลึกๆ และนั่งหลังตรงเพื่อรัดหูรูดกระเพาะอาหารค่ะ");
       } else if (m === 'heavy') {
-        speakThai("มื้อหนักหรือของทอดค่ะ ให้ลุกขึ้นยืนหรือเดินก้าวช้าๆ 5 ถึง 10 นาที เพื่อช่วยทางเดินอาหารนะคะ");
+        speakThai("เลือกมื้อหนักหรือของทอดค่ะ, แนะนำให้ลุกขึ้นยืนหรือเดินก้าวช้าๆ ทอดน่อง เพื่อช่วยทางเดินอาหารนะคะ");
       }
     }
 
@@ -646,41 +857,23 @@
       evaluateMetabolicAndGERD(passedTime);
     }
 
-    // ปรับเปลี่ยนรูปแบบตัวนำจังหวะ (Pacer) ตามมื้ออาหารโดยเฉพาะ
-    function updateDynamicPacer(m) {
-      const circle = document.getElementById('pacer-circle');
-      const icon = document.getElementById('pacer-icon');
-      const title = document.getElementById('pacer-title');
-      const hint = document.getElementById('pacer-hint');
-      const ring = document.getElementById('pacer-ring');
+    // ปรับเปลี่ยนพื้นที่แสดงแอนิเมชันกิจกรรมตามชนิดมื้ออาหารจริง
+    function updateActivityVisualDisplay(m) {
+      const visualCarb = document.getElementById('visual-carb');
+      const visualProtein = document.getElementById('visual-protein');
+      const visualHeavy = document.getElementById('visual-heavy');
 
-      // ล้างคลาสแอนิเมชันเดิมออกทั้งหมด
-      circle.classList.remove('tap-pacer-active', 'breath-pacer-active', 'stroll-pacer-active');
+      // ซ่อนทั้งหมดก่อน
+      visualCarb.classList.add('hidden');
+      visualProtein.classList.add('hidden');
+      visualHeavy.classList.add('hidden');
 
       if (m === 'carb') {
-        // มื้อแป้ง: กระดกส้นเท้า Soleus Push-up ดักจับกลูโคส
-        circle.classList.add('tap-pacer-active');
-        circle.className = "w-16 h-16 rounded-2xl border-2 border-amber-400/80 bg-amber-500/20 flex flex-col items-center justify-center shadow-lg shadow-amber-500/20 tap-pacer-active relative z-10";
-        ring.className = "absolute w-24 h-24 rounded-2xl bg-amber-500/10 pulse-ring";
-        icon.innerText = "🦶";
-        title.innerText = "จังหวะกระดกส้นเท้า (Soleus Pacer - 1.2s)";
-        hint.innerText = "ปลายเท้าแตะพื้น ยกเฉพาะส้นเท้าตามจังหวะ • หน้าท้องไม่เกร็ง (Zero-IAP)";
+        visualCarb.classList.remove('hidden');
       } else if (m === 'protein') {
-        // มื้อโปรตีน: ฝึกหายใจด้วยกะบังลม (Diaphragmatic Breathing) หนีบรัดหูรูดหลอดอาหาร
-        circle.classList.add('breath-pacer-active');
-        circle.className = "w-16 h-16 rounded-2xl border-2 border-sky-400/80 bg-sky-500/20 flex flex-col items-center justify-center shadow-lg shadow-sky-500/20 breath-pacer-active relative z-10";
-        ring.className = "absolute w-24 h-24 rounded-2xl bg-sky-500/10 pulse-ring";
-        icon.innerText = "🫁";
-        title.innerText = "จังหวะบริหารกะบังลม (Breath Pacer: เข้า 4s / ออก 6s)";
-        hint.innerText = "หายใจเข้าท้องพองตามวงกลม 4 วิ • หายใจออกผ่อนคลาย 6 วิ เพื่อให้กะบังลมรัดหูรูดกระเพาะ";
+        visualProtein.classList.remove('hidden');
       } else if (m === 'heavy') {
-        // มื้อหนัก: เดินช้าๆ หรือยืนยืดตัว (Slow Stroll) กระตุ้นการบีบตัวของทางเดินอาหาร
-        circle.classList.add('stroll-pacer-active');
-        circle.className = "w-16 h-16 rounded-2xl border-2 border-emerald-400/80 bg-emerald-500/20 flex flex-col items-center justify-center shadow-lg shadow-emerald-500/20 stroll-pacer-active relative z-10";
-        ring.className = "absolute w-24 h-24 rounded-2xl bg-emerald-500/10 pulse-ring";
-        icon.innerText = "🚶‍♂️";
-        title.innerText = "จังหวะก้าวเดินช้าๆ (Slow Stroll Pacer - 65 BPM)";
-        hint.innerText = "ลุกขึ้นยืนหรือเดินก้าวสั้นๆ ช้าๆ ตามจังหวะ ห้ามจ้ำอ้าว เพื่อให้ทางเดินอาหารเคลื่อนตัว";
+        visualHeavy.classList.remove('hidden');
       }
     }
 
@@ -739,8 +932,58 @@
       document.getElementById('res-desc').innerText = item.desc;
       document.getElementById('posture-desc').innerText = item.posture;
 
-      // อัปเดตวิดเจ็ตแสดงผลเฉพาะมื้อ
-      updateDynamicPacer(currentMeal);
+      updateActivityVisualDisplay(currentMeal);
+    }
+
+    // เริ่มต้น / พัก การนับเวลาสด พร้อมส่งเสียงพูดเตือนตามช่วงสำคัญ
+    function toggleLiveTimer() {
+      const btn = document.getElementById('live-timer-toggle-btn');
+      if (!isLiveTimerRunning) {
+        isLiveTimerRunning = true;
+        btn.innerText = "⏸ หยุดพัก";
+        btn.className = "px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700 text-amber-300 text-xs sm:text-sm font-extrabold transition-all";
+
+        // เสียงพูดเตือนเมื่อกดเริ่มนับ
+        if (liveSeconds === 0) {
+          speakThai("เริ่มนับเวลาหลังอาหารแล้วค่ะ, ให้นั่งหลังตรงยืดอก, และหลีกเลี่ยงการนอนราบหรือฟุบโต๊ะทำงานนะคะ");
+        }
+
+        liveTimerInterval = setInterval(() => {
+          liveSeconds++;
+          const mins = Math.floor(liveSeconds / 60);
+          const secs = liveSeconds % 60;
+          document.getElementById('live-timer-display').innerText = 
+            `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+          if (timingMode === 'auto') {
+            passedTime = mins;
+            evaluateMetabolicAndGERD(passedTime);
+          }
+
+          checkVoiceMilestones(mins, secs);
+        }, 1000);
+      } else {
+        isLiveTimerRunning = false;
+        clearInterval(liveTimerInterval);
+        btn.innerText = "▶ นับเวลาต่อ";
+        btn.className = "px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs sm:text-sm font-extrabold transition-all shadow-lg shadow-amber-500/20";
+      }
+    }
+
+    // ตรวจสอบหลักไมล์เวลาเพื่อแจ้งเตือนด้วยเสียงพูดภาษาไทยที่นุ่มนวล
+    function checkVoiceMilestones(mins, secs) {
+      if (secs !== 0) return;
+
+      if (mins === 25 && !announcedMilestones.has(25)) {
+        announcedMilestones.add(25);
+        speakThai("แจ้งเตือนค่ะ, ขณะนี้ระดับน้ำตาลในเลือดกำลังขึ้นสู่จุดสูงสุดแล้วค่ะ, เริ่มทำกิจกรรมตามจังหวะภาพเพื่อเผาผลาญน้ำตาลได้เลยนะคะ");
+      } else if (mins === 45 && !announcedMilestones.has(45)) {
+        announcedMilestones.add(45);
+        speakThai("เวลาผ่านไปสี่สิบห้านาทีแล้วค่ะ, อาหารเริ่มทยอยเคลื่อนตัวสู่ลำไส้เล็กแล้วค่ะ, ยังคงนั่งหลังตรงเพื่อป้องกันกรดไหลย้อนนะคะ");
+      } else if (mins === 60 && !announcedMilestones.has(60)) {
+        announcedMilestones.add(60);
+        speakThai("ครบหนึ่งชั่วโมงแล้วค่ะ, พ้นช่วงวิกฤตของกรดไหลย้อนแล้วค่ะ, ร่างกายของคุณปรับสมดุลพลังงานได้ดีเยี่ยมแล้วค่ะ");
+      }
     }
 
     // ระบบสังเคราะห์คลื่นเสียง 40Hz Gamma Wave (หูซ้าย 220Hz + หูขวา 260Hz)
@@ -822,6 +1065,8 @@
     // ประเมินผลเริ่มต้นเมื่อโหลดหน้าเสร็จ
     window.addEventListener('DOMContentLoaded', () => {
       evaluateMetabolicAndGERD(0);
+      updateActivityVisualDisplay('carb');
+
       // โหลด Voice list ของเบราว์เซอร์เตรียมไว้ล่วงหน้า
       if ('speechSynthesis' in window) {
         window.speechSynthesis.onvoiceschanged = () => {
