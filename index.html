@@ -1145,18 +1145,38 @@
       }
     }
 
-    // ฟังก์ชันทดสอบป๊อปอัปบนหน้าจอ (ทั้งคอมและมือถือ)
-    function testPopupAlert() {
+    // ฟังก์ชันเมื่อผู้ใช้คลิกเลือกกิจกรรม: เปลี่ยนสถานะ และเด้งป๊อปอัปแนะนำวิธีทำทันที
+    function clickActivityButton(actId) {
       unlockAudioHardware();
-      const cfg = activityConfigs[currentActivity];
+      selectActivity(actId);
+
+      const cfg = activityConfigs[actId];
       openPopupModal({
         icon: cfg.icon,
-        badge: '✨ ทดสอบป๊อปอัปแจ้งเตือน',
+        badge: `⏱️ แนะนำทำรอบละ ${cfg.badgeText}`,
         title: cfg.title,
-        desc: `ระบบป๊อปอัปพร้อมเสียงแจ้งเตือนทำงานสมบูรณ์แบบแล้วครับ!<br><br><b>คำแนะนำสรีระ:</b> ${cfg.posture}`,
-        actionText: 'เริ่มทำรอบนี้เลย',
+        desc: `
+          <div class="space-y-2 text-stone-200">
+            <p class="text-amber-200 font-medium">${cfg.sub}</p>
+            <div class="bg-[#241610] p-2.5 rounded-xl border border-amber-800/80 text-left">
+              <div class="font-bold text-amber-300 text-[11px] mb-0.5 flex items-center gap-1">
+                <span>📐</span> คำแนะนำสรีระ:
+              </div>
+              <div class="text-[11px] text-stone-300">${cfg.posture}</div>
+            </div>
+            <div class="bg-[#0b281f] p-2.5 rounded-xl border border-emerald-800/80 text-left">
+              <div class="font-bold text-emerald-300 text-[11px] mb-0.5 flex items-center gap-1">
+                <span>✓</span> ข้อปฏิบัติ:
+              </div>
+              <ul class="text-[10.5px] text-stone-300 space-y-0.5">
+                ${cfg.guideItems.map(item => `<li>• ${item}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+        `,
+        actionText: `เริ่มจับเวลาทำ (${cfg.badgeText})`,
         actionIcon: '▶',
-        targetActivity: currentActivity,
+        targetActivity: actId,
         soundType: 'alert'
       });
     }
