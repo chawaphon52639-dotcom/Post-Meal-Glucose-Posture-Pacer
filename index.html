@@ -6,18 +6,18 @@
   <title>โปรแกรมลดอาการง่วงหลังอาหาร และ ป้องกันกรดไหลย้อน</title>
   
   <!-- ตั้งค่าแอปพลิเคชันบนมือถือ (PWA & Standalone) -->
-  <meta name="theme-color" content="#032119">
+  <meta name="theme-color" content="#1c130e">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="PostMeal">
   <meta name="mobile-web-app-capable" content="yes">
 
-  <!-- ไอคอนแอปพลิเคชันแบบ Vector SVG ในโทนเขียวเข้มพรีเมียม -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%23064e3b'/><text y='68' x='50' font-size='56' text-anchor='middle'>🦶</text></svg>">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%23064e3b'/><text y='68' x='50' font-size='56' text-anchor='middle'>🦶</text></svg>">
+  <!-- ไอคอนแอปพลิเคชันแบบ Vector SVG ในโทนน้ำตาลทอง & เขียวพรีเมียม -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%232e1a12'/><text y='68' x='50' font-size='56' text-anchor='middle'>🦶</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%232e1a12'/><text y='68' x='50' font-size='56' text-anchor='middle'>🦶</text></svg>">
   
   <!-- Web App Manifest ในตัว -->
-  <link rel="manifest" href='data:application/manifest+json,{"name":"โปรแกรมลดอาการง่วงหลังอาหาร และ ป้องกันกรดไหลย้อน","short_name":"PostMeal","start_url":".","display":"standalone","background_color":"%23021812","theme_color":"%23064e3b","icons":[{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2228%22 fill=%22%23064e3b%22/><text y=%2268%22 x=%2250%22 font-size=%2256%22 text-anchor=%22middle%22>🦶</text></svg>","sizes":"192x192 512x512","type":"image/svg+xml"}]}'>
+  <link rel="manifest" href='data:application/manifest+json,{"name":"โปรแกรมลดอาการง่วงหลังอาหาร และ ป้องกันกรดไหลย้อน","short_name":"PostMeal","start_url":".","display":"standalone","background_color":"%2318100b","theme_color":"%232e1a12","icons":[{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2228%22 fill=%22%232e1a12%22/><text y=%2268%22 x=%2250%22 font-size=%2256%22 text-anchor=%22middle%22>🦶</text></svg>","sizes":"192x192 512x512","type":"image/svg+xml"}]}'>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -31,7 +31,7 @@
     body {
       font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
-      background-color: #021812;
+      background-color: #140d09;
     }
 
     /* 1. แอนิเมชันยกส้นเท้า Soleus Push-up (SPU) 1.2 วินาที */
@@ -49,20 +49,20 @@
       animation: soleusFootMotion 1.2s infinite cubic-bezier(0.4, 0.0, 0.2, 1);
     }
 
-    @keyframes calfMuscleGlowEmerald {
+    @keyframes calfMuscleGlowAmber {
       0%, 100% {
-        opacity: 0.4;
+        opacity: 0.45;
         stroke: #f59e0b;
         filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.3));
       }
       50% {
         opacity: 1;
-        stroke: #fbbf24;
-        filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.9));
+        stroke: #fef08a;
+        filter: drop-shadow(0 0 9px rgba(251, 191, 36, 0.95));
       }
     }
     .calf-glow-animated {
-      animation: calfMuscleGlowEmerald 1.2s infinite cubic-bezier(0.4, 0.0, 0.2, 1);
+      animation: calfMuscleGlowAmber 1.2s infinite cubic-bezier(0.4, 0.0, 0.2, 1);
     }
 
     /* 2. แอนิเมชันปอดและกะบังลม */
@@ -86,12 +86,12 @@
 
     /* 4. แอนิเมชันก้าวเดินสลับเท้า */
     @keyframes stepLeftFoot {
-      0%, 100% { opacity: 0.4; transform: scale(0.94); }
+      0%, 100% { opacity: 0.35; transform: scale(0.94); }
       50% { opacity: 1; transform: scale(1.08); }
     }
     @keyframes stepRightFoot {
       0%, 100% { opacity: 1; transform: scale(1.08); }
-      50% { opacity: 0.4; transform: scale(0.94); }
+      50% { opacity: 0.35; transform: scale(0.94); }
     }
     .step-left-animated { animation: stepLeftFoot 1.8s infinite ease-in-out; }
     .step-right-animated { animation: stepRightFoot 1.8s infinite ease-in-out; }
@@ -106,9 +106,9 @@
     }
 
     @keyframes softPulseGlow {
-      0% { transform: scale(0.96); opacity: 0.6; }
-      50% { transform: scale(1.08); opacity: 0.15; }
-      100% { transform: scale(0.96); opacity: 0.6; }
+      0% { transform: scale(0.95); opacity: 0.7; }
+      50% { transform: scale(1.1); opacity: 0.15; }
+      100% { transform: scale(0.95); opacity: 0.7; }
     }
     .soft-pulse { animation: softPulseGlow 2.4s infinite ease-in-out; }
 
@@ -116,53 +116,53 @@
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-gradient-to-b from-[#021812] via-[#04241b] to-[#01140e] text-slate-100 min-h-screen flex items-center justify-center p-2 sm:p-4 selection:bg-emerald-500 selection:text-slate-950">
+<body class="bg-gradient-to-b from-[#140d09] via-[#101b15] to-[#120a06] text-slate-100 min-h-screen flex items-center justify-center p-2 sm:p-4 selection:bg-amber-500 selection:text-slate-950">
 
-  <!-- กล่องแอปพลิเคชันหลัก: ธีมเขียวเข้มพรีเมียม (Deep Forest Emerald) สบายตา คมชัดระดับสูง -->
-  <main class="max-w-5xl w-full bg-[#05291f]/95 border border-emerald-700/60 rounded-3xl p-3.5 sm:p-6 shadow-2xl shadow-black/80 space-y-3.5 backdrop-blur-xl relative overflow-hidden">
+  <!-- กล่องแอปพลิเคชันหลัก: โทนผสมผสานน้ำตาลมอคค่าอบอุ่น (Mocha Brown) และเขียวมรกตธรรมชาติ (Deep Forest) สบายตา ไม่น่ากลัว คมชัดสูง -->
+  <main class="max-w-5xl w-full bg-[#1e1510]/95 border border-[#4a2e1e]/80 rounded-3xl p-3.5 sm:p-6 shadow-2xl shadow-black/90 space-y-3.5 backdrop-blur-xl relative overflow-hidden">
     
-    <!-- แสงเรืองมรกตอ่อนละมุนด้านหลัง -->
-    <div class="absolute -top-24 -right-24 w-52 h-52 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute -bottom-24 -left-24 w-52 h-52 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <!-- แสงเรืองทองและมรกตอ่อนละมุนด้านหลัง -->
+    <div class="absolute -top-24 -right-24 w-56 h-56 bg-amber-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-24 -left-24 w-56 h-56 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
-    <!-- ส่วนหัว (Header): สีเขียวเข้ม คมชัด พร้อมระบุเครดิต พัฒนาระบบโดย " น้าราม " -->
-    <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-emerald-800/70 relative z-10">
+    <!-- ส่วนหัว (Header): บาร์น้ำตาลหรูหรา พร้อมระบุเครดิต พัฒนาระบบโดย " น้าราม " -->
+    <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-[#3d2417] relative z-10">
       <div>
         <div class="flex items-center gap-2 flex-wrap">
-          <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-900/80 border border-emerald-500/50 text-[11px] font-bold text-emerald-300 shadow-sm">
+          <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#0a271e] border border-emerald-500/60 text-[11px] font-bold text-emerald-300 shadow-sm">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             ดูแลพลังงาน & ทางเดินอาหาร
           </span>
           <!-- ชื่อผู้พัฒนา "น้าราม" เด่นชัด สวยงาม น่าเชื่อถือ -->
-          <span class="inline-flex items-center gap-1 px-3.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500 via-emerald-500 to-teal-400 text-slate-950 text-[11px] font-extrabold shadow-md tracking-wide">
+          <span class="inline-flex items-center gap-1 px-3.5 py-0.5 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-emerald-400 text-slate-950 text-[11px] font-black shadow-md tracking-wide">
             ✨ พัฒนาระบบโดย " น้าราม "
           </span>
         </div>
-        <h1 class="text-base sm:text-xl font-extrabold tracking-tight text-white mt-1.5 drop-shadow-sm">
+        <h1 class="text-base sm:text-xl font-extrabold tracking-tight text-amber-50 mt-1.5 drop-shadow-sm">
           โปรแกรมลดอาการง่วงหลังอาหาร และ ป้องกันกรดไหลย้อน
         </h1>
       </div>
 
-      <!-- ปุ่มควบคุมเสียงโค้ช & ปุ่มทดสอบเสียงมือถือ -->
+      <!-- ปุ่มควบคุมเสียงโค้ช & ปุ่มฟังคำแนะนำ -->
       <div class="flex items-center gap-2 self-end sm:self-center flex-wrap">
-        <button type="button" id="voice-toggle-btn" onclick="toggleVoiceCoach()" class="px-3 py-1.5 rounded-xl bg-emerald-900/80 hover:bg-emerald-800 border border-emerald-500/60 text-emerald-200 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1.5">
+        <button type="button" id="voice-toggle-btn" onclick="toggleVoiceCoach()" class="px-3 py-1.5 rounded-xl bg-[#2e1c12] hover:bg-[#3d2518] border border-amber-600/50 text-amber-200 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1.5">
           <span id="voice-status-icon">🔊</span>
           <span id="voice-status-text">โค้ชชาย: เปิด</span>
         </button>
-        <button type="button" onclick="speakCurrentAdvice()" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-300 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1.5" title="ฟังเสียงคำแนะนำ">
+        <button type="button" onclick="speakCurrentAdvice()" class="px-3.5 py-1.5 rounded-xl bg-[#0a2c20] hover:bg-[#0e3b2b] border border-emerald-500/60 text-emerald-200 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1.5" title="ฟังเสียงคำแนะนำ">
           <span>🗣️</span>
           <span>ฟังคำแนะนำ</span>
         </button>
       </div>
     </header>
 
-    <!-- แถบสลับหน้าจอหลัก (Main Navigation Tabs): 2 เมนูใหญ่ชัดเจน ในธีมเขียวเข้ม -->
-    <nav class="flex bg-[#021b14] p-1.5 rounded-2xl border border-emerald-800/80 gap-1.5 text-xs sm:text-sm font-bold">
-      <button type="button" id="nav-btn-pacer" onclick="switchMainTab('pacer')" class="flex-1 py-2.5 rounded-xl bg-emerald-700 text-white shadow-md transition-all flex items-center justify-center gap-2">
+    <!-- แถบสลับหน้าจอหลัก: 1. โปรแกรม Pacer (สีเขียวเข้ม) | 2. คัมภีร์กรดไหลย้อน (สีน้ำตาลเข้ม) -->
+    <nav class="flex bg-[#120a06] p-1.5 rounded-2xl border border-[#382115] gap-1.5 text-xs sm:text-sm font-bold">
+      <button type="button" id="nav-btn-pacer" onclick="switchMainTab('pacer')" class="flex-1 py-2.5 rounded-xl bg-[#0c382b] text-emerald-100 border border-emerald-600/50 shadow-md transition-all flex items-center justify-center gap-2">
         <span class="text-base">⚡</span>
         <span>1. โปรแกรมลดง่วง & ต้านกรด (Pacer)</span>
       </button>
-      <button type="button" id="nav-btn-gerd" onclick="switchMainTab('gerd')" class="flex-1 py-2.5 rounded-xl text-emerald-200/80 hover:text-white hover:bg-emerald-900/40 transition-all flex items-center justify-center gap-2">
+      <button type="button" id="nav-btn-gerd" onclick="switchMainTab('gerd')" class="flex-1 py-2.5 rounded-xl text-amber-200/80 hover:text-white hover:bg-[#2c1a12] transition-all flex items-center justify-center gap-2">
         <span class="text-base">🥗</span>
         <span>2. คัมภีร์อาหาร & ดูแลกรดไหลย้อน</span>
       </button>
@@ -171,51 +171,51 @@
     <!-- ==================== หน้าต่างที่ 1: โปรแกรมลดง่วง & ต้านกรด ==================== -->
     <div id="tab-pacer-view" class="space-y-3">
       
-      <!-- ส่วนที่ 1: เลือกมื้ออาหารที่เพิ่งรับประทาน -->
-      <section class="space-y-1.5 bg-[#032119] p-3 rounded-2xl border border-emerald-800/70">
+      <!-- ส่วนที่ 1: เลือกมื้ออาหารที่เพิ่งรับประทาน (สไตล์น้ำตาลเข้มพรีเมียม) -->
+      <section class="space-y-1.5 bg-[#291a12] p-3 rounded-2xl border border-[#4d2e1f]">
         <div class="flex items-center justify-between text-xs">
-          <span class="font-bold text-emerald-200">1. เลือกมื้อที่เพิ่งรับประทาน:</span>
-          <span id="meal-badge" class="text-[11px] text-amber-300 font-bold bg-amber-500/15 px-3 py-0.5 rounded-lg border border-amber-500/30">🍚 ข้าว / เส้น / แป้ง</span>
+          <span class="font-bold text-amber-200">1. เลือกมื้อที่เพิ่งรับประทาน:</span>
+          <span id="meal-badge" class="text-[11px] text-amber-300 font-bold bg-[#170e09] px-3 py-0.5 rounded-lg border border-amber-500/40">🍚 ข้าว / เส้น / แป้ง</span>
         </div>
         <div class="grid grid-cols-3 gap-2 sm:gap-2.5">
-          <button type="button" onclick="setMeal('carb')" id="m-carb" class="m-btn py-2.5 px-2 rounded-xl border-2 border-emerald-400 bg-emerald-600/30 text-emerald-200 text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95">
+          <button type="button" onclick="setMeal('carb')" id="m-carb" class="m-btn py-2.5 px-2 rounded-xl border-2 border-amber-500 bg-[#3d2417] text-amber-100 text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95">
             <span class="text-lg">🍚</span>
             <span>ข้าว / แป้ง</span>
           </button>
-          <button type="button" onclick="setMeal('protein')" id="m-protein" class="m-btn py-2.5 px-2 rounded-xl border-2 border-emerald-900 bg-[#021812] text-slate-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all hover:bg-emerald-950 active:scale-95">
+          <button type="button" onclick="setMeal('protein')" id="m-protein" class="m-btn py-2.5 px-2 rounded-xl border-2 border-[#42291c] bg-[#1a0f0a] text-stone-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all hover:bg-[#2a170f] active:scale-95">
             <span class="text-lg">🥩</span>
             <span>เนื้อ / โปรตีน</span>
           </button>
-          <button type="button" onclick="setMeal('heavy')" id="m-heavy" class="m-btn py-2.5 px-2 rounded-xl border-2 border-emerald-900 bg-[#021812] text-slate-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all hover:bg-emerald-950 active:scale-95">
+          <button type="button" onclick="setMeal('heavy')" id="m-heavy" class="m-btn py-2.5 px-2 rounded-xl border-2 border-[#42291c] bg-[#1a0f0a] text-stone-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all hover:bg-[#2a170f] active:scale-95">
             <span class="text-lg">🍔</span>
             <span>บุฟเฟต์ / มันจัด</span>
           </button>
         </div>
       </section>
 
-      <!-- แท็บสลับหน้าจอสำหรับโทรศัพท์มือถือ (ป้องกันจอยาวล้น) -->
-      <div class="flex sm:hidden bg-[#021812] p-1 rounded-xl border border-emerald-800/80 text-xs font-bold">
-        <button type="button" id="m-tab-timer" onclick="switchMobileSubTab('timer')" class="flex-1 py-2 rounded-lg bg-emerald-700 text-white shadow-xs transition-all flex items-center justify-center gap-1">
+      <!-- แท็บสลับหน้าจอสำหรับโทรศัพท์มือถือ -->
+      <div class="flex sm:hidden bg-[#140b07] p-1 rounded-xl border border-[#382115] text-xs font-bold">
+        <button type="button" id="m-tab-timer" onclick="switchMobileSubTab('timer')" class="flex-1 py-2 rounded-lg bg-[#0c382b] text-emerald-100 border border-emerald-600/50 shadow-xs transition-all flex items-center justify-center gap-1">
           <span>⏱️</span> เวลา & สถานะ
         </button>
-        <button type="button" id="m-tab-activity" onclick="switchMobileSubTab('activity')" class="flex-1 py-2 rounded-lg text-emerald-300/80 transition-all flex items-center justify-center gap-1">
+        <button type="button" id="m-tab-activity" onclick="switchMobileSubTab('activity')" class="flex-1 py-2 rounded-lg text-amber-300/80 transition-all flex items-center justify-center gap-1">
           <span>🏃</span> 5 กิจกรรมแนะนำ
         </button>
       </div>
 
-      <!-- โครงสร้าง 2 คอลัมน์เคียงข้างกัน ไม่ยาวล้นจอ -->
+      <!-- โครงสร้าง 2 คอลัมน์เคียงข้างกัน: ซ้ายเขียวเข้ม (Forest) / ขวาน้ำตาลเข้ม (Mocha) -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
         
-        <!-- คอลัมน์ที่ 1 (ซ้าย): ตัวนับเวลาสด + สถานะน้ำตาลและกรดไหลย้อน + คลื่น 40Hz -->
+        <!-- คอลัมน์ที่ 1 (ซ้าย): สีเขียวเข้มลึก (Deep Forest) - ตัวนับเวลาสด + สถานะน้ำตาลและกรดไหลย้อน + คลื่น 40Hz -->
         <div id="col-timer" class="space-y-2.5">
           
           <!-- การ์ดตัวนับเวลาสด -->
-          <div class="bg-[#032119] p-3.5 rounded-2xl border border-emerald-800/70 shadow-sm space-y-2.5">
+          <div class="bg-[#0b281f] p-3.5 rounded-2xl border border-emerald-700/60 shadow-sm space-y-2.5">
             <div class="flex items-center justify-between pb-2 border-b border-emerald-800/60">
               <span class="text-xs font-bold text-emerald-200 flex items-center gap-1.5">
                 <span>⏱️</span> 2. ตัวนับเวลาหลังอาหาร
               </span>
-              <div class="flex bg-[#021812] p-0.5 rounded-lg border border-emerald-800 text-[10px]">
+              <div class="flex bg-[#051711] p-0.5 rounded-lg border border-emerald-800 text-[10px]">
                 <button type="button" id="tab-auto" onclick="switchTimingMode('auto')" class="px-2.5 py-1 rounded bg-emerald-600 text-white font-bold shadow-xs transition-all">
                   นับสด
                 </button>
@@ -235,11 +235,11 @@
                 </div>
               </div>
               <div class="flex gap-2">
-                <button type="button" id="live-timer-toggle-btn" onclick="toggleLiveTimer()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-slate-950 text-xs font-extrabold active:scale-95 transition-all shadow-md shadow-emerald-500/20 flex items-center gap-1.5">
+                <button type="button" id="live-timer-toggle-btn" onclick="toggleLiveTimer()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black active:scale-95 transition-all shadow-md shadow-amber-500/20 flex items-center gap-1.5">
                   <span>🍽️</span>
                   <span id="live-timer-btn-text">เริ่มนับ</span>
                 </button>
-                <button type="button" onclick="resetLiveTimer()" class="p-2 px-3 rounded-xl bg-[#021812] hover:bg-emerald-950 text-emerald-200 text-xs font-bold active:scale-95 transition-all border border-emerald-800" title="รีเซ็ต">
+                <button type="button" onclick="resetLiveTimer()" class="p-2 px-3 rounded-xl bg-[#051711] hover:bg-emerald-950 text-emerald-200 text-xs font-bold active:scale-95 transition-all border border-emerald-800" title="รีเซ็ต">
                   ↺
                 </button>
               </div>
@@ -253,105 +253,105 @@
                   <span id="time-val">20</span> นาที
                 </div>
               </div>
-              <input type="range" id="time-slider" min="5" max="90" step="5" value="20" oninput="updateTime(this.value)" class="w-full h-2 bg-emerald-950 rounded-lg appearance-none cursor-pointer accent-emerald-400">
+              <input type="range" id="time-slider" min="5" max="90" step="5" value="20" oninput="updateTime(this.value)" class="w-full h-2 bg-emerald-950 rounded-lg appearance-none cursor-pointer accent-amber-400">
             </div>
           </div>
 
           <!-- สถานะระดับน้ำตาล & ความเสี่ยงกรดไหลย้อน -->
-          <div class="bg-[#032119] p-3 rounded-2xl border border-emerald-800/70 shadow-sm space-y-2 text-xs">
-            <div class="flex items-center justify-between gap-1 bg-[#021812] border border-amber-500/30 px-3 py-2 rounded-xl">
-              <span class="text-slate-300 text-[11px] font-medium">ระดับกลูโคส:</span>
+          <div class="bg-[#0b281f] p-3 rounded-2xl border border-emerald-700/60 shadow-sm space-y-2 text-xs">
+            <div class="flex items-center justify-between gap-1 bg-[#051711] border border-amber-500/30 px-3 py-2 rounded-xl">
+              <span class="text-stone-300 text-[11px] font-medium">ระดับกลูโคส:</span>
               <span id="glucose-stage" class="font-bold text-amber-300 text-xs">ระยะเริ่มดูดซึมกลูโคส</span>
             </div>
-            <div class="flex items-center justify-between gap-1 bg-[#021812] border border-rose-500/40 px-3 py-2 rounded-xl">
-              <span class="text-slate-300 text-[11px] font-medium">ความเสี่ยงกรด:</span>
+            <div class="flex items-center justify-between gap-1 bg-[#051711] border border-rose-500/40 px-3 py-2 rounded-xl">
+              <span class="text-stone-300 text-[11px] font-medium">ความเสี่ยงกรด:</span>
               <span id="gerd-risk-stage" class="font-bold text-rose-400 text-xs">⚠️ สูงสุด (ช่วงกรดหลั่งมาก)</span>
             </div>
           </div>
 
-          <!-- คลื่นเสียง 40Hz Gamma Wave ในโทนเขียวเข้ม -->
-          <div class="bg-[#032119] p-3 rounded-2xl border border-emerald-800/70 shadow-sm flex items-center justify-between gap-2">
+          <!-- คลื่นเสียง 40Hz Gamma Beat -->
+          <div class="bg-[#0b281f] p-3 rounded-2xl border border-emerald-700/60 shadow-sm flex items-center justify-between gap-2">
             <div class="text-left">
               <div class="text-xs font-bold text-emerald-200 flex items-center gap-1.5">
                 <span>🎧</span> 40Hz Gamma Beat
               </div>
               <div class="text-[10.5px] text-emerald-400/80">ปลุกสมองตื่นตัว ไม่ต้องดื่มกาแฟเติมกรด</div>
             </div>
-            <button type="button" onclick="toggleAlertTone()" id="audio-btn" class="px-3.5 py-2 rounded-xl bg-teal-600/30 hover:bg-teal-600/50 border border-teal-400/50 text-teal-200 text-xs font-bold active:scale-95 transition-all flex items-center gap-1.5 whitespace-nowrap shadow-sm">
+            <button type="button" onclick="toggleAlertTone()" id="audio-btn" class="px-3.5 py-2 rounded-xl bg-amber-600/30 hover:bg-amber-600/50 border border-amber-500/50 text-amber-200 text-xs font-bold active:scale-95 transition-all flex items-center gap-1.5 whitespace-nowrap shadow-sm">
               <span id="audio-icon">▶</span>
               <span id="audio-label">เปิดเสียง 40Hz</span>
             </button>
           </div>
 
           <!-- เช็กลิสต์ด่วนสรีระป้องกันกรดไหลย้อน -->
-          <div class="bg-[#021812] p-2.5 rounded-xl border border-emerald-800/80 flex items-center justify-between text-[11px] text-emerald-100">
+          <div class="bg-[#051711] p-2.5 rounded-xl border border-emerald-800/80 flex items-center justify-between text-[11px] text-emerald-100">
             <span class="flex items-center gap-1.5 font-medium"><span class="text-rose-400 font-bold">🚫</span> ห้ามฟุบโต๊ะ 60 นาที</span>
             <span class="text-emerald-800">•</span>
             <span class="flex items-center gap-1.5 font-medium"><span class="text-sky-400 font-bold">💧</span> จิบน้ำอุณหภูมิห้อง</span>
           </div>
 
-          <!-- กล่องแสดงข้อความคำบรรยายสด (Live Subtitle) และปุ่มทดสอบเสียงมือถือ -->
-          <div class="bg-[#021812] p-3 rounded-xl border border-emerald-700/60 text-xs text-emerald-100 space-y-1.5">
+          <!-- กล่องคำบรรยายสดโค้ชชาย พร้อมปุ่มทดสอบเสียงมือถือ (แก้ไขเสียงมือถือดัง 100%) -->
+          <div class="bg-[#241610] p-3 rounded-xl border border-amber-700/60 text-xs text-amber-100 space-y-2">
             <div class="flex items-start gap-1.5">
-              <span class="text-amber-400 font-bold whitespace-nowrap">🗣️ โค้ชชาย:</span>
-              <span id="voice-subtitle" class="text-slate-100 leading-snug font-medium">"สวัสดีครับ พัฒนาระบบโดยน้าราม พร้อมดูแลสุขภาพไปด้วยกันครับ"</span>
+              <span class="text-amber-400 font-black whitespace-nowrap">🗣️ โค้ชชาย:</span>
+              <span id="voice-subtitle" class="text-stone-100 leading-snug font-medium">"สวัสดีครับ พัฒนาระบบโดยน้าราม พร้อมดูแลสุขภาพไปด้วยกันครับ"</span>
             </div>
-            <!-- ปุ่มทดสอบเสียงด่วนบนมือถือเพื่อให้มั่นใจว่ามีเสียงแน่นอน -->
-            <div class="pt-1.5 border-t border-emerald-900/80 flex items-center justify-between gap-2">
-              <span class="text-[10px] text-emerald-400/80">ทดสอบเสียงพูดบนมือถือ:</span>
-              <button type="button" onclick="testMobileSound()" class="px-2.5 py-1 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-[11px] font-bold active:scale-95 transition-all flex items-center gap-1 shadow-sm">
+            <!-- ปุ่มทดสอบเสียงด่วนบนมือถือ พร้อมระบบขยายเสียงและระฆังนำทาง -->
+            <div class="pt-2 border-t border-amber-800/60 flex items-center justify-between gap-2">
+              <span class="text-[11px] text-amber-300/90 font-medium">ทดสอบเสียงบนมือถือ:</span>
+              <button type="button" onclick="testMobileSound()" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black active:scale-95 transition-all flex items-center gap-1.5 shadow-md">
                 <span>🔊</span>
-                <span>กดทดสอบเสียง</span>
+                <span>กดทดสอบเสียงทันที</span>
               </button>
             </div>
           </div>
 
-          <!-- ป้ายคำแนะนำแก้ไขเสียงมือถือไม่ดัง (สำคัญมาก) -->
-          <div class="bg-amber-950/40 p-2 px-3 rounded-xl border border-amber-500/40 text-[11px] text-amber-200 flex items-start gap-2">
+          <!-- กล่องคำแนะนำระดับเสียงสำหรับมือถือ iOS / Android -->
+          <div class="bg-[#1b110a] p-2.5 px-3 rounded-xl border border-amber-600/40 text-[11px] text-amber-200/90 flex items-start gap-2">
             <span class="text-base shrink-0">💡</span>
             <div class="leading-tight">
-              <span class="font-bold text-amber-300">มือถือเสียงไม่ดังหรือเงียบ?</span> 
-              <span>โปรดปิดโหมดปิดเสียง (สวิตช์ Silent/Mute ข้างเครื่อง iPhone) และกดปุ่มเพิ่มเสียงข้างตัวเครื่องให้สุดครับ</span>
+              <span class="font-bold text-amber-300">มือถือเสียงเงียบหรือไม่ดัง?</span> 
+              <span>เปิดสวิตช์เสียงข้างเครื่อง (ไม่เปิดโหมดเงียบ/Silent) และกดปุ่มเร่งเสียงมีเดียข้างมือถือให้สุดครับ</span>
             </div>
           </div>
 
         </div>
 
-        <!-- คอลัมน์ที่ 2 (ขวา): รายการ 5 กิจกรรมหลังอาหาร + ภาพจำลองสด + ตัวจับเวลารอบ -->
+        <!-- คอลัมน์ที่ 2 (ขวา): สีน้ำตาลเข้มอบอุ่น (Mocha Brown) - 5 กิจกรรม + แอนิเมชัน + ตัวจับเวลารอบ -->
         <div id="col-activity" class="space-y-2.5 hidden sm:block">
           
-          <div class="bg-[#032119] p-3.5 rounded-2xl border border-emerald-800/70 shadow-sm space-y-2.5">
+          <div class="bg-[#241610] p-3.5 rounded-2xl border border-amber-700/60 shadow-sm space-y-2.5">
             
             <!-- ส่วนเลือกกิจกรรม 5 รูปแบบ -->
             <div class="space-y-2">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-emerald-100 flex items-center gap-1.5">
+                <span class="text-xs font-bold text-amber-100 flex items-center gap-1.5">
                   <span>🏃</span> เลือก 1 ใน 5 กิจกรรมฟื้นฟูหลังมื้อ:
                 </span>
-                <span id="activity-rec-tag" class="text-[10px] text-amber-300 font-bold bg-amber-500/20 px-2.5 py-0.5 rounded-full border border-amber-500/40">
+                <span id="activity-rec-tag" class="text-[10px] text-amber-300 font-bold bg-[#140b07] px-2.5 py-0.5 rounded-full border border-amber-500/40">
                   ⭐ มื้อนี้แนะนำ
                 </span>
               </div>
               
-              <!-- เมนูกิจกรรม 5 แบบ กดเลือกได้ทันที -->
+              <!-- เมนูกิจกรรม 5 แบบ กดเลือกได้ทันที ในโทนน้ำตาลเข้มหรูหรา -->
               <div class="grid grid-cols-5 gap-1.5 text-center">
-                <button type="button" onclick="selectActivity('spu')" id="act-btn-spu" class="act-btn p-2 rounded-xl border-2 border-emerald-400 bg-emerald-600/30 text-white transition-all flex flex-col items-center gap-0.5 shadow-md">
+                <button type="button" onclick="selectActivity('spu')" id="act-btn-spu" class="act-btn p-2 rounded-xl border-2 border-amber-500 bg-[#3d2417] text-white transition-all flex flex-col items-center gap-0.5 shadow-md">
                   <span class="text-base">🦶</span>
                   <span class="text-[9.5px] font-bold leading-tight">กระดกส้น</span>
                 </button>
-                <button type="button" onclick="selectActivity('breath')" id="act-btn-breath" class="act-btn p-2 rounded-xl border-2 border-emerald-900 bg-[#021812] text-slate-300 hover:bg-emerald-950 transition-all flex flex-col items-center gap-0.5">
+                <button type="button" onclick="selectActivity('breath')" id="act-btn-breath" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
                   <span class="text-base">🫁</span>
                   <span class="text-[9.5px] font-medium leading-tight">กะบังลม</span>
                 </button>
-                <button type="button" onclick="selectActivity('stretch')" id="act-btn-stretch" class="act-btn p-2 rounded-xl border-2 border-emerald-900 bg-[#021812] text-slate-300 hover:bg-emerald-950 transition-all flex flex-col items-center gap-0.5">
+                <button type="button" onclick="selectActivity('stretch')" id="act-btn-stretch" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
                   <span class="text-base">🧘</span>
                   <span class="text-[9.5px] font-medium leading-tight">ยืดอกเปิด</span>
                 </button>
-                <button type="button" onclick="selectActivity('walk')" id="act-btn-walk" class="act-btn p-2 rounded-xl border-2 border-emerald-900 bg-[#021812] text-slate-300 hover:bg-emerald-950 transition-all flex flex-col items-center gap-0.5">
+                <button type="button" onclick="selectActivity('walk')" id="act-btn-walk" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
                   <span class="text-base">🚶</span>
                   <span class="text-[9.5px] font-medium leading-tight">เดินช้า</span>
                 </button>
-                <button type="button" onclick="selectActivity('ankle')" id="act-btn-ankle" class="act-btn p-2 rounded-xl border-2 border-emerald-900 bg-[#021812] text-slate-300 hover:bg-emerald-950 transition-all flex flex-col items-center gap-0.5">
+                <button type="button" onclick="selectActivity('ankle')" id="act-btn-ankle" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
                   <span class="text-base">🔄</span>
                   <span class="text-[9.5px] font-medium leading-tight">หมุนข้อเท้า</span>
                 </button>
@@ -359,36 +359,36 @@
             </div>
 
             <!-- หัวข้อกิจกรรมที่เลือกและระยะเวลารอบ -->
-            <div class="flex items-center justify-between border-t border-emerald-800/60 pt-2">
+            <div class="flex items-center justify-between border-t border-amber-800/60 pt-2">
               <div>
                 <h2 id="current-act-title" class="text-xs sm:text-sm font-bold text-white">
                   1. กระดกส้นเท้าใต้โต๊ะ (Soleus Push-up)
                 </h2>
-                <div id="current-act-sub" class="text-[10.5px] text-emerald-300/80">
+                <div id="current-act-sub" class="text-[10.5px] text-amber-200/80">
                   ดึงกลูโคสเข้ากล้ามเนื้อน่องโดยตรง หน้าท้องผ่อนคลาย ไม่กดกระเพาะ
                 </div>
               </div>
-              <span id="activity-time-badge" class="font-bold text-amber-300 bg-amber-500/20 px-2.5 py-0.5 rounded-lg border border-amber-500/40 text-xs whitespace-nowrap">
+              <span id="activity-time-badge" class="font-bold text-amber-300 bg-[#120a06] px-2.5 py-0.5 rounded-lg border border-amber-500/40 text-xs whitespace-nowrap">
                 10 นาที
               </span>
             </div>
 
-            <!-- พื้นที่แสดงแอนิเมชันจำลองสด 5 รูปแบบ ในธีมเขียวเข้มสบายตา -->
-            <div id="activity-visual-area" class="w-full bg-[#021812] border border-emerald-800/80 rounded-2xl p-2 flex flex-col items-center justify-center relative overflow-hidden min-h-[115px]">
+            <!-- พื้นที่แสดงแอนิเมชันจำลองสด 5 รูปแบบ ในกล่องสีน้ำตาลเข้มลึก -->
+            <div id="activity-visual-area" class="w-full bg-[#140b07] border border-amber-800/80 rounded-2xl p-2 flex flex-col items-center justify-center relative overflow-hidden min-h-[115px]">
               
               <!-- 1. ภาพกระดกส้นเท้า Soleus Push-up -->
               <div id="vis-spu" class="w-full flex flex-col items-center justify-center space-y-1">
                 <div class="relative w-48 h-20 flex items-center justify-center">
-                  <div class="absolute w-20 h-20 rounded-full bg-amber-400/10 soft-pulse pointer-events-none"></div>
+                  <div class="absolute w-20 h-20 rounded-full bg-amber-500/15 soft-pulse pointer-events-none"></div>
                   <svg viewBox="0 0 200 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="20" y1="105" x2="180" y2="105" stroke="#064e3b" stroke-width="3" stroke-linecap="round"/>
-                    <line x1="45" y1="26" x2="115" y2="26" stroke="#94a3b8" stroke-width="11" stroke-linecap="round"/>
-                    <circle cx="115" cy="26" r="7" fill="#cbd5e1"/>
-                    <line x1="115" y1="26" x2="115" y2="82" stroke="#94a3b8" stroke-width="9" stroke-linecap="round"/>
+                    <line x1="20" y1="105" x2="180" y2="105" stroke="#523120" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="45" y1="26" x2="115" y2="26" stroke="#a8a29e" stroke-width="11" stroke-linecap="round"/>
+                    <circle cx="115" cy="26" r="7" fill="#d6d3d1"/>
+                    <line x1="115" y1="26" x2="115" y2="82" stroke="#a8a29e" stroke-width="9" stroke-linecap="round"/>
                     <path d="M 115,32 Q 138,55 116,76" fill="none" stroke="#f59e0b" stroke-width="8" stroke-linecap="round" class="calf-glow-animated"/>
                     <g class="soleus-foot-animated">
-                      <circle cx="115" cy="82" r="5" fill="#64748b"/>
-                      <path d="M 115,82 L 130,94 L 56,103" fill="none" stroke="#f8fafc" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                      <circle cx="115" cy="82" r="5" fill="#78716c"/>
+                      <path d="M 115,82 L 130,94 L 56,103" fill="none" stroke="#fafaf9" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
                       <circle cx="130" cy="94" r="5" fill="#fbbf24"/>
                     </g>
                     <circle cx="56" cy="103" r="5" fill="#10b981"/>
@@ -396,7 +396,7 @@
                     <text x="162" y="52" font-size="8.5" font-weight="bold" fill="#fbbf24" text-anchor="middle">กล้ามเนื้อน่อง</text>
                   </svg>
                 </div>
-                <div class="text-[10.5px] text-emerald-200 font-medium text-center">
+                <div class="text-[10.5px] text-amber-200 font-medium text-center">
                   จังหวะ: <span class="text-amber-300 font-bold">ยกส้นเท้าขึ้นสูง ➔ วางลงเบาๆ ปลายเท้าติดพื้น (1.2 วิ)</span>
                 </div>
               </div>
@@ -436,79 +436,79 @@
               <div id="vis-walk" class="w-full hidden flex-col items-center justify-center space-y-1">
                 <div class="w-full py-1.5 flex items-center justify-center gap-5">
                   <div class="flex flex-col items-center gap-0.5 step-left-animated">
-                    <div class="w-9 h-10 rounded-xl bg-emerald-900/90 border-2 border-emerald-400 flex items-center justify-center text-sm shadow-sm">
+                    <div class="w-9 h-10 rounded-xl bg-[#2e1a12] border-2 border-amber-400 flex items-center justify-center text-sm shadow-sm">
                       🦶
                     </div>
-                    <span class="text-[9.5px] font-bold text-emerald-300">ก้าวซ้าย</span>
+                    <span class="text-[9.5px] font-bold text-amber-300">ก้าวซ้าย</span>
                   </div>
-                  <div class="text-emerald-400 text-xs font-bold font-mono bg-[#032119] px-2 py-0.5 rounded border border-emerald-800">
+                  <div class="text-amber-400 text-xs font-bold font-mono bg-[#140b07] px-2 py-0.5 rounded border border-amber-800">
                     <span>65 BPM</span>
                   </div>
                   <div class="flex flex-col items-center gap-0.5 step-right-animated">
-                    <div class="w-9 h-10 rounded-xl bg-emerald-900/90 border-2 border-emerald-400 flex items-center justify-center text-sm shadow-sm">
+                    <div class="w-9 h-10 rounded-xl bg-[#2e1a12] border-2 border-amber-400 flex items-center justify-center text-sm shadow-sm">
                       🦶
                     </div>
-                    <span class="text-[9.5px] font-bold text-emerald-300">ก้าวขวา</span>
+                    <span class="text-[9.5px] font-bold text-amber-300">ก้าวขวา</span>
                   </div>
                 </div>
-                <div class="text-[10.5px] text-emerald-200 font-medium text-center">
-                  จังหวะ: <span class="font-bold text-emerald-300">ก้าวสั้น ทอดน่องสบายๆ ไม่จ้ำอ้าว ช่วยทางเดินอาหารเคลื่อนตัว</span>
+                <div class="text-[10.5px] text-amber-200 font-medium text-center">
+                  จังหวะ: <span class="font-bold text-amber-300">ก้าวสั้น ทอดน่องสบายๆ ไม่จ้ำอ้าว ช่วยทางเดินอาหารเคลื่อนตัว</span>
                 </div>
               </div>
 
               <!-- 5. ภาพหมุนข้อเท้าและยืดน่อง -->
               <div id="vis-ankle" class="w-full hidden flex-col items-center justify-center space-y-1">
                 <div class="relative w-28 h-20 flex items-center justify-center">
-                  <div class="w-14 h-14 rounded-full border-2 border-dashed border-teal-400 ankle-rotate-animated flex items-center justify-center bg-teal-950/40">
+                  <div class="w-14 h-14 rounded-full border-2 border-dashed border-amber-400 ankle-rotate-animated flex items-center justify-center bg-amber-950/40">
                     <span class="text-xl">🔄</span>
                   </div>
                 </div>
-                <div class="text-[10.5px] text-teal-200 font-medium text-center">
-                  จังหวะ: <span class="font-bold text-teal-300">ยกปลายเท้าลอย หมุนวนเป็นวงกลม ช้าๆ ตามและทวนเข็มนาฬิกา</span>
+                <div class="text-[10.5px] text-amber-200 font-medium text-center">
+                  จังหวะ: <span class="font-bold text-amber-300">ยกปลายเท้าลอย หมุนวนเป็นวงกลม ช้าๆ ตามและทวนเข็มนาฬิกา</span>
                 </div>
               </div>
 
             </div>
 
             <!-- แถบจับเวลารอบกิจกรรม (Session Control) -->
-            <div class="bg-[#021812] p-2.5 rounded-xl border border-emerald-800/80 flex items-center justify-between gap-2">
+            <div class="bg-[#140b07] p-2.5 rounded-xl border border-amber-800/80 flex items-center justify-between gap-2">
               <div class="flex items-baseline gap-1.5">
-                <span class="text-[10.5px] text-emerald-400/80 font-medium">เวลารอบนี้:</span>
+                <span class="text-[10.5px] text-amber-400/80 font-medium">เวลารอบนี้:</span>
                 <span id="session-timer-display" class="text-lg font-mono font-extrabold text-amber-300">10:00</span>
               </div>
               <div class="flex gap-2">
-                <button type="button" id="session-btn" onclick="toggleSessionTimer()" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs active:scale-95 transition-all shadow-sm flex items-center gap-1">
+                <button type="button" id="session-btn" onclick="toggleSessionTimer()" class="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs active:scale-95 transition-all shadow-sm flex items-center gap-1">
                   <span>▶</span>
                   <span id="session-btn-label">เริ่มจับเวลาทำ</span>
                 </button>
-                <button type="button" onclick="resetSessionTimer()" class="px-2.5 py-1.5 rounded-xl bg-[#032119] hover:bg-emerald-950 text-emerald-200 font-bold text-xs active:scale-95 transition-all border border-emerald-800" title="รีเซ็ตเวลารอบ">
+                <button type="button" onclick="resetSessionTimer()" class="px-2.5 py-1.5 rounded-xl bg-[#241610] hover:bg-[#321e16] text-amber-200 font-bold text-xs active:scale-95 transition-all border border-amber-800" title="รีเซ็ตเวลารอบ">
                   ↺
                 </button>
               </div>
             </div>
 
             <!-- การจัดสรีระต้านกรดไหลย้อน (Postural Advice) -->
-            <div class="p-2.5 rounded-xl bg-[#021812] border border-amber-500/30 text-left text-xs space-y-0.5">
+            <div class="p-2.5 rounded-xl bg-[#140b07] border border-amber-500/40 text-left text-xs space-y-0.5">
               <div class="font-bold text-amber-300 flex items-center gap-1 text-[11px]">
                 <span>📐</span> คำแนะนำสรีระ:
               </div>
-              <p id="current-act-posture" class="text-slate-200 leading-snug font-medium text-[11px]">
+              <p id="current-act-posture" class="text-stone-200 leading-snug font-medium text-[11px]">
                 นั่งตัวตรง อกผาย วางปลายเท้าแตะพื้น ขยับเฉพาะข้อเท้า หน้าท้องผ่อนคลาย 100%
               </p>
             </div>
 
             <!-- สรุปข้อปฏิบัติและสัญญาณหยุด -->
             <div class="grid grid-cols-2 gap-2 text-[10px] text-left">
-              <div class="bg-[#021812] p-2 rounded-xl border border-emerald-800/80">
+              <div class="bg-[#140b07] p-2 rounded-xl border border-emerald-800/80">
                 <div class="font-bold text-emerald-300 mb-0.5 flex items-center gap-1 text-[10px]">
                   <span>✓</span> ข้อปฏิบัติ:
                 </div>
-                <ul id="activity-guide-list" class="text-slate-300 space-y-0.5 leading-tight">
+                <ul id="activity-guide-list" class="text-stone-300 space-y-0.5 leading-tight">
                   <li>• ปลายเท้าแตะพื้นตลอดเวลา</li>
                   <li>• หน้าท้องผ่อนคลาย ไม่เกร็ง</li>
                 </ul>
               </div>
-              <div class="bg-[#021812] p-2 rounded-xl border border-rose-800/60">
+              <div class="bg-[#140b07] p-2 rounded-xl border border-rose-800/60">
                 <div class="font-bold text-rose-300 mb-0.5 flex items-center gap-1 text-[10px]">
                   <span>🛑</span> ควรหยุดเมื่อ:
                 </div>
@@ -531,33 +531,33 @@
     <div id="tab-gerd-view" class="space-y-3.5 hidden">
       
       <!-- ส่วนหัวคัมภีร์พร้อมปุ่มฟังเสียงสรุป -->
-      <div class="bg-[#032119] p-3.5 rounded-2xl border border-emerald-700/70 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+      <div class="bg-[#241610] p-3.5 rounded-2xl border border-amber-700/70 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
         <div>
-          <span class="text-[11px] font-bold text-emerald-300 bg-emerald-900/80 px-2.5 py-0.5 rounded-md border border-emerald-500/50">
+          <span class="text-[11px] font-bold text-amber-300 bg-[#140b07] px-2.5 py-0.5 rounded-md border border-amber-500/50">
             คู่มือสุขภาพทางเดินอาหาร
           </span>
           <h2 class="text-sm sm:text-base font-extrabold text-white mt-1">
             คัมภีร์อาหาร เครื่องดื่ม และวิธีฟื้นฟูกรดไหลย้อน (ฉบับน้าราม)
           </h2>
-          <p class="text-[11px] text-emerald-300/80">
+          <p class="text-[11px] text-amber-200/80">
             รวมรายการสิ่งที่ควรทาน หลีกเลี่ยง และ 7 กฎเหล็กพฤติกรรมตัดวงจรกรดไหลย้อนถาวร
           </p>
         </div>
-        <button type="button" onclick="speakGerdGuideSummary()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-slate-950 text-xs font-bold active:scale-95 transition-all shadow-md flex items-center gap-1.5 self-start sm:self-center whitespace-nowrap">
+        <button type="button" onclick="speakGerdGuideSummary()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black active:scale-95 transition-all shadow-md flex items-center gap-1.5 self-start sm:self-center whitespace-nowrap">
           <span>🗣️</span>
           <span>ฟังเสียงสรุปคัมภีร์กรดไหลย้อน</span>
         </button>
       </div>
 
       <!-- สวิตช์หมวดหมู่คัมภีร์: 1. อาหาร | 2. เครื่องดื่ม | 3. วิธีดูแลตัวเอง -->
-      <div class="flex bg-[#021812] p-1.5 rounded-xl border border-emerald-800/80 text-xs font-bold">
-        <button type="button" id="sub-gerd-food" onclick="switchGerdSection('food')" class="flex-1 py-2 rounded-lg bg-emerald-700 text-white shadow-xs transition-all flex items-center justify-center gap-1">
+      <div class="flex bg-[#140b07] p-1.5 rounded-xl border border-[#382115] text-xs font-bold">
+        <button type="button" id="sub-gerd-food" onclick="switchGerdSection('food')" class="flex-1 py-2 rounded-lg bg-amber-600 text-slate-950 font-black shadow-xs transition-all flex items-center justify-center gap-1">
           <span>🍚</span> อาหารควรทาน & เลี่ยง
         </button>
-        <button type="button" id="sub-gerd-drink" onclick="switchGerdSection('drink')" class="flex-1 py-2 rounded-lg text-emerald-300/80 hover:text-white transition-all flex items-center justify-center gap-1">
+        <button type="button" id="sub-gerd-drink" onclick="switchGerdSection('drink')" class="flex-1 py-2 rounded-lg text-amber-300/80 hover:text-white transition-all flex items-center justify-center gap-1">
           <span>🍵</span> เครื่องดื่มควรดื่ม & เลี่ยง
         </button>
-        <button type="button" id="sub-gerd-care" onclick="switchGerdSection('care')" class="flex-1 py-2 rounded-lg text-emerald-300/80 hover:text-white transition-all flex items-center justify-center gap-1">
+        <button type="button" id="sub-gerd-care" onclick="switchGerdSection('care')" class="flex-1 py-2 rounded-lg text-amber-300/80 hover:text-white transition-all flex items-center justify-center gap-1">
           <span>🛡️</span> 7 กฎเหล็กดูแลตัวเอง
         </button>
       </div>
@@ -565,91 +565,91 @@
       <!-- หมวดที่ 1: อาหาร (Food Guide) -->
       <div id="gerd-sec-food" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         
-        <!-- ควรทาน (Good Foods) -->
-        <div class="bg-[#032119] p-3.5 rounded-2xl border-2 border-emerald-600/70 shadow-sm space-y-2.5">
+        <!-- ควรทาน (Good Foods) โทนเขียวธรรมชาติ -->
+        <div class="bg-[#0c261e] p-3.5 rounded-2xl border-2 border-emerald-600/70 shadow-sm space-y-2.5">
           <div class="flex items-center gap-2 pb-1.5 border-b border-emerald-800 text-emerald-300 font-bold text-xs sm:text-sm">
             <span class="w-5 h-5 rounded-full bg-emerald-500/30 flex items-center justify-center text-xs text-emerald-300 border border-emerald-400">✓</span>
             <span>อาหารที่ควรทาน (กระเพาะสบาย กรดต่ำ)</span>
           </div>
-          <ul class="space-y-2 text-xs text-slate-200">
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-emerald-800/60">
+          <ul class="space-y-2 text-xs text-stone-200">
+            <li class="flex items-start gap-2 bg-[#051711] p-2 rounded-xl border border-emerald-800/60">
               <span class="text-base">🍌</span>
               <div>
                 <span class="font-bold text-emerald-300">กล้วยน้ำว้าห่าม / แอปเปิลเขียว:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">มีสารแทนนินและเพกติน ช่วยเคลือบกระเพาะและลดความเป็นกรด</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">มีสารแทนนินและเพกติน ช่วยเคลือบกระเพาะและลดความเป็นกรด</p>
               </div>
             </li>
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-emerald-800/60">
+            <li class="flex items-start gap-2 bg-[#051711] p-2 rounded-xl border border-emerald-800/60">
               <span class="text-base">🥣</span>
               <div>
                 <span class="font-bold text-emerald-300">ข้าวโอ๊ต / ข้าวกล้อง / มันเทศต้ม:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">คาร์โบไฮเดรตเชิงซ้อน ใยอาหารละลายน้ำ ช่วยดูดซับน้ำกรดส่วนเกิน</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">คาร์โบไฮเดรตเชิงซ้อน ใยอาหารละลายน้ำ ช่วยดูดซับน้ำกรดส่วนเกิน</p>
               </div>
             </li>
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-emerald-800/60">
+            <li class="flex items-start gap-2 bg-[#051711] p-2 rounded-xl border border-emerald-800/60">
               <span class="text-base">🥦</span>
               <div>
                 <span class="font-bold text-emerald-300">ผักใบเขียว / ฟักทอง / แตงกวา:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">ผักด่างธรรมชาติ ย่อยง่ายมาก ไม่กระตุ้นการหลั่งกรดเกลือ</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">ผักด่างธรรมชาติ ย่อยง่ายมาก ไม่กระตุ้นการหลั่งกรดเกลือ</p>
               </div>
             </li>
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-emerald-800/60">
+            <li class="flex items-start gap-2 bg-[#051711] p-2 rounded-xl border border-emerald-800/60">
               <span class="text-base">🐟</span>
               <div>
                 <span class="font-bold text-emerald-300">เนื้อปลา / อกไก่ลวก (ไขมันต่ำ):</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">โปรตีนย่อยง่าย ไม่ค้างในกระเพาะนานเหมือนเนื้อแดงติดมัน</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">โปรตีนย่อยง่าย ไม่ค้างในกระเพาะนานเหมือนเนื้อแดงติดมัน</p>
               </div>
             </li>
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-emerald-800/60">
+            <li class="flex items-start gap-2 bg-[#051711] p-2 rounded-xl border border-emerald-800/60">
               <span class="text-base">🫚</span>
               <div>
                 <span class="font-bold text-emerald-300">ขิงสด / ขิงอ่อน:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">ขับลมตามธรรมชาติ ต้านการอักเสบในหลอดอาหารได้ดีเยี่ยม</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">ขับลมตามธรรมชาติ ต้านการอักเสบในหลอดอาหารได้ดีเยี่ยม</p>
               </div>
             </li>
           </ul>
         </div>
 
-        <!-- ควรหลีกเลี่ยง (Foods to Avoid) -->
-        <div class="bg-[#032119] p-3.5 rounded-2xl border-2 border-rose-600/70 shadow-sm space-y-2.5">
+        <!-- ควรหลีกเลี่ยง (Foods to Avoid) โทนแดงอิฐ-น้ำตาล -->
+        <div class="bg-[#241610] p-3.5 rounded-2xl border-2 border-rose-700/70 shadow-sm space-y-2.5">
           <div class="flex items-center gap-2 pb-1.5 border-b border-rose-900/80 text-rose-300 font-bold text-xs sm:text-sm">
             <span class="w-5 h-5 rounded-full bg-rose-500/30 flex items-center justify-center text-xs text-rose-300 border border-rose-400">✕</span>
             <span>อาหารที่ควรหลีกเลี่ยง (ตัวกระตุ้นกรดพุ่ง)</span>
           </div>
-          <ul class="space-y-2 text-xs text-slate-200">
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-rose-900/60">
+          <ul class="space-y-2 text-xs text-stone-200">
+            <li class="flex items-start gap-2 bg-[#140b07] p-2 rounded-xl border border-rose-900/60">
               <span class="text-base">🍟</span>
               <div>
                 <span class="font-bold text-rose-300">ของทอด / ของมัน / กะทิข้น:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">ไขมันสูงทำให้กระเพาะบีบตัวช้า อาหารคั่งค้าง เกิดแก๊สดันหูรูด</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">ไขมันสูงทำให้กระเพาะบีบตัวช้า อาหารคั่งค้าง เกิดแก๊สดันหูรูด</p>
               </div>
             </li>
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-rose-900/60">
+            <li class="flex items-start gap-2 bg-[#140b07] p-2 rounded-xl border border-rose-900/60">
               <span class="text-base">🌶️</span>
               <div>
                 <span class="font-bold text-rose-300">อาหารรสเผ็ดจัด / ส้มตำรสจัด:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">แคปไซซินในพริกระคายเคืองเยื่อบุหลอดอาหารโดยตรง</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">แคปไซซินในพริกระคายเคืองเยื่อบุหลอดอาหารโดยตรง</p>
               </div>
             </li>
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-rose-900/60">
+            <li class="flex items-start gap-2 bg-[#140b07] p-2 rounded-xl border border-rose-900/60">
               <span class="text-base">🍅</span>
               <div>
                 <span class="font-bold text-rose-300">มะเขือเทศ / ซอสมะเขือเทศ:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">มีกรดมาลิกและกรดซิตริกสูง กระตุ้นการแสบร้อนกลางอกทันที</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">มีกรดมาลิกและกรดซิตริกสูง กระตุ้นการแสบร้อนกลางอกทันที</p>
               </div>
             </li>
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-rose-900/60">
+            <li class="flex items-start gap-2 bg-[#140b07] p-2 rounded-xl border border-rose-900/60">
               <span class="text-base">🍫</span>
               <div>
                 <span class="font-bold text-rose-300">ช็อกโกแลต / โกโก้เข้มข้น:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">มีสารเมธิลแซนทีน ทำให้หูรูดหลอดอาหารคลายตัวและเปิดออก</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">มีสารเมธิลแซนทีน ทำให้หูรูดหลอดอาหารคลายตัวและเปิดออก</p>
               </div>
             </li>
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-rose-900/60">
+            <li class="flex items-start gap-2 bg-[#140b07] p-2 rounded-xl border border-rose-900/60">
               <span class="text-base">🧅</span>
               <div>
                 <span class="font-bold text-rose-300">กระเทียมดิบ / หอมหัวใหญ่ดิบ:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">สร้างแก๊สและกรดในทางเดินอาหาร กัดเยื่อบุกระเพาะ</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">สร้างแก๊สและกรดในทางเดินอาหาร กัดเยื่อบุกระเพาะ</p>
               </div>
             </li>
           </ul>
@@ -661,90 +661,90 @@
       <div id="gerd-sec-drink" class="grid grid-cols-1 sm:grid-cols-2 gap-3 hidden">
         
         <!-- ควรดื่ม (Safe Drinks) -->
-        <div class="bg-[#032119] p-3.5 rounded-2xl border-2 border-emerald-600/70 shadow-sm space-y-2.5">
+        <div class="bg-[#0c261e] p-3.5 rounded-2xl border-2 border-emerald-600/70 shadow-sm space-y-2.5">
           <div class="flex items-center gap-2 pb-1.5 border-b border-emerald-800 text-emerald-300 font-bold text-xs sm:text-sm">
             <span class="w-5 h-5 rounded-full bg-emerald-500/30 flex items-center justify-center text-xs text-emerald-300 border border-emerald-400">✓</span>
             <span>เครื่องดื่มที่ควรดื่ม (สมานหลอดอาหาร)</span>
           </div>
-          <ul class="space-y-2 text-xs text-slate-200">
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-emerald-800/60">
+          <ul class="space-y-2 text-xs text-stone-200">
+            <li class="flex items-start gap-2 bg-[#051711] p-2 rounded-xl border border-emerald-800/60">
               <span class="text-base">💧</span>
               <div>
                 <span class="font-bold text-emerald-300">น้ำเปล่าอุณหภูมิห้อง (จิบทีละอึก):</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">ช่วยชะล้างคราบกรดที่คอหอยลงสู่กระเพาะ ไม่ดื่มน้ำเย็นจัด</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">ช่วยชะล้างคราบกรดที่คอหอยลงสู่กระเพาะ ไม่ดื่มน้ำเย็นจัด</p>
               </div>
             </li>
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-emerald-800/60">
+            <li class="flex items-start gap-2 bg-[#051711] p-2 rounded-xl border border-emerald-800/60">
               <span class="text-base">🍵</span>
               <div>
                 <span class="font-bold text-emerald-300">น้ำขิงอุ่น (หวานน้อยหรือไม่ใส่น้ำตาล):</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">ขับลม ไล่แก๊ส ลดอาการแน่นอึดอัดท้องหลังอาหาร</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">ขับลม ไล่แก๊ส ลดอาการแน่นอึดอัดท้องหลังอาหาร</p>
               </div>
             </li>
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-emerald-800/60">
+            <li class="flex items-start gap-2 bg-[#051711] p-2 rounded-xl border border-emerald-800/60">
               <span class="text-base">🌼</span>
               <div>
                 <span class="font-bold text-emerald-300">ชาคาโมมายล์ / ชาเก๊กฮวยอุ่น:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">ไร้คาเฟอีน ช่วยคลายความเครียดและลดการระคายเคืองกระเพาะ</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">ไร้คาเฟอีน ช่วยคลายความเครียดและลดการระคายเคืองกระเพาะ</p>
               </div>
             </li>
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-emerald-800/60">
+            <li class="flex items-start gap-2 bg-[#051711] p-2 rounded-xl border border-emerald-800/60">
               <span class="text-base">🥛</span>
               <div>
                 <span class="font-bold text-emerald-300">นมอัลมอนด์ / นมข้าวโอ๊ต:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">ความเป็นด่างอ่อนๆ ช่วยเคลือบทางเดินอาหาร ปลอดภัยกว่านมวัว</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">ความเป็นด่างอ่อนๆ ช่วยเคลือบทางเดินอาหาร ปลอดภัยกว่านมวัว</p>
               </div>
             </li>
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-emerald-800/60">
+            <li class="flex items-start gap-2 bg-[#051711] p-2 rounded-xl border border-emerald-800/60">
               <span class="text-base">🥥</span>
               <div>
                 <span class="font-bold text-emerald-300">น้ำมะพร้าวสด (ไม่หวานจัด):</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">มีเกลือแร่ธรรมชาติและช่วยปรับสมดุลกรด-ด่างในกระเพาะ</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">มีเกลือแร่ธรรมชาติและช่วยปรับสมดุลกรด-ด่างในกระเพาะ</p>
               </div>
             </li>
           </ul>
         </div>
 
         <!-- ควรหลีกเลี่ยง (Drinks to Avoid) -->
-        <div class="bg-[#032119] p-3.5 rounded-2xl border-2 border-rose-600/70 shadow-sm space-y-2.5">
+        <div class="bg-[#241610] p-3.5 rounded-2xl border-2 border-rose-700/70 shadow-sm space-y-2.5">
           <div class="flex items-center gap-2 pb-1.5 border-b border-rose-900/80 text-rose-300 font-bold text-xs sm:text-sm">
             <span class="w-5 h-5 rounded-full bg-rose-500/30 flex items-center justify-center text-xs text-rose-300 border border-rose-400">✕</span>
             <span>เครื่องดื่มที่ควรหลีกเลี่ยงเด็ดขาด</span>
           </div>
-          <ul class="space-y-2 text-xs text-slate-200">
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-rose-900/60">
+          <ul class="space-y-2 text-xs text-stone-200">
+            <li class="flex items-start gap-2 bg-[#140b07] p-2 rounded-xl border border-rose-900/60">
               <span class="text-base">☕</span>
               <div>
                 <span class="font-bold text-rose-300">กาแฟสด / กาแฟดำ / ชาเข้มข้น:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">คาเฟอีนทำให้หูรูดกระเพาะเปิดออกทันที และกระตุ้นการหลั่งกรด</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">คาเฟอีนทำให้หูรูดกระเพาะเปิดออกทันที และกระตุ้นการหลั่งกรด</p>
               </div>
             </li>
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-rose-900/60">
+            <li class="flex items-start gap-2 bg-[#140b07] p-2 rounded-xl border border-rose-900/60">
               <span class="text-base">🥤</span>
               <div>
                 <span class="font-bold text-rose-300">น้ำอัดลม / โซดา / สปาร์คกลิ้ง:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">ฟองแก๊สคาร์บอนิกทำให้กระเพาะขยายตัว ดันน้ำย่อยพุ่งขึ้นคอ</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">ฟองแก๊สคาร์บอนิกทำให้กระเพาะขยายตัว ดันน้ำย่อยพุ่งขึ้นคอ</p>
               </div>
             </li>
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-rose-900/60">
+            <li class="flex items-start gap-2 bg-[#140b07] p-2 rounded-xl border border-rose-900/60">
               <span class="text-base">🍊</span>
               <div>
                 <span class="font-bold text-rose-300">น้ำส้ม / น้ำมะนาว / น้ำเกรปฟรุต:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">กรดซิตริกเข้มข้นซ้ำเติมแผลในหลอดอาหารให้แสบร้อนยิ่งขึ้น</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">กรดซิตริกเข้มข้นซ้ำเติมแผลในหลอดอาหารให้แสบร้อนยิ่งขึ้น</p>
               </div>
             </li>
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-rose-900/60">
+            <li class="flex items-start gap-2 bg-[#140b07] p-2 rounded-xl border border-rose-900/60">
               <span class="text-base">🍺</span>
               <div>
                 <span class="font-bold text-rose-300">แอลกอฮอล์ / เบียร์ / ไวน์:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">คลายกล้ามเนื้อหูรูดหลอดอาหารโดยตรง และทำลายเมือกเคลือบกระเพาะ</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">คลายกล้ามเนื้อหูรูดหลอดอาหารโดยตรง และทำลายเมือกเคลือบกระเพาะ</p>
               </div>
             </li>
-            <li class="flex items-start gap-2 bg-[#021812] p-2 rounded-xl border border-rose-900/60">
+            <li class="flex items-start gap-2 bg-[#140b07] p-2 rounded-xl border border-rose-900/60">
               <span class="text-base">🌿</span>
               <div>
                 <span class="font-bold text-rose-300">ชาเปปเปอร์มินต์ / สะระแหน่:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">เมนทอลมีฤทธิ์คลายหูรูด แม้จะรู้สึกเย็นคอแต่ทำให้กรดย้อนง่ายขึ้น</p>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">เมนทอลมีฤทธิ์คลายหูรูด แม้จะรู้สึกเย็นคอแต่ทำให้กรดย้อนง่ายขึ้น</p>
               </div>
             </li>
           </ul>
@@ -754,70 +754,70 @@
 
       <!-- หมวดที่ 3: 7 กฎเหล็กวิธีดูแลตัวเอง (Self-Care Rules) -->
       <div id="gerd-sec-care" class="space-y-2 hidden">
-        <div class="bg-[#032119] p-3.5 rounded-2xl border border-emerald-800/70 shadow-sm space-y-2.5">
-          <div class="flex items-center justify-between border-b border-emerald-800/70 pb-2">
+        <div class="bg-[#241610] p-3.5 rounded-2xl border border-amber-800/70 shadow-sm space-y-2.5">
+          <div class="flex items-center justify-between border-b border-amber-800/70 pb-2">
             <span class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
               <span>🛡️</span> 7 กฎเหล็กปรับพฤติกรรม ต้านกรดไหลย้อนถาวร
             </span>
-            <span class="text-[11px] text-emerald-300 font-bold bg-emerald-900/80 px-2.5 py-0.5 rounded-lg border border-emerald-600/50">
+            <span class="text-[11px] text-amber-300 font-bold bg-[#140b07] px-2.5 py-0.5 rounded-lg border border-amber-600/50">
               ทำตามได้ทันที
             </span>
           </div>
           
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
-            <div class="bg-[#021812] p-3 rounded-xl border border-emerald-800/70 flex items-start gap-2.5">
-              <span class="w-6 h-6 rounded-lg bg-emerald-600 text-slate-950 font-extrabold flex items-center justify-center text-xs shrink-0">1</span>
+            <div class="bg-[#140b07] p-3 rounded-xl border border-amber-800/70 flex items-start gap-2.5">
+              <span class="w-6 h-6 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shrink-0">1</span>
               <div>
-                <span class="font-bold text-emerald-300">กฎ 60 นาทีทอง:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">ห้ามนอนราบหรือฟุบโต๊ะทำงานเด็ดขาดในช่วง 1 ชั่วโมงแรกหลังอาหาร</p>
+                <span class="font-bold text-amber-300">กฎ 60 นาทีทอง:</span>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">ห้ามนอนราบหรือฟุบโต๊ะทำงานเด็ดขาดในช่วง 1 ชั่วโมงแรกหลังอาหาร</p>
               </div>
             </div>
 
-            <div class="bg-[#021812] p-3 rounded-xl border border-emerald-800/70 flex items-start gap-2.5">
-              <span class="w-6 h-6 rounded-lg bg-emerald-600 text-slate-950 font-extrabold flex items-center justify-center text-xs shrink-0">2</span>
+            <div class="bg-[#140b07] p-3 rounded-xl border border-amber-800/70 flex items-start gap-2.5">
+              <span class="w-6 h-6 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shrink-0">2</span>
               <div>
-                <span class="font-bold text-emerald-300">กฎ 3 ชั่วโมงก่อนนอน:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">ทานมื้อเย็นเสร็จแล้ว ต้องเว้นระยะห่างอย่างน้อย 3-4 ชั่วโมงก่อนเข้านอน</p>
+                <span class="font-bold text-amber-300">กฎ 3 ชั่วโมงก่อนนอน:</span>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">ทานมื้อเย็นเสร็จแล้ว ต้องเว้นระยะห่างอย่างน้อย 3-4 ชั่วโมงก่อนเข้านอน</p>
               </div>
             </div>
 
-            <div class="bg-[#021812] p-3 rounded-xl border border-emerald-800/70 flex items-start gap-2.5">
-              <span class="w-6 h-6 rounded-lg bg-emerald-600 text-slate-950 font-extrabold flex items-center justify-center text-xs shrink-0">3</span>
+            <div class="bg-[#140b07] p-3 rounded-xl border border-amber-800/70 flex items-start gap-2.5">
+              <span class="w-6 h-6 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shrink-0">3</span>
               <div>
-                <span class="font-bold text-emerald-300">นอนยกหัวสูง 6-8 นิ้ว:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">ยกระนาบลำตัวส่วนบนขึ้น ไม่ใช่แค่หนุนหมอนสูง เพราะจะทำให้คอพับและกดกระเพาะ</p>
+                <span class="font-bold text-amber-300">นอนยกหัวสูง 6-8 นิ้ว:</span>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">ยกระนาบลำตัวส่วนบนขึ้น ไม่ใช่แค่หนุนหมอนสูง เพราะจะทำให้คอพับและกดกระเพาะ</p>
               </div>
             </div>
 
-            <div class="bg-[#021812] p-3 rounded-xl border border-emerald-800/70 flex items-start gap-2.5">
-              <span class="w-6 h-6 rounded-lg bg-emerald-600 text-slate-950 font-extrabold flex items-center justify-center text-xs shrink-0">4</span>
+            <div class="bg-[#140b07] p-3 rounded-xl border border-amber-800/70 flex items-start gap-2.5">
+              <span class="w-6 h-6 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shrink-0">4</span>
               <div>
-                <span class="font-bold text-emerald-300">นอนตะแคงซ้าย (Left Side):</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">ท่านอนตะแคงซ้ายทำให้กระเพาะอยู่ต่ำกว่าหลอดอาหารตามกายวิภาค กรดจะไม่ไหลย้อน</p>
+                <span class="font-bold text-amber-300">นอนตะแคงซ้าย (Left Side):</span>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">ท่านอนตะแคงซ้ายทำให้กระเพาะอยู่ต่ำกว่าหลอดอาหารตามกายวิภาค กรดจะไม่ไหลย้อน</p>
               </div>
             </div>
 
-            <div class="bg-[#021812] p-3 rounded-xl border border-emerald-800/70 flex items-start gap-2.5">
-              <span class="w-6 h-6 rounded-lg bg-emerald-600 text-slate-950 font-extrabold flex items-center justify-center text-xs shrink-0">5</span>
+            <div class="bg-[#140b07] p-3 rounded-xl border border-amber-800/70 flex items-start gap-2.5">
+              <span class="w-6 h-6 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shrink-0">5</span>
               <div>
-                <span class="font-bold text-emerald-300">เคี้ยวละเอียด 25-30 ครั้ง:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">ช่วยให้อาหารคลุกเคล้าเอนไซม์น้ำลาย ลดภาระกระเพาะไม่ต้องหลั่งกรดมากเกินไป</p>
+                <span class="font-bold text-amber-300">เคี้ยวละเอียด 25-30 ครั้ง:</span>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">ช่วยให้อาหารคลุกเคล้าเอนไซม์น้ำลาย ลดภาระกระเพาะไม่ต้องหลั่งกรดมากเกินไป</p>
               </div>
             </div>
 
-            <div class="bg-[#021812] p-3 rounded-xl border border-emerald-800/70 flex items-start gap-2.5">
-              <span class="w-6 h-6 rounded-lg bg-emerald-600 text-slate-950 font-extrabold flex items-center justify-center text-xs shrink-0">6</span>
+            <div class="bg-[#140b07] p-3 rounded-xl border border-amber-800/70 flex items-start gap-2.5">
+              <span class="w-6 h-6 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shrink-0">6</span>
               <div>
-                <span class="font-bold text-emerald-300">ไม่ใส่เสื้อผ้าหรือเข็มขัดรัดแน่น:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">การรัดเอวแน่นจะเพิ่มแรงดันในช่องท้อง (IAP) ดันกรดทะลักขึ้นหูรูดทันที</p>
+                <span class="font-bold text-amber-300">ไม่ใส่เสื้อผ้าหรือเข็มขัดรัดแน่น:</span>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">การรัดเอวแน่นจะเพิ่มแรงดันในช่องท้อง (IAP) ดันกรดทะลักขึ้นหูรูดทันที</p>
               </div>
             </div>
 
-            <div class="bg-[#021812] p-3 rounded-xl border border-emerald-800/70 flex items-start gap-2.5 sm:col-span-2">
-              <span class="w-6 h-6 rounded-lg bg-emerald-600 text-slate-950 font-extrabold flex items-center justify-center text-xs shrink-0">7</span>
+            <div class="bg-[#140b07] p-3 rounded-xl border border-amber-800/70 flex items-start gap-2.5 sm:col-span-2">
+              <span class="w-6 h-6 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shrink-0">7</span>
               <div>
-                <span class="font-bold text-emerald-300">จิบน้ำระหว่างวัน แทนการดื่มทีละมากๆ:</span>
-                <p class="text-[11px] text-slate-300 leading-tight mt-0.5">การดื่มน้ำครั้งละ 1-2 แก้วหลังอาหารจะทำให้กระเพาะขยายตัวและเจือจางน้ำย่อย ให้เปลี่ยนเป็นจิบทีละ 1-2 อึกพอดีคำครับ</p>
+                <span class="font-bold text-amber-300">จิบน้ำระหว่างวัน แทนการดื่มทีละมากๆ:</span>
+                <p class="text-[11px] text-stone-300 leading-tight mt-0.5">การดื่มน้ำครั้งละ 1-2 แก้วหลังอาหารจะทำให้กระเพาะขยายตัวและเจือจางน้ำย่อย ให้เปลี่ยนเป็นจิบทีละ 1-2 อึกพอดีคำครับ</p>
               </div>
             </div>
           </div>
@@ -966,7 +966,7 @@
       }
     };
 
-    // ระบบปลดล็อกเสียงบนมือถือ (iOS / Android Audio Unlocker)
+    // ระบบปลดล็อกเสียงบนมือถือ (iOS / Android Mobile Audio Pipeline Unlocker)
     function unlockMobileAudio() {
       try {
         const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
@@ -977,25 +977,25 @@
           globalAudioCtx.resume();
         }
 
-        // ปลดล็อกเอนจิน SpeechSynthesis บน Safari iOS ทันทีในจังหวะสัมผัสตรง
-        if ('speechSynthesis' in window) {
-          if (!isAudioUnlocked) {
-            const silentUtter = new SpeechSynthesisUtterance(' ');
-            silentUtter.volume = 0.01;
-            window.speechSynthesis.speak(silentUtter);
-            isAudioUnlocked = true;
-          }
+        // ปลดล็อก Web Speech API ใน Safari iOS และ Chrome Android
+        if ('speechSynthesis' in window && !isAudioUnlocked) {
+          // ใช้ space สั้นๆ เพื่อเปิด Speech channel บนอุปกรณ์พกพา
+          const warmUtter = new SpeechSynthesisUtterance('');
+          warmUtter.volume = 0.05;
+          window.speechSynthesis.speak(warmUtter);
+          isAudioUnlocked = true;
         }
       } catch (err) {
         console.debug("Audio unlock status:", err);
       }
     }
 
-    // ผูกคำสั่งปลดล็อกเสียงกับทุกการสัมผัสหรือคลิกแรก
+    // ผูกคำสั่งปลดล็อกเสียงกับทุกการสัมผัสหรือคลิก
     window.addEventListener('touchstart', unlockMobileAudio, { passive: true });
+    window.addEventListener('touchend', unlockMobileAudio, { passive: true });
     window.addEventListener('click', unlockMobileAudio, { passive: true });
 
-    // สัญญาณเสียงกระดิ่งเตือนแบบกังวานชัดเจน ดังก้องบนลำโพงมือถือ
+    // สัญญาณเสียงกระดิ่งเตือนดังก้องกังวาน คมชัดบนลำโพงมือถือทุกรุ่น
     function playChimeAlert() {
       try {
         unlockMobileAudio();
@@ -1008,21 +1008,21 @@
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
 
-        osc.type = 'triangle'; // เสียงใส กังวาน ได้ยินชัดเจน
+        osc.type = 'triangle'; // เสียงใส กังวาน ได้ยินชัดมากบนมือถือ
         osc.frequency.setValueAtTime(523.25, now); // C5
-        osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.14); // G5
+        osc.frequency.exponentialRampToValueAtTime(880.00, now + 0.16); // A5
 
         gain.gain.setValueAtTime(0.01, now);
-        gain.gain.linearRampToValueAtTime(0.35, now + 0.05); // เพิ่มระดับความดังให้ชัดบนมือถือ
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
+        gain.gain.linearRampToValueAtTime(0.55, now + 0.04); // เพิ่มระดับความดังให้ได้ยินชัดเจน
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.48);
 
         osc.connect(gain);
         gain.connect(ctx.destination);
 
         osc.start(now);
-        osc.stop(now + 0.46);
+        osc.stop(now + 0.49);
       } catch (err) {
-        console.debug("Chime playback notice:", err);
+        console.debug("Chime alert notice:", err);
       }
     }
 
@@ -1044,31 +1044,32 @@
       });
       if (explicitMale) return explicitMale;
 
-      // ลำดับที่ 2: หากเป็นอุปกรณ์ที่ไม่มีเสียงผู้ชาย (เช่น iPhone ที่มีเสียงไทยมาตรฐาน) ให้ใช้เสียงไทยที่มีอยู่ เพื่อให้ "มีเสียงดังออกมา" ไม่เงียบ
+      // ลำดับที่ 2: หากไม่มีเสียงผู้ชาย ให้ใช้เสียงภาษาไทยที่มีอยู่ในเครื่อง เพื่อให้มีเสียงดังออกลำโพง 100%
       return thaiVoices[0];
     }
 
-    // ฟังก์ชันสังเคราะห์เสียงพูดภาษาไทย คมชัด สุภาพ และไม่โดน Safari ตัดทิ้ง
+    // ฟังก์ชันสั่งงานเสียงพูดภาษาไทย คมชัด ชัดถ้อยชัดคำ และการันตีเสียงออกลำโพงมือถือ
     function speakThai(message) {
       const sub = document.getElementById('voice-subtitle');
       if (sub) {
         sub.innerText = `"${message}"`;
       }
 
-      if (!voiceCoachEnabled || !('speechSynthesis' in window)) return;
+      if (!voiceCoachEnabled) return;
+
+      // ส่งเสียงระฆัง Chime นำร่องดังก้องบนลำโพงมือถือเสมอ
+      playChimeAlert();
+
+      if (!('speechSynthesis' in window)) return;
 
       try {
         unlockMobileAudio();
-        
-        // เล่นเสียงระฆังเตือน
-        playChimeAlert();
 
         // ตรวจสอบและยกเลิกเสียงเดิมที่ค้างอยู่
-        if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+        if (window.speechSynthesis.speaking) {
           window.speechSynthesis.cancel();
         }
 
-        // เริ่มพูดโดยตรงโดยไม่ใช้ setTimeout หน่วงเวลานาน เพื่อป้องกัน iOS Safari บล็อกการสั่งงาน
         const utter = new SpeechSynthesisUtterance(message);
         utter.lang = 'th-TH';
 
@@ -1078,25 +1079,29 @@
         }
 
         utter.pitch = 0.98; // โทนเสียงผู้ชาย อบอุ่น ฟังสบาย
-        utter.rate = 0.95;  // ความเร็วชัดถ้อยชัดคำ
-        utter.volume = 1.0; // เร่งความดังระดับสูงสุด 100%
+        utter.rate = 0.95;  // จังหวะชัดถ้อยชัดคำ
+        utter.volume = 1.0; // เร่งระดับความดังสูงสุด 100%
 
         // ป้องกัน Garbage Collection บนเบราว์เซอร์มือถือตัดเสียงพูดทิ้ง
         window.activeSpeechUtterance = utter;
 
         utter.onend = () => { window.activeSpeechUtterance = null; };
-        utter.onerror = () => { window.activeSpeechUtterance = null; };
+        utter.onerror = (e) => { 
+          console.debug("Speech playback note:", e);
+          window.activeSpeechUtterance = null; 
+        };
 
+        // สั่งเล่นเสียงพูด
         window.speechSynthesis.speak(utter);
       } catch (err) {
         console.error("Speech playback error:", err);
       }
     }
 
-    // ปุ่มทดสอบเสียงด่วนสำหรับมือถือ
+    // ปุ่มทดสอบเสียงด่วนบนมือถือ (ทำให้มั่นใจว่าลำโพงดังชัดเจน)
     function testMobileSound() {
       unlockMobileAudio();
-      speakThai("ทดสอบเสียงพูดครับ ระบบเสียงทำงานสมบูรณ์แล้วครับ ปรับระดับเสียงข้างตัวเครื่องให้ดังตามต้องการได้เลยครับ");
+      speakThai("ทดสอบเสียงพูดครับ ระบบเสียงทำงานสมบูรณ์แล้วครับ ปรับระดับเสียงข้างโทรศัพท์มือถือให้ดังตามต้องการได้เลยครับ");
     }
 
     function toggleVoiceCoach() {
@@ -1108,13 +1113,13 @@
       if (voiceCoachEnabled) {
         text.innerText = "โค้ชชาย: เปิด";
         icon.innerText = "🔊";
-        btn.className = "px-3 py-1.5 rounded-xl bg-emerald-900/80 hover:bg-emerald-800 border border-emerald-500/60 text-emerald-200 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1.5";
+        btn.className = "px-3 py-1.5 rounded-xl bg-[#2e1c12] hover:bg-[#3d2518] border border-amber-600/50 text-amber-200 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1.5";
         speakThai("เปิดเสียงโค้ชเรียบร้อยแล้วครับ พัฒนาระบบโดยน้าราม พร้อมดูแลสุขภาพไปด้วยกันครับ");
       } else {
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
         text.innerText = "โค้ช: ปิด";
         icon.innerText = "🔇";
-        btn.className = "px-3 py-1.5 rounded-xl bg-[#021812] border border-emerald-900 text-emerald-500 text-xs font-bold active:scale-95 transition-all flex items-center gap-1.5";
+        btn.className = "px-3 py-1.5 rounded-xl bg-[#140b07] border border-amber-900 text-stone-400 text-xs font-bold active:scale-95 transition-all flex items-center gap-1.5";
       }
     }
 
@@ -1128,13 +1133,13 @@
       const viewGerd = document.getElementById('tab-gerd-view');
 
       if (tab === 'pacer') {
-        btnPacer.className = "flex-1 py-2.5 rounded-xl bg-emerald-700 text-white shadow-md transition-all flex items-center justify-center gap-2 font-bold";
-        btnGerd.className = "flex-1 py-2.5 rounded-xl text-emerald-200/80 hover:text-white hover:bg-emerald-900/40 transition-all flex items-center justify-center gap-2 font-medium";
+        btnPacer.className = "flex-1 py-2.5 rounded-xl bg-[#0c382b] text-emerald-100 border border-emerald-600/50 shadow-md transition-all flex items-center justify-center gap-2 font-bold";
+        btnGerd.className = "flex-1 py-2.5 rounded-xl text-amber-200/80 hover:text-white hover:bg-[#2c1a12] transition-all flex items-center justify-center gap-2 font-medium";
         viewPacer.classList.remove('hidden');
         viewGerd.classList.add('hidden');
       } else {
-        btnGerd.className = "flex-1 py-2.5 rounded-xl bg-emerald-700 text-white shadow-md transition-all flex items-center justify-center gap-2 font-bold";
-        btnPacer.className = "flex-1 py-2.5 rounded-xl text-emerald-200/80 hover:text-white hover:bg-emerald-900/40 transition-all flex items-center justify-center gap-2 font-medium";
+        btnGerd.className = "flex-1 py-2.5 rounded-xl bg-amber-600 text-slate-950 font-black shadow-md transition-all flex items-center justify-center gap-2";
+        btnPacer.className = "flex-1 py-2.5 rounded-xl text-emerald-300/80 hover:text-white hover:bg-[#0c2a20] transition-all flex items-center justify-center gap-2 font-medium";
         viewGerd.classList.remove('hidden');
         viewPacer.classList.add('hidden');
         speakThai("เปิดคัมภีร์อาหารและวิธีดูแลกรดไหลย้อนแล้วครับ มีทั้งรายการอาหาร เครื่องดื่ม และ 7 กฎเหล็กดูแลตัวเองครับ");
@@ -1152,20 +1157,20 @@
       const secCare = document.getElementById('gerd-sec-care');
 
       [btnFood, btnDrink, btnCare].forEach(b => {
-        b.className = "flex-1 py-2 rounded-lg text-emerald-300/80 hover:text-white transition-all flex items-center justify-center gap-1 font-medium";
+        b.className = "flex-1 py-2 rounded-lg text-amber-300/80 hover:text-white transition-all flex items-center justify-center gap-1 font-medium";
       });
       [secFood, secDrink, secCare].forEach(s => s.classList.add('hidden'));
 
       if (sec === 'food') {
-        btnFood.className = "flex-1 py-2 rounded-lg bg-emerald-700 text-white shadow-xs transition-all flex items-center justify-center gap-1 font-bold";
+        btnFood.className = "flex-1 py-2 rounded-lg bg-amber-600 text-slate-950 font-black shadow-xs transition-all flex items-center justify-center gap-1";
         secFood.classList.remove('hidden');
         speakThai("หมวดอาหารครับ กล้วยน้ำว้า ข้าวโอ๊ต และเนื้อปลา ย่อยง่ายและปลอดภัยครับ หลีกเลี่ยงของทอดและของเผ็ดจัดนะครับ");
       } else if (sec === 'drink') {
-        btnDrink.className = "flex-1 py-2 rounded-lg bg-emerald-700 text-white shadow-xs transition-all flex items-center justify-center gap-1 font-bold";
+        btnDrink.className = "flex-1 py-2 rounded-lg bg-amber-600 text-slate-950 font-black shadow-xs transition-all flex items-center justify-center gap-1";
         secDrink.classList.remove('hidden');
         speakThai("หมวดเครื่องดื่มครับ แนะนำจิบน้ำเปล่าอุณหภูมิห้อง หรือน้ำขิงอุ่นครับ หลีกเลี่ยงกาแฟสดและน้ำอัดลมเด็ดขาดนะครับ");
       } else if (sec === 'care') {
-        btnCare.className = "flex-1 py-2 rounded-lg bg-emerald-700 text-white shadow-xs transition-all flex items-center justify-center gap-1 font-bold";
+        btnCare.className = "flex-1 py-2 rounded-lg bg-amber-600 text-slate-950 font-black shadow-xs transition-all flex items-center justify-center gap-1";
         secCare.classList.remove('hidden');
         speakThai("หมวด 7 กฎเหล็กครับ ข้อสำคัญที่สุดคือห้ามนอนราบใน 60 นาทีแรก และมื้อเย็นต้องห่างจากเวลานอนอย่างน้อย 3 ชั่วโมงครับ");
       }
@@ -1183,12 +1188,12 @@
       const colActivity = document.getElementById('col-activity');
 
       if (tab === 'timer') {
-        btnTimer.className = "flex-1 py-2 rounded-lg bg-emerald-700 text-white shadow-xs transition-all flex items-center justify-center gap-1 font-bold";
-        btnActivity.className = "flex-1 py-2 rounded-lg text-emerald-300/80 transition-all flex items-center justify-center gap-1 font-medium";
+        btnTimer.className = "flex-1 py-2 rounded-lg bg-[#0c382b] text-emerald-100 border border-emerald-600/50 shadow-xs transition-all flex items-center justify-center gap-1 font-bold";
+        btnActivity.className = "flex-1 py-2 rounded-lg text-amber-300/80 transition-all flex items-center justify-center gap-1 font-medium";
         colTimer.classList.remove('hidden');
         colActivity.classList.add('hidden');
       } else {
-        btnActivity.className = "flex-1 py-2 rounded-lg bg-emerald-700 text-white shadow-xs transition-all flex items-center justify-center gap-1 font-bold";
+        btnActivity.className = "flex-1 py-2 rounded-lg bg-amber-600 text-slate-950 font-black shadow-xs transition-all flex items-center justify-center gap-1";
         btnTimer.className = "flex-1 py-2 rounded-lg text-emerald-300/80 transition-all flex items-center justify-center gap-1 font-medium";
         colActivity.classList.remove('hidden');
         colTimer.classList.add('hidden');
@@ -1202,16 +1207,16 @@
       const config = activityConfigs[actId];
 
       document.querySelectorAll('.act-btn').forEach(btn => {
-        btn.classList.remove('border-emerald-400', 'bg-emerald-600/30', 'text-white', 'shadow-md');
-        btn.classList.add('border-emerald-900', 'bg-[#021812]', 'text-slate-300');
+        btn.classList.remove('border-amber-500', 'bg-[#3d2417]', 'text-white', 'shadow-md');
+        btn.classList.add('border-[#45281a]', 'bg-[#170e0a]', 'text-stone-300');
         const span = btn.querySelector('span:last-child');
         if (span) span.className = "text-[9.5px] font-medium leading-tight";
       });
 
       const activeBtn = document.getElementById('act-btn-' + actId);
       if (activeBtn) {
-        activeBtn.classList.remove('border-emerald-900', 'bg-[#021812]', 'text-slate-300');
-        activeBtn.classList.add('border-emerald-400', 'bg-emerald-600/30', 'text-white', 'shadow-md');
+        activeBtn.classList.remove('border-[#45281a]', 'bg-[#170e0a]', 'text-stone-300');
+        activeBtn.classList.add('border-amber-500', 'bg-[#3d2417]', 'text-white', 'shadow-md');
         const span = activeBtn.querySelector('span:last-child');
         if (span) span.className = "text-[9.5px] font-bold leading-tight";
       }
@@ -1239,10 +1244,10 @@
       const recTag = document.getElementById('activity-rec-tag');
       if (config.recommendedMeal === currentMeal) {
         recTag.innerText = "⭐ มื้อนี้แนะนำ";
-        recTag.className = "text-[10px] text-amber-300 font-bold bg-amber-500/20 px-2.5 py-0.5 rounded-full border border-amber-500/40";
+        recTag.className = "text-[10px] text-amber-300 font-bold bg-[#140b07] px-2.5 py-0.5 rounded-full border border-amber-500/40";
       } else {
         recTag.innerText = "✓ เลือกทำได้";
-        recTag.className = "text-[10px] text-emerald-300/80 font-medium bg-[#021812] px-2.5 py-0.5 rounded-full border border-emerald-800";
+        recTag.className = "text-[10px] text-stone-300/80 font-medium bg-[#140b07] px-2.5 py-0.5 rounded-full border border-stone-800";
       }
 
       resetSessionTimer();
@@ -1252,13 +1257,13 @@
       unlockMobileAudio();
       currentMeal = m;
       document.querySelectorAll('.m-btn').forEach(b => {
-        b.classList.remove('border-emerald-400', 'bg-emerald-600/30', 'text-emerald-200', 'font-bold');
-        b.classList.add('border-emerald-900', 'bg-[#021812]', 'text-slate-300', 'font-semibold');
+        b.classList.remove('border-amber-500', 'bg-[#3d2417]', 'text-amber-100', 'font-bold');
+        b.classList.add('border-[#42291c]', 'bg-[#1a0f0a]', 'text-stone-300', 'font-semibold');
       });
 
       const activeBtn = document.getElementById('m-' + m);
-      activeBtn.classList.remove('border-emerald-900', 'bg-[#021812]', 'text-slate-300', 'font-semibold');
-      activeBtn.classList.add('border-emerald-400', 'bg-emerald-600/30', 'text-emerald-200', 'font-bold');
+      activeBtn.classList.remove('border-[#42291c]', 'bg-[#1a0f0a]', 'text-stone-300', 'font-semibold');
+      activeBtn.classList.add('border-amber-500', 'bg-[#3d2417]', 'text-amber-100', 'font-bold');
 
       document.getElementById('meal-badge').innerText = mealTitles[m];
 
@@ -1313,8 +1318,8 @@
 
       if (!isSessionRunning) {
         isSessionRunning = true;
-        btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-500', 'text-slate-950');
-        btn.classList.add('bg-slate-700', 'hover:bg-slate-600', 'text-white');
+        btn.classList.remove('bg-amber-500', 'hover:bg-amber-400', 'text-slate-950');
+        btn.classList.add('bg-stone-700', 'hover:bg-stone-600', 'text-white');
         label.innerText = "พักเวลา";
 
         if (sessionRemainingSeconds === sessionTotalSeconds) {
@@ -1332,8 +1337,8 @@
       } else {
         isSessionRunning = false;
         clearInterval(sessionTimerInterval);
-        btn.classList.remove('bg-slate-700', 'hover:bg-slate-600', 'text-white');
-        btn.classList.add('bg-emerald-600', 'hover:bg-emerald-500', 'text-slate-950');
+        btn.classList.remove('bg-stone-700', 'hover:bg-stone-600', 'text-white');
+        btn.classList.add('bg-amber-500', 'hover:bg-amber-400', 'text-slate-950');
         label.innerText = "ทำต่อ";
       }
     }
@@ -1351,8 +1356,8 @@
       const btn = document.getElementById('session-btn');
       const label = document.getElementById('session-btn-label');
 
-      btn.classList.remove('bg-slate-700', 'hover:bg-slate-600');
-      btn.classList.add('bg-teal-600', 'text-white');
+      btn.classList.remove('bg-stone-700', 'hover:bg-stone-600');
+      btn.classList.add('bg-emerald-600', 'text-white');
       label.innerText = "✓ ครบเวลาแล้ว";
 
       const config = activityConfigs[currentActivity];
@@ -1369,7 +1374,7 @@
 
       const btn = document.getElementById('session-btn');
       const label = document.getElementById('session-btn-label');
-      btn.className = "px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs active:scale-95 transition-all shadow-sm flex items-center gap-1";
+      btn.className = "px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs active:scale-95 transition-all shadow-sm flex items-center gap-1";
       label.innerText = "เริ่มจับเวลาทำ";
     }
 
@@ -1467,6 +1472,7 @@
       }
     }
 
+    // ระบบกำเนิดเสียง 40Hz Gamma Wave ผ่าน Web Audio API
     function toggleAlertTone() {
       unlockMobileAudio();
       const btn = document.getElementById('audio-btn');
@@ -1483,7 +1489,7 @@
 
           masterGain = ctx.createGain();
           masterGain.gain.setValueAtTime(0.001, ctx.currentTime);
-          masterGain.gain.exponentialRampToValueAtTime(0.24, ctx.currentTime + 0.2); // เสียงดัง คมชัด
+          masterGain.gain.exponentialRampToValueAtTime(0.30, ctx.currentTime + 0.2); // เสียงดัง คมชัด มีพลัง
           masterGain.connect(ctx.destination);
 
           osc1 = ctx.createOscillator();
@@ -1497,7 +1503,7 @@
           lfo = ctx.createOscillator();
           const lfoGain = ctx.createGain();
           lfo.frequency.setValueAtTime(40, ctx.currentTime);
-          lfoGain.gain.setValueAtTime(0.06, ctx.currentTime);
+          lfoGain.gain.setValueAtTime(0.08, ctx.currentTime);
           lfo.connect(lfoGain.gain);
 
           if (ctx.createStereoPanner) {
@@ -1540,7 +1546,7 @@
 
         icon.innerText = "▶";
         label.innerText = "เปิดเสียง 40Hz";
-        btn.className = "px-3.5 py-2 rounded-xl bg-teal-600/30 hover:bg-teal-600/50 border border-teal-400/50 text-teal-200 text-xs font-bold active:scale-95 transition-all flex items-center gap-1.5 whitespace-nowrap shadow-sm";
+        btn.className = "px-3.5 py-2 rounded-xl bg-amber-600/30 hover:bg-amber-600/50 border border-amber-500/50 text-amber-200 text-xs font-bold active:scale-95 transition-all flex items-center gap-1.5 whitespace-nowrap shadow-sm";
       }
     }
 
