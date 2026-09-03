@@ -303,26 +303,26 @@
               </span>
             </div>
             
-            <!-- กล่องทดสอบเสียงด่วนบนมือถือ (ใช้ชิปเสียงฮาร์ดแวร์เดียวกับ 40Hz การันตีดัง 100%) -->
+            <!-- กล่องทดสอบเสียงด่วนบนมือถือ ด้วยเสียงพูด AI ชายแท้ -->
             <div class="pt-2 border-t border-amber-800/60 flex items-center justify-between gap-2">
               <div class="text-[11px] text-amber-300/90 font-medium">
-                ทดสอบเสียงบนมือถือ:
+                เสียงพูดโค้ช AI (ชาย):
               </div>
               <button type="button" onclick="testMobileSound()" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black active:scale-95 transition-all flex items-center gap-1.5 shadow-md">
-                <span>🔔</span>
-                <span>แตะทดสอบเสียงทันที</span>
+                <span>🗣️</span>
+                <span>แตะทดสอบเสียง AI ชายทันที</span>
               </button>
             </div>
 
             <!-- กล่องวินิจฉัยเสียงในเครื่องแบบเรียลไทม์ (Audio Diagnostics) -->
             <div id="device-audio-status-box" class="bg-[#140b07] p-2 rounded-lg border border-amber-900/80 text-[10.5px] text-amber-200/90 flex flex-col gap-1">
               <div class="flex items-center justify-between">
-                <span class="text-stone-300 font-medium">ระบบเสียงฮาร์ดแวร์ (Chime):</span>
+                <span class="text-stone-300 font-medium">ระบบขับเสียงฮาร์ดแวร์ (Chime/40Hz):</span>
                 <span class="text-emerald-400 font-bold">พร้อมทำงาน 100% ✓</span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-stone-300 font-medium">ไฟล์เสียงไทยในเครื่อง (TTS):</span>
-                <span id="tts-diagnostic-text" class="text-amber-300 font-bold">กำลังตรวจสอบ...</span>
+                <span class="text-stone-300 font-medium">เสียงพูด AI สตูดิโอ (Gemini Engine):</span>
+                <span id="tts-diagnostic-text" class="text-emerald-400 font-bold">เสียงผู้ชายพร้อมใช้งาน ✓</span>
               </div>
             </div>
           </div>
@@ -846,6 +846,50 @@
     </div>
 
   </main>
+
+  <!-- ==================== หน้าต่างป๊อปอัปแจ้งเตือนอัจฉริยะ (Modal Popup) ==================== -->
+  <div id="alert-popup-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4 bg-black/85 backdrop-blur-md hidden transition-all duration-300" onclick="handleBackdropClick(event)">
+    <div id="alert-popup-card" class="bg-gradient-to-b from-[#2e1c14] to-[#150c08] border-2 border-amber-500/80 rounded-3xl p-5 max-w-sm w-full text-center shadow-2xl shadow-black/90 relative transform scale-95 transition-all duration-200 space-y-3">
+      
+      <!-- ปุ่มกากบาทปิดมุมบนขวา -->
+      <button type="button" onclick="closePopupModal()" class="absolute top-3 right-3 text-stone-400 hover:text-white w-8 h-8 rounded-full bg-[#140b07] border border-amber-900/60 flex items-center justify-center text-sm font-bold active:scale-90 transition-all">
+        ✕
+      </button>
+
+      <!-- วงกลมไอคอนกิจกรรมป๊อปอัปขนาดใหญ่ -->
+      <div id="popup-icon-wrapper" class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-tr from-amber-500/25 to-emerald-500/25 border-2 border-amber-400 flex items-center justify-center text-4xl shadow-lg shadow-amber-500/10">
+        <span id="popup-icon-display">🦶</span>
+      </div>
+
+      <!-- ป้ายหมวดหมู่ป๊อปอัป -->
+      <div>
+        <span id="popup-badge" class="inline-block px-3 py-0.5 rounded-full text-[11px] font-extrabold bg-amber-500 text-slate-950 shadow-sm">
+          ⚠️ ช่วงวิกฤต (นาทีที่ 25)
+        </span>
+        <h3 id="popup-title" class="text-base font-black text-amber-50 mt-1">
+          น้ำตาลในเลือดพุ่งสูงสุด!
+        </h3>
+      </div>
+
+      <!-- คำอธิบายป๊อปอัป -->
+      <p id="popup-desc" class="text-xs text-stone-200 leading-relaxed bg-[#140b07] p-3 rounded-xl border border-amber-900/60 text-left">
+        น้ำตาลกำลังแตะจุดพีค แนะนำให้ทำ <b>กระดกส้นเท้าใต้โต๊ะ (Soleus Push-up)</b> เพื่อดึงน้ำตาลเข้ากล้ามเนื้อทันทีครับ
+      </p>
+
+      <!-- ปุ่มดำเนินการ -->
+      <div class="flex gap-2 pt-1">
+        <button type="button" id="popup-action-btn" onclick="handlePopupAction()" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1">
+          <span id="popup-action-icon">▶</span>
+          <span id="popup-action-text">เริ่มทำกิจกรรมนี้เลย</span>
+        </button>
+        <button type="button" onclick="closePopupModal()" class="px-4 py-2.5 rounded-xl bg-[#140b07] border border-amber-800/80 text-amber-200 font-bold text-xs hover:bg-[#20120a] active:scale-95 transition-all">
+          รับทราบ
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <script>
     // สถานะหลักของระบบ
     let currentMainTab = 'pacer';
@@ -863,7 +907,7 @@
     let sessionTimerInterval = null;
     let isSessionRunning = false;
 
-    // ระบบจัดการชิปเสียงหลัก (Unified Master Audio Context): ใช้ท่อเสียงเดียวกับการันตีความดัง 100%
+    // ชิปเสียงหลัก (Web Audio API): ขับเสียงตรงผ่านชิปฮาร์ดแวร์ S24 / iPhone 100%
     let masterAudioCtx = null;
 
     // ตัวแปรสำหรับคลื่น 40Hz
@@ -874,10 +918,10 @@
     let masterGain_40 = null;
     let is40HzActive = false;
 
-    // ระบบแจ้งเตือนเสียงพูด
-    let voiceCoachEnabled = true;
+    // ระบบเสียงแจ้งเตือนป๊อปอัป
+    let alertSoundEnabled = true;
     let announcedMilestones = new Set();
-    let hasThaiVoiceInDevice = false;
+    let currentPopupTargetActivity = 'spu';
 
     const mealTitles = {
       carb: '🍚 ข้าว / แป้ง',
@@ -888,106 +932,102 @@
     const activityConfigs = {
       spu: {
         id: 'spu',
+        icon: '🦶',
         title: '1. กระดกส้นเท้าใต้โต๊ะ (Soleus Push-up)',
         sub: 'ดึงกลูโคสเข้ากล้ามเนื้อน่องโดยตรง หน้าท้องผ่อนคลาย ไม่กดกระเพาะ',
         durationSeconds: 600,
         badgeText: '10 นาที',
         recommendedMeal: 'carb',
-        posture: 'นั่งตัวตรง อกผาย วางปลายเท้าแตะพื้น ขยับเฉพาะข้อเท้า หน้าท้องผ่อนคลาย 100% ครับ',
+        posture: 'นั่งตัวตรง อกผาย วางปลายเท้าแตะพื้น ขยับเฉพาะข้อเท้า หน้าท้องผ่อนคลาย 100%',
         guideItems: [
-          'วางปลายเท้าทั้งสองข้างแตะพื้นไว้ตลอดเวลาครับ',
-          'ยกเฉพาะส้นเท้าขึ้นให้สุด แล้ววางลงเบาๆ จังหวะ 1.2 วินาทีครับ',
-          'หน้าท้องผ่อนคลาย ไม่เกร็งหน้าท้อง เพื่อไม่บีบกระเพาะอาหารครับ'
+          'วางปลายเท้าทั้งสองข้างแตะพื้นไว้ตลอดเวลา',
+          'ยกเฉพาะส้นเท้าขึ้นให้สุด แล้ววางลงเบาๆ จังหวะ 1.2 วินาที',
+          'หน้าท้องผ่อนคลาย ไม่เกร็ง เพื่อไม่บีบกระเพาะอาหาร'
         ],
         stopSignals: [
-          'เมื่อทำครบ 10 นาที (ระบบจะส่งเสียงเตือนอัตโนมัติครับ)',
-          'หากเริ่มรู้สึกตึงหรือเมื่อยน่อง ให้หยุดพักได้ทันทีครับ'
-        ],
-        startVoice: 'เริ่มจับเวลากระดกส้นเท้า 10 นาทีแล้วครับ นั่งหลังตรง วางปลายเท้าติดพื้น แล้วยกส้นเท้าขึ้นลงตามจังหวะภาพได้เลยครับ หากเมื่อยน่องกดหยุดพักได้ตลอดเวลานะครับ',
-        completionVoice: 'ครบ 10 นาทีแล้วครับ ยอดเยี่ยมมากครับ กล้ามเนื้อน่องช่วยเผาผลาญน้ำตาลเรียบร้อยแล้วครับ นั่งทำงานต่อได้อย่างสดชื่นเลยครับ'
+          'เมื่อทำครบ 10 นาที (ป๊อปอัปจะเด้งแจ้งเตือน)',
+          'หากเริ่มรู้สึกตึงหรือเมื่อยน่อง ให้หยุดพักได้ทันที'
+        ]
       },
       breath: {
         id: 'breath',
+        icon: '🫁',
         title: '2. ฝึกหายใจด้วยกะบังลม (Diaphragmatic Breathing)',
         sub: 'เสริมแรงรัดของหูรูดหลอดอาหาร ป้องกันกรดไหลย้อนขณะกระเพาะหลั่งกรด',
         durationSeconds: 300,
         badgeText: '5 นาที',
         recommendedMeal: 'protein',
-        posture: 'นั่งยืดแนวกระดูกสันหลังให้ตรง อกผาย ไม่นั่งหลังค่อม เพื่อเปิดมุมกระเพาะอาหารครับ',
+        posture: 'นั่งยืดแนวกระดูกสันหลังให้ตรง อกผาย ไม่นั่งหลังค่อม เพื่อเปิดมุมกระเพาะอาหาร',
         guideItems: [
-          'สูดลมหายใจเข้าทางจมูกช้าๆ ให้ท้องพองขึ้น 4 วินาทีครับ',
-          'ผ่อนลมหายใจออกทางปากยาวๆ ให้ท้องยุบลง 6 วินาทีครับ',
-          'ให้กะบังลมช่วยหนีบรัดหูรูดหลอดอาหาร ป้องกันไอระเหยของกรดครับ'
+          'สูดลมหายใจเข้าทางจมูกช้าๆ ให้ท้องพองขึ้น 4 วินาที',
+          'ผ่อนลมหายใจออกทางปากยาวๆ ให้ท้องยุบลง 6 วินาที',
+          'ให้กะบังลมช่วยหนีบรัดหูรูดหลอดอาหาร ป้องกันไอระเหยของกรด'
         ],
         stopSignals: [
-          'เมื่อฝึกหายใจครบ 5 นาที ให้เปลี่ยนมาหายใจตามธรรมชาติครับ',
-          'หากรู้สึกหน้ามืดหรือเวียนศีรษะ ให้หยุดพักทันทีครับ'
-        ],
-        startVoice: 'เริ่มจับเวลาฝึกหายใจ 5 นาทีแล้วครับ นั่งยืดตัวตรง สูดหายใจเข้าให้ท้องพอง 4 วินาที และผ่อนออกยาวๆ 6 วินาที ตามจังหวะวงกลมได้เลยนะครับ',
-        completionVoice: 'ครบ 5 นาทีแล้วครับ เยี่ยมมากครับ ผ่อนคลายและหายใจตามปกติได้เลยครับ แต่นั่งหลังตรงต่ออีกสักนิด เพื่อป้องกันกรดไหลย้อนนะครับ'
+          'เมื่อฝึกหายใจครบ 5 นาที ให้เปลี่ยนมาหายใจตามธรรมชาติ',
+          'หากรู้สึกหน้ามืดหรือเวียนศีรษะ ให้หยุดพักทันที'
+        ]
       },
       stretch: {
         id: 'stretch',
+        icon: '🧘',
         title: '3. ยืดอกเปิดกระดูกสันหลัง (Thoracic Extension)',
         sub: 'เปิดมุมรอยต่อกระเพาะอาหาร (Angle of His) คลายแรงดันกดทับช่องท้อง',
         durationSeconds: 300,
         badgeText: '3 – 5 นาที',
         recommendedMeal: 'protein',
-        posture: 'ประสานมือด้านหน้าแล้วยืดแขนขึ้นเหนือศีรษะเบาๆ อกเปิดกว้าง ไม่งอเอวครับ',
+        posture: 'ประสานมือด้านหน้าแล้วยืดแขนขึ้นเหนือศีรษะเบาๆ อกเปิดกว้าง ไม่งอเอว',
         guideItems: [
-          'นั่งหรือยืนตัวตรง ยืดแนวกระดูกสันหลังให้ยาวที่สุดครับ',
-          'ประสานมือแล้วยืดแขนขึ้นช้าๆ ค้างไว้ 10-15 วินาทีต่อรอบครับ',
-          'ช่วยคลายแรงดันในช่องท้อง ไม่ให้น้ำย่อยถูกบีบขึ้นมาครับ'
+          'นั่งหรือยืนตัวตรง ยืดแนวกระดูกสันหลังให้ยาวที่สุด',
+          'ประสานมือแล้วยืดแขนขึ้นช้าๆ ค้างไว้ 10-15 วินาทีต่อรอบ',
+          'ช่วยคลายแรงดันในช่องท้อง ไม่ให้น้ำย่อยถูกบีบขึ้นมา'
         ],
         stopSignals: [
-          'เมื่อยืดตัวครบ 3-5 นาที ให้กลับสู่ท่านั่งทำงานปกติครับ',
-          'หากมีอาการเจ็บแปลบที่สะบักหรือเอว ให้หยุดทำทันทีครับ'
-        ],
-        startVoice: 'เริ่มจับเวลายืดลำตัว 5 นาทีแล้วครับ ยืดแนวกระดูกสันหลังให้ตรง ประสานมือยืดแขนขึ้นเบาๆ เพื่อเปิดมุมกระเพาะอาหารให้กรดไม่ไหลย้อนนะครับ',
-        completionVoice: 'ครบเวลาแล้วครับ ช่องท้องผ่อนคลายและทางเดินอาหารเปิดกว้างแล้วครับ นั่งทำงานต่อได้อย่างสบายตัวเลยครับ'
+          'เมื่อยืดตัวครบ 3-5 นาที ให้กลับสู่ท่านั่งทำงานปกติ',
+          'หากมีอาการเจ็บแปลบที่สะบักหรือเอว ให้หยุดทำทันที'
+        ]
       },
       walk: {
         id: 'walk',
+        icon: '🚶',
         title: '4. ก้าวเดินช้าทอดน่อง (Slow Stroll 65 BPM)',
         sub: 'กระตุ้นการบีบตัวของทางเดินอาหาร ระบายอาหารมื้อหนักลงสู่ลำไส้เล็ก',
         durationSeconds: 600,
         badgeText: '10 นาที',
         recommendedMeal: 'heavy',
-        posture: 'ลุกขึ้นยืน ลำตัวตั้งตรง ไม่ก้มตัวผูกเชือกรองเท้า ก้าวเท้าสบายๆ ครับ',
+        posture: 'ลุกขึ้นยืน ลำตัวตั้งตรง ไม่ก้มตัวผูกเชือกรองเท้า ก้าวเท้าสบายๆ',
         guideItems: [
-          'ลุกยืนและก้าวเดินสั้นๆ ช้าๆ ทอดน่องสบายๆ ไม่เดินจ้ำอ้าวครับ',
-          'แกว่งแขนเบาๆ ปล่อยให้แรงโน้มถ่วงช่วยลำเลียงอาหารครับ',
-          'ช่วยกระตุ้นการบีบตัวของกระเพาะและลำไส้โดยไม่ทำให้จุกแน่นครับ'
+          'ลุกยืนและก้าวเดินสั้นๆ ช้าๆ ทอดน่องสบายๆ ไม่เดินจ้ำอ้าว',
+          'แกว่งแขนเบาๆ ปล่อยให้แรงโน้มถ่วงช่วยลำเลียงอาหาร',
+          'ช่วยกระตุ้นการบีบตัวของกระเพาะและลำไส้โดยไม่ทำให้จุกแน่น'
         ],
         stopSignals: [
-          'เมื่อเดินช้าครบ 10 นาที ให้กลับมานั่งในท่าตัวตรงครับ',
-          'หยุดทันทีหากเริ่มรู้สึกจุกแน่น หรือมีอาการเสียดท้องครับ'
-        ],
-        startVoice: 'เริ่มจับเวลาเดินช้า 10 นาทีแล้วครับ ลุกขึ้นยืนยืดตัวตรง แล้วก้าวเดินช้าๆ ทอดน่องสบายๆ นะครับ หากเริ่มรู้สึกจุกแน่นให้หยุดพักทันทีครับ',
-        completionVoice: 'ครบ 10 นาทีแล้วครับ ระบบทางเดินอาหารเริ่มเคลื่อนตัวได้ดีขึ้นแล้วครับ กลับมานั่งทำงานในท่าตัวตรงต่อได้เลยครับ'
+          'เมื่อเดินช้าครบ 10 นาที ให้กลับมานั่งในท่าตัวตรง',
+          'หยุดทันทีหากเริ่มรู้สึกจุกแน่น หรือมีอาการเสียดท้อง'
+        ]
       },
       ankle: {
         id: 'ankle',
+        icon: '🔄',
         title: '5. หมุนข้อเท้าและเหยียดน่อง (Ankle Circles & Stretch)',
         sub: 'กระตุ้นการไหลเวียนเลือดดำ (Venous Return) ปั๊มออกซิเจนสู่สมองแก้ง่วง',
         durationSeconds: 300,
         badgeText: '3 – 5 นาที',
         recommendedMeal: 'carb',
-        posture: 'นั่งเต็มก้น ยกเท้าลอยจากพื้นเล็กน้อย หมุนข้อเท้าช้าๆ เป็นวงกลมครับ',
+        posture: 'นั่งเต็มก้น ยกเท้าลอยจากพื้นเล็กน้อย หมุนข้อเท้าช้าๆ เป็นวงกลม',
         guideItems: [
-          'ยกปลายเท้าขึ้นจากพื้นเล็กน้อย หมุนข้อเท้าตามเข็มนาฬิกา 10 รอบครับ',
-          'สลับหมุนทวนเข็มนาฬิกาอีก 10 รอบ แล้วสลับข้างเท้าครับ',
-          'ช่วยปั๊มเลือดดำที่คั่งอยู่ส่วนล่างกลับคืนสู่หัวใจและสมองครับ'
+          'ยกปลายเท้าขึ้นจากพื้นเล็กน้อย หมุนข้อเท้าตามเข็มนาฬิกา 10 รอบ',
+          'สลับหมุนทวนเข็มนาฬิกาอีก 10 รอบ แล้วสลับข้างเท้า',
+          'ช่วยปั๊มเลือดดำที่คั่งอยู่ส่วนล่างกลับคืนสู่หัวใจและสมอง'
         ],
         stopSignals: [
-          'เมื่อหมุนข้อเท้าครบ 5 นาที หรือเมื่อสมองเริ่มตื่นตัวแจ่มใสครับ',
-          'หากเริ่มเมื่อยข้อเท้าให้วางเท้าแตะพื้นพักได้ทันทีครับ'
-        ],
-        startVoice: 'เริ่มจับเวลาหมุนข้อเท้า 5 นาทีแล้วครับ ยกเท้าขึ้นเล็กน้อย แล้วหมุนข้อเท้าช้าๆ เป็นวงกลม ช่วยกระตุ้นระบบหมุนเวียนเลือดและปลุกสมองให้สดชื่นครับ',
-        completionVoice: 'ครบ 5 นาทีแล้วครับ สมองได้รับออกซิเจนสดชื่นแล้วครับ วางเท้าแตะพื้นแล้วลุยงานต่อได้อย่างมีพลังเลยครับ'
+          'เมื่อหมุนข้อเท้าครบ 5 นาที หรือเมื่อสมองเริ่มตื่นตัวแจ่มใส',
+          'หากเริ่มเมื่อยข้อเท้าให้วางเท้าแตะพื้นพักได้ทันที'
+        ]
       }
     };
-    // ฟังก์ชันเรียกคืนชิปเสียงหลักตัวเดียว (Unified Audio Pipeline)
+
+    // ฟังก์ชันเรียกคืนชิปเสียงฮาร์ดแวร์ (Hardware Audio Context)
     function getHardwareAudioContext() {
       const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
       if (!AudioCtxClass) return null;
@@ -1000,190 +1040,185 @@
       return masterAudioCtx;
     }
 
-    // ปลดล็อกระบบเสียงทันทีที่แตะหน้าจอมือถือ
-    function unlockMobileAudioHardware() {
+    function unlockAudioHardware() {
       const ctx = getHardwareAudioContext();
       if (ctx && ctx.state === 'suspended') {
         ctx.resume();
       }
     }
-    window.addEventListener('touchstart', unlockMobileAudioHardware, { passive: true });
-    window.addEventListener('touchend', unlockMobileAudioHardware, { passive: true });
-    window.addEventListener('click', unlockMobileAudioHardware, { passive: true });
+    window.addEventListener('touchstart', unlockAudioHardware, { passive: true });
+    window.addEventListener('click', unlockAudioHardware, { passive: true });
 
-    // เล่นเสียงกระดิ่งระฆังดนตรี 3 จังหวะ (C5 ➔ E5 ➔ G5) ผ่านชิปเสียงฮาร์ดแวร์ การันตีดังก้อง 100%
-    function playHardwareMelodyChime() {
+    // เสียงสัญญาณเตือนสำหรับป๊อปอัป (สร้างสดผ่าน Web Audio ชัดใส 100%)
+    function playPopupChime(type = 'alert') {
+      if (!alertSoundEnabled) return;
       try {
         const ctx = getHardwareAudioContext();
         if (!ctx) return;
         const now = ctx.currentTime;
 
-        const notes = [523.25, 659.25, 783.99]; // โน้ตเพลงเมเจอร์คอร์ด (โด-มี-ซอล) กังวานสดใส
-        notes.forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          const startTime = now + (idx * 0.12);
+        if (type === 'alert') {
+          // โน้ตเพลงคอร์ดระฆังสดใส 3 จังหวะ (C5 ➔ E5 ➔ G5)
+          const notes = [523.25, 659.25, 783.99];
+          notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            const startTime = now + (idx * 0.1);
 
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, startTime);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, startTime);
 
-          gain.gain.setValueAtTime(0.001, startTime);
-          gain.gain.exponentialRampToValueAtTime(0.35, startTime + 0.03);
-          gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.35);
+            gain.gain.setValueAtTime(0.001, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.4, startTime + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.4);
 
-          osc.connect(gain);
-          gain.connect(ctx.destination);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
 
-          osc.start(startTime);
-          osc.stop(startTime + 0.36);
-        });
+            osc.start(startTime);
+            osc.stop(startTime + 0.42);
+          });
+        } else if (type === 'success') {
+          // โน้ตเพลงแสดงความสำเร็จ 4 จังหวะ (C5 ➔ G5 ➔ A5 ➔ C6)
+          const notes = [523.25, 783.99, 880.0, 1046.5];
+          notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            const startTime = now + (idx * 0.1);
+
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, startTime);
+
+            gain.gain.setValueAtTime(0.001, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.35, startTime + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.35);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.start(startTime);
+            osc.stop(startTime + 0.37);
+          });
+        }
       } catch(e) {
-        console.error("Hardware chime error:", e);
+        console.error("Popup chime error:", e);
       }
     }
 
-    // อัปเดตไฟสถานะการพูดให้ผู้ใช้เห็นชัดเจน
-    function setSpeechBadge(state, label) {
-      const badge = document.getElementById('speech-live-badge');
-      if (!badge) return;
-      if (state === 'speaking') {
-        badge.innerText = label || "🔊 กำลังเตือน...";
-        badge.className = "shrink-0 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-600 text-white border border-emerald-400 animate-pulse";
-      } else if (state === 'fallback') {
-        badge.innerText = label || "🔔 เตือนด้วยกระดิ่ง";
-        badge.className = "shrink-0 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-600 text-slate-950 border border-amber-400";
-      } else {
-        badge.innerText = "พร้อมเตือน";
-        badge.className = "shrink-0 px-2 py-0.5 rounded text-[10px] font-bold bg-stone-800 text-stone-300 border border-stone-700";
-      }
+    // ==================== ระบบจัดการหน้าต่างป๊อปอัป (Popup Modal System) ====================
+    function openPopupModal({ icon, badge, title, desc, actionText, actionIcon, targetActivity, soundType = 'alert' }) {
+      const modal = document.getElementById('alert-popup-modal');
+      const card = document.getElementById('alert-popup-card');
+
+      document.getElementById('popup-icon-display').innerText = icon || '🦶';
+      document.getElementById('popup-badge').innerText = badge || 'แจ้งเตือน';
+      document.getElementById('popup-title').innerText = title || 'แจ้งเตือนสำคัญ';
+      document.getElementById('popup-desc').innerHTML = desc || '';
+      document.getElementById('popup-action-text').innerText = actionText || 'เริ่มทำกิจกรรม';
+      document.getElementById('popup-action-icon').innerText = actionIcon || '▶';
+
+      currentPopupTargetActivity = targetActivity || currentActivity;
+
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        card.classList.remove('scale-95');
+        card.classList.add('scale-100');
+      }, 10);
+
+      // เล่นเสียงกระดิ่งป๊อปอัป
+      playPopupChime(soundType);
     }
-    // ฟังก์ชันสั่งงานเสียงเตือนครบวงจร (Hybrid Audio Alert System)
-    function notifyWithVoiceAndChime(message) {
-      const sub = document.getElementById('voice-subtitle');
-      if (sub) sub.innerText = `"${message}"`;
 
-      if (!voiceCoachEnabled) return;
+    function closePopupModal() {
+      const modal = document.getElementById('alert-popup-modal');
+      const card = document.getElementById('alert-popup-card');
+      card.classList.remove('scale-100');
+      card.classList.add('scale-95');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 150);
+    }
 
-      // 1. ส่งเสียงระฆังดนตรีผ่านชิปเสียงฮาร์ดแวร์ก่อนเสมอ (การันตีเสียงออกลำโพงมือถือ 100% แน่นอน)
-      playHardwareMelodyChime();
-
-      // 2. หากเบราว์เซอร์รองรับ SpeechSynthesis พยายามเปล่งเสียงพูดต่อทันที
-      if (!('speechSynthesis' in window)) {
-        setSpeechBadge('fallback', '🔔 เตือนด้วยกระดิ่ง');
-        return;
-      }
-
-      try {
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.resume();
-
-        const utter = new SpeechSynthesisUtterance(message);
-        utter.lang = 'th-TH';
-        utter.rate = 0.95;
-        utter.pitch = 1.0;
-        utter.volume = 1.0;
-
-        // ค้นหาเสียงภาษาไทย
-        const voices = window.speechSynthesis.getVoices() || [];
-        const thaiVoices = voices.filter(v => v.lang && (v.lang === 'th-TH' || v.lang.toLowerCase().replace('_', '-').startsWith('th')));
-
-        if (thaiVoices.length > 0) {
-          const maleKeywords = ['niwat', 'sarawut', 'male', 'man', 'ชาย', 'boy', 'pattara'];
-          const male = thaiVoices.find(v => maleKeywords.some(k => (v.name || '').toLowerCase().includes(k)));
-          utter.voice = male || thaiVoices[0];
-          hasThaiVoiceInDevice = true;
-        }
-
-        utter.onstart = () => {
-          setSpeechBadge('speaking', '🔊 โค้ชกำลังพูด...');
-        };
-        utter.onend = () => {
-          setSpeechBadge('idle', 'พร้อมเตือน');
-        };
-        utter.onerror = (e) => {
-          // หากมือถือไม่มีชุดภาษาไทย หรือระบบไม่อนุญาตให้สังเคราะห์เสียงพูด
-          setSpeechBadge('fallback', '🔔 เตือนด้วยกระดิ่ง');
-          console.debug("TTS Event blocked/unsupported, falling back to chime:", e);
-        };
-
-        window._activeUtterance = utter;
-        window.speechSynthesis.speak(utter);
-
-        // แก้บั๊กค้างแช่แข็งของ Chrome Android (Speech Freeze Workaround)
-        if (window.speechSynthesis.paused) {
-          window.speechSynthesis.resume();
-        }
-      } catch(err) {
-        setSpeechBadge('fallback', '🔔 เตือนด้วยกระดิ่ง');
-        console.error("Speech Synthesis Error:", err);
+    function handleBackdropClick(e) {
+      if (e.target.id === 'alert-popup-modal') {
+        closePopupModal();
       }
     }
 
-    // ฟังก์ชันตรวจสอบความพร้อมของชุดภาษาไทยในเครื่องแบบสดๆ
-    function checkDeviceTTSAvailability() {
-      const diagText = document.getElementById('tts-diagnostic-text');
-      if (!diagText) return;
-
-      if (!('speechSynthesis' in window)) {
-        diagText.innerText = "เบราว์เซอร์ไม่รองรับ (ใช้กระดิ่งแทน) ⚠️";
-        diagText.className = "text-amber-400 font-bold";
-        return;
+    function handlePopupAction() {
+      if (currentPopupTargetActivity) {
+        selectActivity(currentPopupTargetActivity);
+        // สลับมุมมองมือถือไปที่แท็บกิจกรรม
+        switchMobileSubTab('activity');
       }
-
-      const voices = window.speechSynthesis.getVoices() || [];
-      const thai = voices.filter(v => v.lang && (v.lang === 'th-TH' || v.lang.toLowerCase().replace('_', '-').startsWith('th')));
-
-      if (thai.length > 0) {
-        const vName = thai[0].name ? (thai[0].name.length > 18 ? thai[0].name.substring(0, 18) + '...' : thai[0].name) : "พบภาษาไทย";
-        diagText.innerText = `พร้อมพูด (${vName}) ✓`;
-        diagText.className = "text-emerald-400 font-bold";
-        hasThaiVoiceInDevice = true;
-      } else {
-        diagText.innerText = "ไม่พบไฟล์เสียงไทย (เตือนด้วยกระดิ่ง) 🔔";
-        diagText.className = "text-amber-400 font-bold";
-        hasThaiVoiceInDevice = false;
+      closePopupModal();
+      // หากยังไม่ได้เริ่มจับเวลา ให้เริ่มจับเวลากิจกรรมทันที
+      if (!isSessionRunning) {
+        toggleSessionTimer();
       }
     }
 
-    // ปุ่มแตะทดสอบเสียงด่วนบนมือถือ (มีเสียงดังก้อง 100% แน่นอน)
-    function testMobileSound() {
-      unlockMobileAudioHardware();
-      checkDeviceTTSAvailability();
-      notifyWithVoiceAndChime("สวัสดีครับน้าราม ระบบเสียงพร้อมทำงานแล้วครับ หากได้ยินเสียงกระดิ่งหรือเสียงพูดนี้ แสดงว่าพร้อมใช้งานแล้วครับ");
+    // ฟังก์ชันทดสอบป๊อปอัปบนหน้าจอ (ทั้งคอมและมือถือ)
+    function testPopupAlert() {
+      unlockAudioHardware();
+      const cfg = activityConfigs[currentActivity];
+      openPopupModal({
+        icon: cfg.icon,
+        badge: '✨ ทดสอบป๊อปอัปแจ้งเตือน',
+        title: cfg.title,
+        desc: `ระบบป๊อปอัปพร้อมเสียงแจ้งเตือนทำงานสมบูรณ์แบบแล้วครับ!<br><br><b>คำแนะนำสรีระ:</b> ${cfg.posture}`,
+        actionText: 'เริ่มทำรอบนี้เลย',
+        actionIcon: '▶',
+        targetActivity: currentActivity,
+        soundType: 'alert'
+      });
+    }
+
+    // ป๊อปอัปสรุปคัมภีร์กรดไหลย้อน
+    function showGerdSummaryPopup() {
+      unlockAudioHardware();
+      openPopupModal({
+        icon: '🥗',
+        badge: '📋 สรุปคัมภีร์กรดไหลย้อน',
+        title: 'กฎเหล็กต้านกรดไหลย้อน (ฉบับน้าราม)',
+        desc: `<b>1. อาหาร:</b> กล้วยน้ำว้าห่าม ข้าวโอ๊ต และเนื้อปลา (เลี่ยงของทอด เผ็ด ช็อกโกแลต)<br>
+               <b>2. เครื่องดื่ม:</b> น้ำเปล่าอุณหภูมิห้อง น้ำขิงอุ่น (เลี่ยงกาแฟ ชา น้ำอัดลม)<br>
+               <b>3. สรีระ:</b> ห้ามนอนราบหรือฟุบโต๊ะ 60 นาทีแรกหลังอาหารเด็ดขาดครับ`,
+        actionText: 'เข้าใจแล้ว ขอบคุณครับ',
+        actionIcon: '✓',
+        targetActivity: null,
+        soundType: 'success'
+      });
     }
 
     // สลับเปิด/ปิดเสียงเตือน
-    function toggleVoiceCoach() {
-      voiceCoachEnabled = !voiceCoachEnabled;
-      const btn = document.getElementById('voice-toggle-btn');
-      const text = document.getElementById('voice-status-text');
-      const icon = document.getElementById('voice-status-icon');
+    function toggleAlertSound() {
+      alertSoundEnabled = !alertSoundEnabled;
+      const btn = document.getElementById('sound-toggle-btn');
+      const text = document.getElementById('sound-status-text');
+      const icon = document.getElementById('sound-status-icon');
 
-      if (voiceCoachEnabled) {
+      if (alertSoundEnabled) {
         text.innerText = "เสียงเตือน: เปิด";
-        icon.innerText = "🔊";
+        icon.innerText = "🔔";
         btn.className = "px-3 py-1.5 rounded-xl bg-[#2e1c12] hover:bg-[#3d2518] border border-amber-600/50 text-amber-200 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1.5";
-        playHardwareMelodyChime();
-        notifyWithVoiceAndChime("เปิดระบบเสียงเตือนเรียบร้อยแล้วครับ");
+        playPopupChime('alert');
       } else {
-        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
         text.innerText = "เสียงเตือน: ปิด";
-        icon.innerText = "🔇";
+        icon.innerText = "🔕";
         btn.className = "px-3 py-1.5 rounded-xl bg-[#140b07] border border-amber-900 text-stone-400 text-xs font-bold active:scale-95 transition-all flex items-center gap-1.5";
-        setSpeechBadge('idle', 'ปิดเสียง');
       }
     }
-    // ระบบกำเนิดเสียง 40Hz Gamma Beat โดยใช้ Master Audio Context
+
+    // ==================== ระบบเสียง 40Hz Gamma Beat ====================
     function start40HzTone() {
       if (is40HzActive) return;
 
       try {
         const ctx = getHardwareAudioContext();
         if (!ctx) return;
-
         const now = ctx.currentTime;
 
-        // ล้างออสซิลเลเตอร์เก่าถ้ามีค้าง
         try { if (osc1_40) { osc1_40.stop(); osc1_40.disconnect(); } } catch(e){}
         try { if (osc2_40) { osc2_40.stop(); osc2_40.disconnect(); } } catch(e){}
         try { if (lfo_40) { lfo_40.stop(); lfo_40.disconnect(); } } catch(e){}
@@ -1231,7 +1266,6 @@
       }
     }
 
-    // หยุดเสียง 40Hz เด็ดขาดทันที 100%
     function stop40HzTone() {
       is40HzActive = false;
       update40HzButtonUI(false);
@@ -1253,7 +1287,7 @@
     }
 
     function toggleAlertTone() {
-      unlockMobileAudioHardware();
+      unlockAudioHardware();
       if (is40HzActive) {
         stop40HzTone();
       } else {
@@ -1277,7 +1311,8 @@
         btn.className = "px-3.5 py-2 rounded-xl bg-amber-600/30 hover:bg-amber-600/50 border border-amber-500/50 text-amber-200 text-xs font-bold active:scale-95 transition-all flex items-center gap-1.5 whitespace-nowrap shadow-sm";
       }
     }
-    // สลับหน้าต่างหลัก (แท็บ 1 Pacer vs แท็บ 2 คัมภีร์กรดไหลย้อน)
+
+    // ==================== การนำทางหน้าจอ ====================
     function switchMainTab(tab) {
       currentMainTab = tab;
       const btnPacer = document.getElementById('nav-btn-pacer');
@@ -1324,10 +1359,6 @@
       }
     }
 
-    function speakGerdGuideSummary() {
-      notifyWithVoiceAndChime("สรุปคัมภีร์กรดไหลย้อนครับ อาหารควรทานเช่น กล้วยน้ำว้า ข้าวโอ๊ต และเนื้อปลาครับ เครื่องดื่มแนะนำน้ำเปล่าอุณหภูมิห้องหรือน้ำขิงอุ่นครับ หลีกเลี่ยงกาแฟและของทอดเด็ดขาด และห้ามนอนราบหลังอาหาร 60 นาทีนะครับ");
-    }
-
     function switchMobileSubTab(tab) {
       const btnTimer = document.getElementById('m-tab-timer');
       const btnActivity = document.getElementById('m-tab-activity');
@@ -1346,7 +1377,9 @@
         colTimer.classList.add('hidden');
       }
     }
-    function selectActivity(actId, silent = false) {
+
+    // ==================== การเลือกกิจกรรมและมื้ออาหาร ====================
+    function selectActivity(actId) {
       currentActivity = actId;
       const config = activityConfigs[actId];
 
@@ -1393,11 +1426,6 @@
       }
 
       resetSessionTimer();
-
-      if (!silent) {
-        const sub = document.getElementById('voice-subtitle');
-        if (sub) sub.innerText = `"${config.title} - ${config.sub}"`;
-      }
     }
 
     function setMeal(m) {
@@ -1414,22 +1442,14 @@
       document.getElementById('meal-badge').innerText = mealTitles[m];
 
       if (m === 'carb') {
-        selectActivity('spu', true);
-        notifyWithVoiceAndChime("เลือกมื้อข้าวแป้งครับ แนะนำให้กระดกส้นเท้าดึงน้ำตาลเข้ากล้ามเนื้อน่องครับ");
+        selectActivity('spu');
       } else if (m === 'protein') {
-        selectActivity('breath', true);
-        notifyWithVoiceAndChime("เลือกมื้อโปรตีนสูงครับ แนะนำให้ฝึกหายใจด้วยกะบังลม เพื่อรัดหูรูดกระเพาะครับ");
+        selectActivity('breath');
       } else if (m === 'heavy') {
-        selectActivity('walk', true);
-        notifyWithVoiceAndChime("เลือกมื้อหนักมันจัดครับ แนะนำให้เดินทอดน่องช้าๆ ช่วยทางเดินอาหารเคลื่อนตัวครับ");
+        selectActivity('walk');
       }
 
       evaluateMetabolicAndGERD(passedTime);
-    }
-
-    function speakCurrentAdvice() {
-      const config = activityConfigs[currentActivity];
-      notifyWithVoiceAndChime(`${config.title} ครับ ${config.sub} คำแนะนำสรีระ: ${config.posture}`);
     }
 
     function switchTimingMode(mode) {
@@ -1455,20 +1475,16 @@
       evaluateMetabolicAndGERD(passedTime);
     }
 
+    // ==================== ระบบจับเวลารอบกิจกรรม (Session Timer) ====================
     function toggleSessionTimer() {
       const btn = document.getElementById('session-btn');
       const label = document.getElementById('session-btn-label');
-      const config = activityConfigs[currentActivity];
 
       if (!isSessionRunning) {
         isSessionRunning = true;
         btn.classList.remove('bg-amber-500', 'hover:bg-amber-400', 'text-slate-950');
         btn.classList.add('bg-stone-700', 'hover:bg-stone-600', 'text-white');
         label.innerText = "พักเวลา";
-
-        if (sessionRemainingSeconds === sessionTotalSeconds) {
-          notifyWithVoiceAndChime(config.startVoice);
-        }
 
         sessionTimerInterval = setInterval(() => {
           if (sessionRemainingSeconds > 0) {
@@ -1505,7 +1521,17 @@
       label.innerText = "✓ ครบเวลาแล้ว";
 
       const config = activityConfigs[currentActivity];
-      notifyWithVoiceAndChime(config.completionVoice);
+      // เด้งป๊อปอัปแจ้งเตือนเมื่อทำครบเวลา
+      openPopupModal({
+        icon: '🏆',
+        badge: '🎉 ยอดเยี่ยมมาก!',
+        title: `ทำครบเวลา ${config.badgeText} แล้วครับ!`,
+        desc: `คุณได้บริหารร่างกายเพื่อกระตุ้นระบบเผาผลาญเรียบร้อยแล้ว สามารถหยุดพักขาและนั่งทำงานในท่าตัวตรงต่อได้อย่างสดชื่นเลยครับ`,
+        actionText: 'รับทราบ / ทำงานต่อ',
+        actionIcon: '✓',
+        targetActivity: null,
+        soundType: 'success'
+      });
     }
 
     function resetSessionTimer() {
@@ -1521,6 +1547,8 @@
       btn.className = "px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs active:scale-95 transition-all shadow-sm flex items-center gap-1";
       label.innerText = "เริ่มจับเวลาทำ";
     }
+
+    // ==================== ระบบนับเวลาสดหลังอาหาร (Live Auto-Timer) ====================
     function toggleLiveTimer() {
       const btnText = document.getElementById('live-timer-btn-text');
       if (!isLiveTimerRunning) {
@@ -1528,7 +1556,17 @@
         btnText.innerText = "พัก";
 
         if (liveSeconds === 0) {
-          notifyWithVoiceAndChime("เริ่มนับเวลาหลังอาหารแล้วครับ นั่งหลังตรง ยืดอกไว้นะครับ อย่าเพิ่งฟุบโต๊ะหรือนอนราบ เพื่อป้องกันกรดไหลย้อนครับ");
+          // ป๊อปอัปเริ่มนับเวลา
+          openPopupModal({
+            icon: '🍽️',
+            badge: '⏱️ เริ่มนับเวลาหลังอาหาร',
+            title: 'นาทีทองป้องกันกรดไหลย้อน',
+            desc: `ระบบเริ่มนับเวลาแล้วครับ ในช่วง 60 นาทีแรก <b>ห้ามนอนราบหรือฟุบโต๊ะทำงานเด็ดขาด</b> ให้นั่งยืดตัวตรงเพื่อป้องกันกรดไหลย้อนนะครับ`,
+            actionText: 'เข้าใจแล้ว',
+            actionIcon: '✓',
+            targetActivity: null,
+            soundType: 'alert'
+          });
         }
 
         liveTimerInterval = setInterval(() => {
@@ -1543,7 +1581,7 @@
             evaluateMetabolicAndGERD(passedTime);
           }
 
-          checkVoiceMilestones(mins, secs);
+          checkPopupMilestones(mins, secs);
         }, 1000);
       } else {
         isLiveTimerRunning = false;
@@ -1552,18 +1590,47 @@
       }
     }
 
-    function checkVoiceMilestones(mins, secs) {
+    // ตรวจสอบจังหวะเวลาสำคัญแล้วเด้งป๊อปอัปอัตโนมัติ
+    function checkPopupMilestones(mins, secs) {
       if (secs !== 0) return;
 
       if (mins === 25 && !announcedMilestones.has(25)) {
         announcedMilestones.add(25);
-        notifyWithVoiceAndChime("แจ้งเตือนครับ ขณะนี้น้ำตาลในเลือดขึ้นถึงจุดสูงสุดแล้วครับ เริ่มขยับตัวทำกิจกรรมตามจังหวะภาพเพื่อความสดชื่นได้เลยครับ");
+        const config = activityConfigs[currentActivity];
+        openPopupModal({
+          icon: config.icon,
+          badge: '⚠️ ช่วงวิกฤต (นาทีที่ 25)',
+          title: 'น้ำตาลในเลือดพุ่งสูงสุด (Peak Surge)',
+          desc: `ขณะนี้น้ำตาลในเลือดกำลังแตะระดับสูงสุด แนะนำให้เริ่มทำ <b>${config.title}</b> ทันที เพื่อดึงน้ำตาลไปเผาผลาญและแก้อาการง่วงนอนครับ`,
+          actionText: 'เริ่มจับเวลาทำทันที',
+          actionIcon: '▶',
+          targetActivity: currentActivity,
+          soundType: 'alert'
+        });
       } else if (mins === 45 && !announcedMilestones.has(45)) {
         announcedMilestones.add(45);
-        notifyWithVoiceAndChime("ผ่านไป 45 นาทีแล้วครับ อาหารกำลังย่อยลงสู่ลำไส้เล็ก นั่งหลังตรงต่ออีกสักนิดนะครับ");
+        openPopupModal({
+          icon: '⚡',
+          badge: '⏱️ ผ่านไป 45 นาทีแล้ว',
+          title: 'อาหารเริ่มย่อยลงสู่ลำไส้เล็ก',
+          desc: `ระบบย่อยอาหารกำลังทำงานได้อย่างราบรื่น ความเสี่ยงกรดไหลย้อนลดลงแล้ว ให้นั่งยืดตัวตรงต่ออีกสักนิดนะครับ`,
+          actionText: 'รับทราบ',
+          actionIcon: '✓',
+          targetActivity: null,
+          soundType: 'alert'
+        });
       } else if (mins === 60 && !announcedMilestones.has(60)) {
         announcedMilestones.add(60);
-        notifyWithVoiceAndChime("ครบ 1 ชั่วโมงแล้วครับ พ้นช่วงอันตรายของกรดไหลย้อนแล้วครับ ปรับตัวได้ยอดเยี่ยมมากครับ");
+        openPopupModal({
+          icon: '✅',
+          badge: '🎉 ครบ 1 ชั่วโมงแล้ว',
+          title: 'พ้นระยะอันตรายของกรดไหลย้อนแล้ว',
+          desc: `กระเพาะอาหารเริ่มว่างลงแล้วครับ ร่างกายปรับสมดุลพลังงานได้อย่างยอดเยี่ยม คุณสามารถเปลี่ยนอิริยาบถและทำงานต่อได้อย่างสบายใจครับ`,
+          actionText: 'ยอดเยี่ยมมาก',
+          actionIcon: '✓',
+          targetActivity: null,
+          soundType: 'success'
+        });
       }
     }
 
@@ -1614,19 +1681,10 @@
       }
     }
 
-    // เริ่มต้นระบบและตรวจสอบเสียงเมื่อโหลดหน้าเสร็จ
+    // เริ่มต้นระบบเมื่อโหลดหน้าเสร็จ
     window.addEventListener('DOMContentLoaded', () => {
       evaluateMetabolicAndGERD(0);
-      selectActivity('spu', true);
-
-      if ('speechSynthesis' in window) {
-        checkDeviceTTSAvailability();
-        window.speechSynthesis.onvoiceschanged = () => {
-          checkDeviceTTSAvailability();
-        };
-      } else {
-        checkDeviceTTSAvailability();
-      }
+      selectActivity('spu');
     });
   </script>
 </body>
