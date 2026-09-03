@@ -118,7 +118,7 @@
 </head>
 <body class="bg-gradient-to-b from-[#140d09] via-[#101b15] to-[#120a06] text-slate-100 min-h-screen flex items-center justify-center p-2 sm:p-4 selection:bg-amber-500 selection:text-slate-950">
 
-  <!-- กล่องแอปพลิเคชันหลัก: โทนผสมผสานน้ำตาลมอคค่าอบอุ่น (Mocha Brown) และเขียวมรกตธรรมชาติ (Deep Forest) สบายตา ไม่น่ากลัว คมชัดสูง -->
+  <!-- กล่องแอปพลิเคชันหลัก: โทนผสมผสานน้ำตาลมอคค่าอบอุ่น (Mocha Brown) และเขียวมรกตธรรมชาติ (Deep Forest) -->
   <main class="max-w-5xl w-full bg-[#1e1510]/95 border border-[#4a2e1e]/80 rounded-3xl p-3.5 sm:p-6 shadow-2xl shadow-black/90 space-y-3.5 backdrop-blur-xl relative overflow-hidden">
     
     <!-- แสงเรืองทองและมรกตอ่อนละมุนด้านหลัง -->
@@ -143,7 +143,7 @@
         </h1>
       </div>
 
-      <!-- ปุ่มควบคุมเสียงโค้ช & ปุ่มฟังคำแนะนำ -->
+      <!-- ปุ่มควบคุมเสียงโค้ช & ปุ่มฟังคำแนะนำ (ไม่มีเสียงกดปุ่มแทรก) -->
       <div class="flex items-center gap-2 self-end sm:self-center flex-wrap">
         <button type="button" id="voice-toggle-btn" onclick="toggleVoiceCoach()" class="px-3 py-1.5 rounded-xl bg-[#2e1c12] hover:bg-[#3d2518] border border-amber-600/50 text-amber-200 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1.5">
           <span id="voice-status-icon">🔊</span>
@@ -171,7 +171,7 @@
     <!-- ==================== หน้าต่างที่ 1: โปรแกรมลดง่วง & ต้านกรด ==================== -->
     <div id="tab-pacer-view" class="space-y-3">
       
-      <!-- ส่วนที่ 1: เลือกมื้ออาหารที่เพิ่งรับประทาน (สไตล์น้ำตาลเข้มพรีเมียม) -->
+      <!-- ส่วนที่ 1: เลือกมื้ออาหารที่เพิ่งรับประทาน (สไตล์น้ำตาลเข้มพรีเมียม ไร้เสียงกดกวนใจ) -->
       <section class="space-y-1.5 bg-[#291a12] p-3 rounded-2xl border border-[#4d2e1f]">
         <div class="flex items-center justify-between text-xs">
           <span class="font-bold text-amber-200">1. เลือกมื้อที่เพิ่งรับประทาน:</span>
@@ -290,18 +290,27 @@
             <span class="flex items-center gap-1.5 font-medium"><span class="text-sky-400 font-bold">💧</span> จิบน้ำอุณหภูมิห้อง</span>
           </div>
 
-          <!-- กล่องคำบรรยายสดโค้ชชาย พร้อมปุ่มทดสอบเสียงมือถือ (แก้ไขเสียงมือถือดัง 100%) -->
+          <!-- กล่องคำบรรยายสดโค้ชชาย พร้อมแถบไฟแสดงสถานะการเปล่งเสียงจริง -->
           <div class="bg-[#241610] p-3 rounded-xl border border-amber-700/60 text-xs text-amber-100 space-y-2">
-            <div class="flex items-start gap-1.5">
-              <span class="text-amber-400 font-black whitespace-nowrap">🗣️ โค้ชชาย:</span>
-              <span id="voice-subtitle" class="text-stone-100 leading-snug font-medium">"สวัสดีครับ พัฒนาระบบโดยน้าราม พร้อมดูแลสุขภาพไปด้วยกันครับ"</span>
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-start gap-1.5">
+                <span class="text-amber-400 font-black whitespace-nowrap">🗣️ โค้ชชาย:</span>
+                <span id="voice-subtitle" class="text-stone-100 leading-snug font-medium">"สวัสดีครับ พัฒนาระบบโดยน้าราม พร้อมดูแลสุขภาพไปด้วยกันครับ"</span>
+              </div>
+              <!-- ไฟสถานะบอกว่าเบราว์เซอร์มือถือกำลังสังเคราะห์เสียงพูดอยู่หรือไม่ -->
+              <span id="speech-live-badge" class="shrink-0 px-2 py-0.5 rounded text-[10px] font-bold bg-stone-800 text-stone-300 border border-stone-700">
+                พร้อมพูด
+              </span>
             </div>
-            <!-- ปุ่มทดสอบเสียงด่วนบนมือถือ พร้อมระบบขยายเสียงและระฆังนำทาง -->
+            
+            <!-- ปุ่มทดสอบเสียงด่วนบนมือถือ (แก้เสียงไม่ออกบน Android/iOS โดยตรง) -->
             <div class="pt-2 border-t border-amber-800/60 flex items-center justify-between gap-2">
-              <span class="text-[11px] text-amber-300/90 font-medium">ทดสอบเสียงบนมือถือ:</span>
-              <button type="button" onclick="testMobileSound()" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black active:scale-95 transition-all flex items-center gap-1.5 shadow-md">
+              <div class="text-[11px] text-amber-300/90 font-medium">
+                ทดสอบเสียงบนมือถือ:
+              </div>
+              <button type="button" onclick="testMobileSound()" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black active:scale-95 transition-all flex items-center gap-1.5 shadow-md">
                 <span>🔊</span>
-                <span>กดทดสอบเสียงทันที</span>
+                <span>แตะทดสอบเสียงทันที</span>
               </button>
             </div>
           </div>
@@ -310,8 +319,8 @@
           <div class="bg-[#1b110a] p-2.5 px-3 rounded-xl border border-amber-600/40 text-[11px] text-amber-200/90 flex items-start gap-2">
             <span class="text-base shrink-0">💡</span>
             <div class="leading-tight">
-              <span class="font-bold text-amber-300">มือถือเสียงเงียบหรือไม่ดัง?</span> 
-              <span>เปิดสวิตช์เสียงข้างเครื่อง (ไม่เปิดโหมดเงียบ/Silent) และกดปุ่มเร่งเสียงมีเดียข้างมือถือให้สุดครับ</span>
+              <span class="font-bold text-amber-300">มือถือเสียงไม่ออก?</span> 
+              <span>1. ตรวจสอบสวิตช์ปิดเสียงข้างเครื่อง (ไม่เปิดโหมดเงียบ/Silent) และ 2. กดปุ่มเร่งเสียงมีเดียข้างมือถือให้ดังขึ้นครับ</span>
             </div>
           </div>
 
@@ -333,7 +342,7 @@
                 </span>
               </div>
               
-              <!-- เมนูกิจกรรม 5 แบบ กดเลือกได้ทันที ในโทนน้ำตาลเข้มหรูหรา -->
+              <!-- เมนูกิจกรรม 5 แบบ กดเลือกได้ทันที ไร้เสียงกดแทรกกวนใจ -->
               <div class="grid grid-cols-5 gap-1.5 text-center">
                 <button type="button" onclick="selectActivity('spu')" id="act-btn-spu" class="act-btn p-2 rounded-xl border-2 border-amber-500 bg-[#3d2417] text-white transition-all flex flex-col items-center gap-0.5 shadow-md">
                   <span class="text-base">🦶</span>
@@ -845,10 +854,10 @@
     let sessionTimerInterval = null;
     let isSessionRunning = false;
 
-    // ระบบจัดการเสียงสำหรับโทรศัพท์มือถือ (Audio Engine & Mobile Unlocker)
-    let isAudioUnlocked = false;
+    // ระบบจัดการเสียงสำหรับโทรศัพท์มือถือ (Audio Engine & Speech State)
     let globalAudioCtx = null;
     window.activeSpeechUtterance = null;
+    let speechWatchdog = null;
 
     let voiceCoachEnabled = true;
     let announcedMilestones = new Set();
@@ -966,39 +975,25 @@
       }
     };
 
-    // ระบบปลดล็อกเสียงบนมือถือ (iOS / Android Mobile Audio Pipeline Unlocker)
-    function unlockMobileAudio() {
-      try {
-        const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
-        if (AudioCtxClass && !globalAudioCtx) {
-          globalAudioCtx = new AudioCtxClass();
-        }
-        if (globalAudioCtx && globalAudioCtx.state === 'suspended') {
-          globalAudioCtx.resume();
-        }
-
-        // ปลดล็อก Web Speech API ใน Safari iOS และ Chrome Android
-        if ('speechSynthesis' in window && !isAudioUnlocked) {
-          // ใช้ space สั้นๆ เพื่อเปิด Speech channel บนอุปกรณ์พกพา
-          const warmUtter = new SpeechSynthesisUtterance('');
-          warmUtter.volume = 0.05;
-          window.speechSynthesis.speak(warmUtter);
-          isAudioUnlocked = true;
-        }
-      } catch (err) {
-        console.debug("Audio unlock status:", err);
+    // ฟังก์ชันอัปเดตไฟสถานะการพูดให้ผู้ใช้เห็นว่าระบบกำลังเปล่งเสียง
+    function setSpeechBadge(state, label) {
+      const badge = document.getElementById('speech-live-badge');
+      if (!badge) return;
+      if (state === 'speaking') {
+        badge.innerText = "กำลังพูด...";
+        badge.className = "shrink-0 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-600 text-white border border-emerald-400 animate-pulse";
+      } else if (state === 'error') {
+        badge.innerText = label || "เสียงขัดข้อง";
+        badge.className = "shrink-0 px-2 py-0.5 rounded text-[10px] font-bold bg-rose-700 text-white border border-rose-500";
+      } else {
+        badge.innerText = "พร้อมพูด";
+        badge.className = "shrink-0 px-2 py-0.5 rounded text-[10px] font-bold bg-stone-800 text-stone-300 border border-stone-700";
       }
     }
 
-    // ผูกคำสั่งปลดล็อกเสียงกับทุกการสัมผัสหรือคลิก
-    window.addEventListener('touchstart', unlockMobileAudio, { passive: true });
-    window.addEventListener('touchend', unlockMobileAudio, { passive: true });
-    window.addEventListener('click', unlockMobileAudio, { passive: true });
-
-    // สัญญาณเสียงกระดิ่งเตือนดังก้องกังวาน คมชัดบนลำโพงมือถือทุกรุ่น
+    // เสียงกระดิ่ง Chime แจ้งเตือนระดับสูง (เฉพาะช่วงเวลาสำคัญเท่านั้น ไม่ใช้กับปุ่มเมนู)
     function playChimeAlert() {
       try {
-        unlockMobileAudio();
         const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
         if (!AudioCtxClass) return;
         const ctx = globalAudioCtx || new AudioCtxClass();
@@ -1008,47 +1003,50 @@
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
 
-        osc.type = 'triangle'; // เสียงใส กังวาน ได้ยินชัดมากบนมือถือ
+        osc.type = 'triangle';
         osc.frequency.setValueAtTime(523.25, now); // C5
         osc.frequency.exponentialRampToValueAtTime(880.00, now + 0.16); // A5
 
         gain.gain.setValueAtTime(0.01, now);
-        gain.gain.linearRampToValueAtTime(0.55, now + 0.04); // เพิ่มระดับความดังให้ได้ยินชัดเจน
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.48);
+        gain.gain.linearRampToValueAtTime(0.45, now + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
 
         osc.connect(gain);
         gain.connect(ctx.destination);
 
         osc.start(now);
-        osc.stop(now + 0.49);
+        osc.stop(now + 0.46);
       } catch (err) {
-        console.debug("Chime alert notice:", err);
+        console.debug("Chime alert note:", err);
       }
     }
 
-    // ฟังก์ชันค้นหาเสียงภาษาไทยที่ดีที่สุด (รองรับทั้ง Android, Windows และ iOS)
+    // ค้นหาเสียงภาษาไทยที่เหมาะสมที่สุด (รองรับทั้ง Windows, Mac, Android และ iOS)
     function getBestThaiVoice() {
       if (!('speechSynthesis' in window)) return null;
-      const voices = window.speechSynthesis.getVoices();
-      if (!voices || voices.length === 0) return null;
+      const voices = window.speechSynthesis.getVoices() || [];
+      if (voices.length === 0) return null;
 
-      // ค้นหาเสียงภาษาไทยทั้งหมด
-      const thaiVoices = voices.filter(v => v.lang === 'th-TH' || v.lang.startsWith('th'));
+      const thaiVoices = voices.filter(v => v.lang && (v.lang === 'th-TH' || v.lang.toLowerCase().replace('_', '-').startsWith('th')));
       if (thaiVoices.length === 0) return null;
 
-      // ลำดับที่ 1: พยายามหาเสียงผู้ชายภาษาไทย (Niwat, Sarawut, Male, ชาย)
+      // 1. ลองหาเสียงผู้ชายภาษาไทย (Niwat, Sarawut, Male, ชาย)
       const maleKeywords = ['niwat', 'sarawut', 'male', 'man', 'boy', 'ชาย', 'pattara'];
-      const explicitMale = thaiVoices.find(v => {
-        const name = (v.name || '').toLowerCase();
-        return maleKeywords.some(kw => name.includes(kw));
+      const maleVoice = thaiVoices.find(v => {
+        const n = (v.name || '').toLowerCase();
+        return maleKeywords.some(kw => n.includes(kw));
       });
-      if (explicitMale) return explicitMale;
+      if (maleVoice) return maleVoice;
 
-      // ลำดับที่ 2: หากไม่มีเสียงผู้ชาย ให้ใช้เสียงภาษาไทยที่มีอยู่ในเครื่อง เพื่อให้มีเสียงดังออกลำโพง 100%
+      // 2. หากเป็นเสียงติดตั้งในเครื่องแบบ local ให้เลือกใช้เพื่อความเสถียรบนมือถือ
+      const localVoice = thaiVoices.find(v => v.localService === true);
+      if (localVoice) return localVoice;
+
+      // 3. เสียงไทยแรกสุดที่มีในเครื่อง
       return thaiVoices[0];
     }
 
-    // ฟังก์ชันสั่งงานเสียงพูดภาษาไทย คมชัด ชัดถ้อยชัดคำ และการันตีเสียงออกลำโพงมือถือ
+    // ฟังก์ชันสั่งงานเสียงพูดภาษาไทย (แก้ไขบั๊กค้างบนมือถือ 100% และไม่มีเสียงกระดิ่งแทรกเมนู)
     function speakThai(message) {
       const sub = document.getElementById('voice-subtitle');
       if (sub) {
@@ -1056,20 +1054,35 @@
       }
 
       if (!voiceCoachEnabled) return;
-
-      // ส่งเสียงระฆัง Chime นำร่องดังก้องบนลำโพงมือถือเสมอ
-      playChimeAlert();
-
-      if (!('speechSynthesis' in window)) return;
+      if (!('speechSynthesis' in window)) {
+        setSpeechBadge('error', 'เบราว์เซอร์ไม่รองรับ');
+        return;
+      }
 
       try {
-        unlockMobileAudio();
-
-        // ตรวจสอบและยกเลิกเสียงเดิมที่ค้างอยู่
-        if (window.speechSynthesis.speaking) {
-          window.speechSynthesis.cancel();
+        // หากระบบอยู่ในสถานะ paused ให้ resume ทันที
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
         }
 
+        // ป้องกันบั๊ก Android Deadlock: หากกำลังพูดอยู่ ให้ยกเลิกแล้วหน่วงเวลาเล็กน้อย
+        if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+          window.speechSynthesis.cancel();
+          setTimeout(() => {
+            executeSpeech(message);
+          }, 60);
+        } else {
+          executeSpeech(message);
+        }
+      } catch (err) {
+        console.error("Speech trigger error:", err);
+        setSpeechBadge('error', 'ขัดข้อง');
+      }
+    }
+
+    // ฟังก์ชันประมวลผลเสียงพูดจริง
+    function executeSpeech(message) {
+      try {
         const utter = new SpeechSynthesisUtterance(message);
         utter.lang = 'th-TH';
 
@@ -1078,30 +1091,57 @@
           utter.voice = chosenVoice;
         }
 
-        utter.pitch = 0.98; // โทนเสียงผู้ชาย อบอุ่น ฟังสบาย
-        utter.rate = 0.95;  // จังหวะชัดถ้อยชัดคำ
-        utter.volume = 1.0; // เร่งระดับความดังสูงสุด 100%
+        // ตั้งค่าความเร็วและระดับเสียงมาตรฐาน เพื่อไม่ให้ TTS บน Samsung/Xiaomi เกิดความผิดพลาด
+        utter.rate = 1.0;
+        utter.pitch = 1.0;
+        utter.volume = 1.0; // เร่งความดังระดับสูงสุด
 
-        // ป้องกัน Garbage Collection บนเบราว์เซอร์มือถือตัดเสียงพูดทิ้ง
+        // ป้องกัน Garbage Collection ตัดเสียงทิ้ง
         window.activeSpeechUtterance = utter;
 
-        utter.onend = () => { window.activeSpeechUtterance = null; };
-        utter.onerror = (e) => { 
-          console.debug("Speech playback note:", e);
-          window.activeSpeechUtterance = null; 
+        utter.onstart = () => {
+          setSpeechBadge('speaking', 'กำลังพูด...');
+          
+          // ระบบ Watchdog ป้องกันเสียงค้างเกิน 15 วินาทีบนเบราว์เซอร์มือถือ
+          if (speechWatchdog) clearInterval(speechWatchdog);
+          speechWatchdog = setInterval(() => {
+            if (window.speechSynthesis.speaking) {
+              window.speechSynthesis.resume();
+            } else {
+              clearInterval(speechWatchdog);
+            }
+          }, 3000);
         };
 
-        // สั่งเล่นเสียงพูด
+        utter.onend = () => {
+          setSpeechBadge('idle', 'พร้อมพูด');
+          if (speechWatchdog) clearInterval(speechWatchdog);
+          window.activeSpeechUtterance = null;
+        };
+
+        utter.onerror = (e) => {
+          console.warn("Speech playback notice:", e);
+          setSpeechBadge('error', 'เตือน: ' + (e.error || ''));
+          if (speechWatchdog) clearInterval(speechWatchdog);
+          window.activeSpeechUtterance = null;
+        };
+
         window.speechSynthesis.speak(utter);
-      } catch (err) {
-        console.error("Speech playback error:", err);
+      } catch (e) {
+        console.error("Execution error:", e);
+        setSpeechBadge('error', 'ขัดข้อง');
       }
     }
 
-    // ปุ่มทดสอบเสียงด่วนบนมือถือ (ทำให้มั่นใจว่าลำโพงดังชัดเจน)
+    // ปุ่มทดสอบเสียงด่วนบนมือถือ (ล้างคิวและพูดทดสอบทันที)
     function testMobileSound() {
-      unlockMobileAudio();
-      speakThai("ทดสอบเสียงพูดครับ ระบบเสียงทำงานสมบูรณ์แล้วครับ ปรับระดับเสียงข้างโทรศัพท์มือถือให้ดังตามต้องการได้เลยครับ");
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.resume();
+      }
+      setTimeout(() => {
+        speakThai("ทดสอบเสียงพูดครับ พัฒนาระบบโดยน้าราม ตอนนี้เสียงพูดบนมือถือทำงานสมบูรณ์แล้วครับ ปรับระดับเสียงข้างเครื่องได้ตามต้องการเลยครับ");
+      }, 70);
     }
 
     function toggleVoiceCoach() {
@@ -1114,18 +1154,18 @@
         text.innerText = "โค้ชชาย: เปิด";
         icon.innerText = "🔊";
         btn.className = "px-3 py-1.5 rounded-xl bg-[#2e1c12] hover:bg-[#3d2518] border border-amber-600/50 text-amber-200 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1.5";
-        speakThai("เปิดเสียงโค้ชเรียบร้อยแล้วครับ พัฒนาระบบโดยน้าราม พร้อมดูแลสุขภาพไปด้วยกันครับ");
+        speakThai("เปิดเสียงโค้ชเรียบร้อยแล้วครับ");
       } else {
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
         text.innerText = "โค้ช: ปิด";
         icon.innerText = "🔇";
         btn.className = "px-3 py-1.5 rounded-xl bg-[#140b07] border border-amber-900 text-stone-400 text-xs font-bold active:scale-95 transition-all flex items-center gap-1.5";
+        setSpeechBadge('idle', 'ปิดเสียง');
       }
     }
 
-    // ฟังก์ชันสลับหน้าต่างหลัก (แท็บ 1 Pacer vs แท็บ 2 คัมภีร์กรดไหลย้อน)
+    // สลับหน้าต่างหลัก (แท็บ 1 Pacer vs แท็บ 2 คัมภีร์กรดไหลย้อน)
     function switchMainTab(tab) {
-      unlockMobileAudio();
       currentMainTab = tab;
       const btnPacer = document.getElementById('nav-btn-pacer');
       const btnGerd = document.getElementById('nav-btn-gerd');
@@ -1142,12 +1182,10 @@
         btnPacer.className = "flex-1 py-2.5 rounded-xl text-emerald-300/80 hover:text-white hover:bg-[#0c2a20] transition-all flex items-center justify-center gap-2 font-medium";
         viewGerd.classList.remove('hidden');
         viewPacer.classList.add('hidden');
-        speakThai("เปิดคัมภีร์อาหารและวิธีดูแลกรดไหลย้อนแล้วครับ มีทั้งรายการอาหาร เครื่องดื่ม และ 7 กฎเหล็กดูแลตัวเองครับ");
       }
     }
 
     function switchGerdSection(sec) {
-      unlockMobileAudio();
       const btnFood = document.getElementById('sub-gerd-food');
       const btnDrink = document.getElementById('sub-gerd-drink');
       const btnCare = document.getElementById('sub-gerd-care');
@@ -1164,15 +1202,12 @@
       if (sec === 'food') {
         btnFood.className = "flex-1 py-2 rounded-lg bg-amber-600 text-slate-950 font-black shadow-xs transition-all flex items-center justify-center gap-1";
         secFood.classList.remove('hidden');
-        speakThai("หมวดอาหารครับ กล้วยน้ำว้า ข้าวโอ๊ต และเนื้อปลา ย่อยง่ายและปลอดภัยครับ หลีกเลี่ยงของทอดและของเผ็ดจัดนะครับ");
       } else if (sec === 'drink') {
         btnDrink.className = "flex-1 py-2 rounded-lg bg-amber-600 text-slate-950 font-black shadow-xs transition-all flex items-center justify-center gap-1";
         secDrink.classList.remove('hidden');
-        speakThai("หมวดเครื่องดื่มครับ แนะนำจิบน้ำเปล่าอุณหภูมิห้อง หรือน้ำขิงอุ่นครับ หลีกเลี่ยงกาแฟสดและน้ำอัดลมเด็ดขาดนะครับ");
       } else if (sec === 'care') {
         btnCare.className = "flex-1 py-2 rounded-lg bg-amber-600 text-slate-950 font-black shadow-xs transition-all flex items-center justify-center gap-1";
         secCare.classList.remove('hidden');
-        speakThai("หมวด 7 กฎเหล็กครับ ข้อสำคัญที่สุดคือห้ามนอนราบใน 60 นาทีแรก และมื้อเย็นต้องห่างจากเวลานอนอย่างน้อย 3 ชั่วโมงครับ");
       }
     }
 
@@ -1200,9 +1235,8 @@
       }
     }
 
-    // ฟังก์ชันเลือก 1 ใน 5 กิจกรรม
-    function selectActivity(actId) {
-      unlockMobileAudio();
+    // ฟังก์ชันเลือก 1 ใน 5 กิจกรรม (ไม่มีเสียงกดกระดิ่งแทรก)
+    function selectActivity(actId, silent = false) {
       currentActivity = actId;
       const config = activityConfigs[actId];
 
@@ -1251,10 +1285,16 @@
       }
 
       resetSessionTimer();
+
+      // อัปเดตข้อความในกล่องบรรยายโดยไม่ต้องยิงเสียงหากเป็นโหมด silent
+      if (!silent) {
+        const sub = document.getElementById('voice-subtitle');
+        if (sub) sub.innerText = `"${config.title} - ${config.sub}"`;
+      }
     }
 
+    // เลือกมื้ออาหาร (ไม่มีเสียงกดกระดิ่งแทรกกวนใจ)
     function setMeal(m) {
-      unlockMobileAudio();
       currentMeal = m;
       document.querySelectorAll('.m-btn').forEach(b => {
         b.classList.remove('border-amber-500', 'bg-[#3d2417]', 'text-amber-100', 'font-bold');
@@ -1269,14 +1309,14 @@
 
       // แนะนำกิจกรรมหลักที่ตรงกับมื้อนั้นโดยอัตโนมัติ
       if (m === 'carb') {
-        selectActivity('spu');
-        speakThai("เลือกมื้อข้าวแป้งครับ แนะนำให้กระดกส้นเท้าดึงน้ำตาล หรือจะเลือกอีก 4 กิจกรรมที่หน้าจอก็ได้ครับ");
+        selectActivity('spu', true);
+        speakThai("เลือกมื้อข้าวแป้งครับ แนะนำให้กระดกส้นเท้าดึงน้ำตาลเข้ากล้ามเนื้อน่องครับ");
       } else if (m === 'protein') {
-        selectActivity('breath');
-        speakThai("เลือกมื้อโปรตีนสูงครับ แนะนำให้ฝึกหายใจด้วยกะบังลม หรือยืดอกเปิดลำตัว เพื่อรัดหูรูดกระเพาะครับ");
+        selectActivity('breath', true);
+        speakThai("เลือกมื้อโปรตีนสูงครับ แนะนำให้ฝึกหายใจด้วยกะบังลม เพื่อรัดหูรูดกระเพาะครับ");
       } else if (m === 'heavy') {
-        selectActivity('walk');
-        speakThai("เลือกมื้อหนักมันจัดครับ แนะนำให้เดินทอดน่องช้าๆ หรือหมุนข้อเท้า เพื่อช่วยทางเดินอาหารเคลื่อนตัวครับ");
+        selectActivity('walk', true);
+        speakThai("เลือกมื้อหนักมันจัดครับ แนะนำให้เดินทอดน่องช้าๆ ช่วยทางเดินอาหารเคลื่อนตัวครับ");
       }
 
       evaluateMetabolicAndGERD(passedTime);
@@ -1284,7 +1324,7 @@
 
     function speakCurrentAdvice() {
       const config = activityConfigs[currentActivity];
-      speakThai(`${config.title} ครับ ... ${config.sub} ... คำแนะนำสรีระ: ${config.posture}`);
+      speakThai(`${config.title} ครับ ${config.sub} คำแนะนำสรีระ: ${config.posture}`);
     }
 
     function switchTimingMode(mode) {
@@ -1311,7 +1351,6 @@
     }
 
     function toggleSessionTimer() {
-      unlockMobileAudio();
       const btn = document.getElementById('session-btn');
       const label = document.getElementById('session-btn-label');
       const config = activityConfigs[currentActivity];
@@ -1360,8 +1399,12 @@
       btn.classList.add('bg-emerald-600', 'text-white');
       label.innerText = "✓ ครบเวลาแล้ว";
 
-      const config = activityConfigs[currentActivity];
-      speakThai(config.completionVoice);
+      // ส่งเสียงระฆังแจ้งเตือนเมื่อหมดเวลารอบจริง แล้วจึงพูดสรุป
+      playChimeAlert();
+      setTimeout(() => {
+        const config = activityConfigs[currentActivity];
+        speakThai(config.completionVoice);
+      }, 500);
     }
 
     function resetSessionTimer() {
@@ -1379,7 +1422,6 @@
     }
 
     function toggleLiveTimer() {
-      unlockMobileAudio();
       const btnText = document.getElementById('live-timer-btn-text');
       if (!isLiveTimerRunning) {
         isLiveTimerRunning = true;
@@ -1415,13 +1457,22 @@
 
       if (mins === 25 && !announcedMilestones.has(25)) {
         announcedMilestones.add(25);
-        speakThai("แจ้งเตือนครับ ขณะนี้น้ำตาลในเลือดขึ้นถึงจุดสูงสุดแล้วครับ เริ่มขยับตัวทำกิจกรรมตามจังหวะภาพเพื่อความสดชื่นได้เลยครับ");
+        playChimeAlert();
+        setTimeout(() => {
+          speakThai("แจ้งเตือนครับ ขณะนี้น้ำตาลในเลือดขึ้นถึงจุดสูงสุดแล้วครับ เริ่มขยับตัวทำกิจกรรมตามจังหวะภาพเพื่อความสดชื่นได้เลยครับ");
+        }, 500);
       } else if (mins === 45 && !announcedMilestones.has(45)) {
         announcedMilestones.add(45);
-        speakThai("ผ่านไป 45 นาทีแล้วครับ อาหารกำลังย่อยลงสู่ลำไส้เล็ก นั่งหลังตรงต่ออีกสักนิดนะครับ");
+        playChimeAlert();
+        setTimeout(() => {
+          speakThai("ผ่านไป 45 นาทีแล้วครับ อาหารกำลังย่อยลงสู่ลำไส้เล็ก นั่งหลังตรงต่ออีกสักนิดนะครับ");
+        }, 500);
       } else if (mins === 60 && !announcedMilestones.has(60)) {
         announcedMilestones.add(60);
-        speakThai("ครบ 1 ชั่วโมงแล้วครับ พ้นช่วงอันตรายของกรดไหลย้อนแล้วครับ ปรับตัวได้ยอดเยี่ยมมากครับ");
+        playChimeAlert();
+        setTimeout(() => {
+          speakThai("ครบ 1 ชั่วโมงแล้วครับ พ้นช่วงอันตรายของกรดไหลย้อนแล้วครับ ปรับตัวได้ยอดเยี่ยมมากครับ");
+        }, 500);
       }
     }
 
@@ -1474,7 +1525,6 @@
 
     // ระบบกำเนิดเสียง 40Hz Gamma Wave ผ่าน Web Audio API
     function toggleAlertTone() {
-      unlockMobileAudio();
       const btn = document.getElementById('audio-btn');
       const icon = document.getElementById('audio-icon');
       const label = document.getElementById('audio-label');
@@ -1489,7 +1539,7 @@
 
           masterGain = ctx.createGain();
           masterGain.gain.setValueAtTime(0.001, ctx.currentTime);
-          masterGain.gain.exponentialRampToValueAtTime(0.30, ctx.currentTime + 0.2); // เสียงดัง คมชัด มีพลัง
+          masterGain.gain.exponentialRampToValueAtTime(0.28, ctx.currentTime + 0.2);
           masterGain.connect(ctx.destination);
 
           osc1 = ctx.createOscillator();
@@ -1550,11 +1600,13 @@
       }
     }
 
+    // โหลด Voice list เมื่อเปิดหน้าเว็บ
     window.addEventListener('DOMContentLoaded', () => {
       evaluateMetabolicAndGERD(0);
-      selectActivity('spu');
+      selectActivity('spu', true);
 
       if ('speechSynthesis' in window) {
+        window.speechSynthesis.getVoices();
         window.speechSynthesis.onvoiceschanged = () => {
           window.speechSynthesis.getVoices();
         };
