@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Post-Meal Glucose & Posture Pacer</title>
+  <title>โปรแกรมลดอาการง่วงหลังอาหาร และ ป้องกันกรดไหลย้อน</title>
   
   <!-- ตั้งค่าแอปพลิเคชันบนมือถือ (PWA & Standalone Fullscreen) -->
   <meta name="theme-color" content="#020617">
@@ -33,7 +33,7 @@
       -webkit-tap-highlight-color: transparent;
     }
     
-    /* ท่าทางยกส้นเท้า Soleus Push-up (SPU) 1.2 วินาทีต่อรอบ */
+    /* ท่าทางยกส้นเท้า Soleus Push-up (SPU) 1.2 วินาทีต่อรอบ สำหรับมื้อแป้ง */
     @keyframes soleusLift {
       0%, 100% {
         transform: translateY(0px) rotate(0deg);
@@ -45,6 +45,25 @@
 
     .tap-pacer-active {
       animation: soleusLift 1.2s infinite cubic-bezier(0.4, 0.0, 0.2, 1);
+    }
+
+    /* แอนิเมชันฝึกกะบังลม หายใจเข้า 4 วินาที (ขยาย) - หายใจออก 6 วินาที (ยุบ) สำหรับมื้อโปรตีน */
+    @keyframes diaphragmBreathe {
+      0%, 100% { transform: scale(0.9); opacity: 0.7; }
+      40% { transform: scale(1.22); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.7; }
+    }
+    .breath-pacer-active {
+      animation: diaphragmBreathe 10s infinite ease-in-out;
+    }
+
+    /* แอนิเมชันจังหวะเดินช้า (Slow Stroll Pacer) สลับก้าวเท้า 1.6 วินาที สำหรับมื้อหนัก/ของมัน */
+    @keyframes slowStroll {
+      0%, 100% { transform: translateX(-10px) rotate(-4deg); }
+      50% { transform: translateX(10px) rotate(4deg); }
+    }
+    .stroll-pacer-active {
+      animation: slowStroll 1.6s infinite ease-in-out;
     }
 
     /* วงแหวนคลื่นพลังงานจังหวะ */
@@ -82,7 +101,7 @@
         ระบบควบคุมพลังงาน & ป้องกันกรดไหลย้อน
       </div>
       <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white leading-snug">
-        โปรแกรมลดอาการง่วงหลังอาหาร
+        โปรแกรมลดอาการง่วงหลังอาหาร และ ป้องกันกรดไหลย้อน
       </h1>
       <p class="text-sm sm:text-base text-slate-300 font-normal leading-relaxed">
         เกลี่ยกราฟน้ำตาล ดึงกลูโคสเข้ากล้ามเนื้อน่อง และเปิดมุมระบายกรดในกระเพาะ
@@ -217,18 +236,64 @@
         </p>
       </div>
 
-      <!-- ตัวนำจังหวะ Soleus Push-up (ตัวหนังสือใหญ่ ชัดเจน) -->
-      <div class="py-4 px-3 flex flex-col items-center justify-center space-y-2.5 bg-slate-900/80 rounded-xl border border-slate-800 relative">
-        <div class="relative flex items-center justify-center">
-          <div class="absolute w-24 h-24 rounded-2xl bg-amber-500/10 pulse-ring"></div>
-          <div id="pacer-circle" class="w-16 h-16 rounded-2xl border-2 border-amber-400/80 bg-amber-500/20 flex flex-col items-center justify-center shadow-lg shadow-amber-500/20 tap-pacer-active relative z-10">
-            <span class="text-3xl" role="img" aria-label="Soleus Tap">🦶</span>
+      <!-- วิดเจ็ตนำจังหวะเฉพาะมื้ออาหาร + ระบบจับเวลาทำกิจกรรมและคำสั่งบอกหยุด (Dynamic Visual Pacer & Session Coach) -->
+      <div id="pacer-container" class="py-4 px-3 flex flex-col items-center justify-center space-y-3 bg-slate-900/80 rounded-xl border border-slate-800 relative transition-all duration-300">
+        
+        <!-- ส่วนหัวบอกระยะเวลาที่เหมาะสมของกิจกรรม -->
+        <div class="w-full flex items-center justify-between px-1 text-xs">
+          <span class="font-bold text-slate-300 flex items-center gap-1.5">
+            <span>⏱️</span> ระยะเวลาที่แนะนำรอบนี้:
+          </span>
+          <span id="session-target-badge" class="font-extrabold text-amber-400 bg-amber-500/15 px-2.5 py-0.5 rounded-md border border-amber-500/30">
+            5 – 10 นาที
+          </span>
+        </div>
+
+        <div class="relative flex items-center justify-center my-1">
+          <div id="pacer-ring" class="absolute w-24 h-24 rounded-2xl bg-amber-500/10 pulse-ring"></div>
+          <div id="pacer-circle" class="w-16 h-16 rounded-2xl border-2 border-amber-400/80 bg-amber-500/20 flex flex-col items-center justify-center shadow-lg shadow-amber-500/20 tap-pacer-active relative z-10 transition-all duration-300">
+            <span id="pacer-icon" class="text-3xl" role="img" aria-label="Action Icon">🦶</span>
           </div>
         </div>
-        <div class="text-center space-y-1">
-          <div class="text-sm sm:text-base font-bold text-slate-100">จังหวะกระดกส้นเท้า (Soleus Pacer - 1.2s)</div>
-          <p class="text-xs sm:text-sm text-slate-300 leading-normal">ปลายเท้าแตะพื้น ยกเฉพาะส้นเท้าตามจังหวะ • หน้าท้องไม่เกร็ง (Zero-IAP)</p>
+
+        <div class="text-center space-y-1 w-full">
+          <div id="pacer-title" class="text-sm sm:text-base font-bold text-slate-100">จังหวะกระดกส้นเท้า (Soleus Pacer - 1.2s)</div>
+          <p id="pacer-hint" class="text-xs sm:text-sm text-slate-300 leading-normal">ปลายเท้าแตะพื้น ยกเฉพาะส้นเท้าตามจังหวะ • หน้าท้องไม่เกร็ง (Zero-IAP)</p>
         </div>
+
+        <!-- แผงจับเวลาทำกิจกรรมและปุ่มสั่งเริ่ม/หยุด (Session Timer Bar) -->
+        <div class="w-full bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="text-xs text-slate-400 font-medium">เวลานับถอยหลังรอบนี้:</div>
+            <div class="text-2xl font-mono font-extrabold text-amber-400 tracking-wider flex items-baseline gap-1">
+              <span id="session-timer-display">10:00</span>
+              <span class="text-[11px] text-slate-400 font-sans font-normal">น.</span>
+            </div>
+          </div>
+          
+          <div class="flex gap-2">
+            <button type="button" id="session-btn" onclick="toggleSessionTimer()" class="flex-1 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm active:scale-95 transition-all shadow-md shadow-amber-500/20 flex items-center justify-center gap-1.5">
+              <span>▶</span>
+              <span id="session-btn-label">เริ่มจับเวลาทำ</span>
+            </button>
+            <button type="button" onclick="resetSessionTimer()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs active:scale-95 transition-all border border-slate-700" title="รีเซ็ตเวลารอบนี้">
+              ↺
+            </button>
+          </div>
+        </div>
+
+        <!-- สัญญาณเตือนที่ควรหยุดทำ (Stop Signals Display) -->
+        <div class="w-full bg-rose-500/10 border border-rose-500/25 p-2.5 rounded-xl text-left space-y-1">
+          <div class="text-xs font-bold text-rose-300 flex items-center gap-1.5">
+            <span>🛑</span> สัญญาณเตือนที่ควรหยุดทำ:
+          </div>
+          <ul id="stop-signals-list" class="text-xs text-slate-200 list-disc list-inside space-y-0.5 leading-relaxed font-normal">
+            <li>เมื่อทำครบ 10 นาที (ระบบจะส่งเสียงเตือนอัตโนมัติ)</li>
+            <li>เมื่อรู้สึกว่าความง่วงหายไปและมีสมาธิโฟกัสงานแล้ว</li>
+            <li>หากเริ่มรู้สึกตึงหรือเมื่อยกล้ามเนื้อน่อง ให้หยุดพักและจิบน้ำทันที</li>
+          </ul>
+        </div>
+
       </div>
 
       <!-- คลื่นเสียง 40Hz Gamma Beat -->
@@ -273,6 +338,47 @@
     let liveSeconds = 0;
     let liveTimerInterval = null;
     let isLiveTimerRunning = false;
+
+    // ระบบจับเวลาทำกิจกรรมเฉพาะรอบ (Session Duration Timer)
+    let sessionRemainingSeconds = 600; // ค่าเริ่มต้น 10 นาทีสำหรับมื้อแป้ง
+    let sessionTotalSeconds = 600;
+    let sessionTimerInterval = null;
+    let isSessionRunning = false;
+
+    // ข้อมูลระยะเวลาและเกณฑ์การหยุดของแต่ละมื้อ
+    const sessionMealConfigs = {
+      carb: {
+        durationSeconds: 600, // 10 นาที
+        badgeText: "5 – 10 นาที",
+        stopSignals: [
+          "เมื่อทำครบ 10 นาที (ระบบจะส่งเสียงเตือนอัตโนมัติ)",
+          "เมื่อรู้สึกหายง่วงและสมองกลับมาโฟกัสงานได้แล้ว",
+          "หากเริ่มรู้สึกตึงหรือเมื่อยกล้ามเนื้อน่อง ให้หยุดพักและจิบน้ำทันที",
+          "เมื่อเวลาหลังอาหารผ่านพ้น 60 นาที (พ้นช่วง Peak Glucose)"
+        ],
+        completionVoice: "ครบ 10 นาทีแล้วค่ะ ระบบช่วยเปิดประตูรับน้ำตาลเรียบร้อยแล้ว สามารถหยุดพักกล้ามเนื้อน่องและกลับไปทำงานได้เลยค่ะ"
+      },
+      protein: {
+        durationSeconds: 300, // 5 นาที
+        badgeText: "3 – 5 นาที (ประมาณ 20 รอบ)",
+        stopSignals: [
+          "เมื่อฝึกหายใจครบ 5 นาที ให้หยุดนับลมหายใจและหายใจตามธรรมชาติ",
+          "หากเริ่มรู้สึกวิงเวียนศีรษะจากการหายใจลึก ให้หยุดทันที",
+          "สิ่งที่ต้องทำต่อ: ยังคงนั่งหลังตรง อกผาย จนครบ 60 นาทีเพื่อกันกรดไหลย้อน"
+        ],
+        completionVoice: "ครบ 5 นาทีแล้วค่ะ หยุดตั้งใจนับลมหายใจได้แล้วค่ะ ให้นั่งหลังตรงยืดอกทำงานต่อตามปกตินะคะ"
+      },
+      heavy: {
+        durationSeconds: 600, // 10 นาที
+        badgeText: "5 – 10 นาที (ไม่เกิน 15 นาที)",
+        stopSignals: [
+          "เมื่อเดินช้าครบ 10 นาที ให้กลับมานั่งทำงานในท่าตัวตรง",
+          "หยุดทันทีเมื่อเริ่มรู้สึก 'จุก เสียด แน่น' ที่ชายโครง",
+          "ห้ามก้าวเดินเร็วหรือจ้ำอ้าว และห้ามเดินจนเหนื่อยหอบ"
+        ],
+        completionVoice: "ครบ 10 นาทีแล้วค่ะ เพียงพอสำหรับการกระตุ้นทางเดินอาหารแล้วค่ะ กลับมานั่งทำงานในท่าตัวตรงได้เลยค่ะ"
+      }
+    };
 
     // ระบบเสียงพูดเตือน (Voice Coach)
     let voiceCoachEnabled = true;
@@ -400,56 +506,85 @@
       evaluateMetabolicAndGERD(passedTime);
     }
 
-    // เริ่มต้น / พัก การนับเวลาสด พร้อมส่งเสียงพูดเตือนตามช่วงสำคัญ
-    function toggleLiveTimer() {
-      const btn = document.getElementById('live-timer-toggle-btn');
-      if (!isLiveTimerRunning) {
-        isLiveTimerRunning = true;
-        btn.innerText = "⏸ หยุดพัก";
-        btn.className = "px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700 text-amber-300 text-xs sm:text-sm font-extrabold transition-all";
+    // ระบบจับเวลาทำกิจกรรมเฉพาะรอบ (Session Countdown Logic)
+    function toggleSessionTimer() {
+      const btn = document.getElementById('session-btn');
+      const label = document.getElementById('session-btn-label');
 
-        // เสียงพูดเตือนเมื่อกดเริ่มนับ
-        if (liveSeconds === 0) {
-          speakThai("เริ่มนับเวลาหลังอาหารแล้วค่ะ นั่งหลังตรง ยืดลำตัว และหลีกเลี่ยงการฟุบโต๊ะหรือนอนราบนะคะ");
+      if (!isSessionRunning) {
+        // เริ่มจับเวลากิจกรรม
+        isSessionRunning = true;
+        btn.classList.remove('bg-amber-500', 'hover:bg-amber-400', 'text-slate-950');
+        btn.classList.add('bg-slate-800', 'hover:bg-slate-700', 'text-amber-300', 'border', 'border-slate-700');
+        label.innerText = "⏸ พักเวลา";
+
+        // เสียงพูดแนะนำเมื่อเริ่มทำกิจกรรม
+        if (sessionRemainingSeconds === sessionTotalSeconds) {
+          if (currentMeal === 'carb') {
+            speakThai("เริ่มจับเวลาสิบนาทีค่ะ กระดกส้นเท้าตามจังหวะ หากหายง่วงหรือเมื่อยน่องก่อน สามารถกดหยุดได้ทันทีนะคะ");
+          } else if (currentMeal === 'protein') {
+            speakThai("เริ่มจับเวลาห้านาทีค่ะ ฝึกหายใจเข้าลึกสี่วิ และออกหกวิ หากเวียนหัวให้หยุดทันทีนะคะ");
+          } else if (currentMeal === 'heavy') {
+            speakThai("เริ่มจับเวลาเดินช้าสิบนาทีค่ะ ก้าวช้าๆ ทอดน่อง หากเริ่มจุกแน่นให้หยุดทันทีนะคะ");
+          }
         }
 
-        liveTimerInterval = setInterval(() => {
-          liveSeconds++;
-          const mins = Math.floor(liveSeconds / 60);
-          const secs = liveSeconds % 60;
-          document.getElementById('live-timer-display').innerText = 
-            `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-
-          if (timingMode === 'auto') {
-            passedTime = mins;
-            evaluateMetabolicAndGERD(passedTime);
+        sessionTimerInterval = setInterval(() => {
+          if (sessionRemainingSeconds > 0) {
+            sessionRemainingSeconds--;
+            updateSessionDisplay();
+          } else {
+            // ทำครบตามเวลาที่กำหนดแล้ว (Auto-Stop Trigger)
+            finishSessionTimer();
           }
-
-          // ตรวจจับหลักไมล์เวลาสำคัญเพื่อส่งเสียงแจ้งเตือนอัตโนมัติ
-          checkVoiceMilestones(mins, secs);
         }, 1000);
       } else {
-        isLiveTimerRunning = false;
-        clearInterval(liveTimerInterval);
-        btn.innerText = "▶ นับเวลาต่อ";
-        btn.className = "px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs sm:text-sm font-extrabold transition-all shadow-lg shadow-amber-500/20";
+        // กดพักการจับเวลา
+        isSessionRunning = false;
+        clearInterval(sessionTimerInterval);
+        btn.classList.remove('bg-slate-800', 'hover:bg-slate-700', 'text-amber-300', 'border', 'border-slate-700');
+        btn.classList.add('bg-amber-500', 'hover:bg-amber-400', 'text-slate-950');
+        label.innerText = "▶ ทำต่อ";
       }
     }
 
-    // ตรวจสอบหลักไมล์เวลาเพื่อแจ้งเตือนด้วยเสียงพูด
-    function checkVoiceMilestones(mins, secs) {
-      if (secs !== 0) return; // เช็กเฉพาะเมื่อครบนาที
+    // อัปเดตตัวเลขนับถอยหลังของรอบกิจกรรม
+    function updateSessionDisplay() {
+      const mins = Math.floor(sessionRemainingSeconds / 60);
+      const secs = sessionRemainingSeconds % 60;
+      document.getElementById('session-timer-display').innerText = 
+        `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
 
-      if (mins === 25 && !announcedMilestones.has(25)) {
-        announcedMilestones.add(25);
-        speakThai("แจ้งเตือนค่ะ ขณะนี้เข้าสู่ช่วงระดับน้ำตาลในเลือดสูงสุดแล้วค่ะ เริ่มกระดกส้นเท้าตามจังหวะเพื่อเผาผลาญน้ำตาลได้เลยค่ะ");
-      } else if (mins === 45 && !announcedMilestones.has(45)) {
-        announcedMilestones.add(45);
-        speakThai("เวลาผ่านไปสี่สิบห้านาทีแล้วค่ะ อาหารเริ่มเคลื่อนตัวสู่ลำไส้เล็กแล้วค่ะ ยังคงนั่งหลังตรงเพื่อลดกรดนะคะ");
-      } else if (mins === 60 && !announcedMilestones.has(60)) {
-        announcedMilestones.add(60);
-        speakThai("ครบหนึ่งชั่วโมงแล้วค่ะ พ้นช่วงวิกฤตของกรดไหลย้อนแล้วค่ะ ร่างกายของคุณปรับระดับน้ำตาลได้ดีเยี่ยมแล้วค่ะ");
-      }
+    // ทำครบกำหนดเวลากิจกรรม (แจ้งเตือนด้วยเสียงพูดให้หยุดทำทันที)
+    function finishSessionTimer() {
+      clearInterval(sessionTimerInterval);
+      isSessionRunning = false;
+      const btn = document.getElementById('session-btn');
+      const label = document.getElementById('session-btn-label');
+
+      btn.classList.remove('bg-slate-800', 'hover:bg-slate-700', 'text-amber-300', 'border', 'border-slate-700');
+      btn.classList.add('bg-emerald-500', 'hover:bg-emerald-400', 'text-slate-950');
+      label.innerText = "✓ ครบเวลาแล้ว";
+
+      // ส่งเสียงพูดสั่งให้ผู้ใช้หยุดทำกิจกรรม
+      const config = sessionMealConfigs[currentMeal];
+      speakThai(config.completionVoice);
+    }
+
+    // รีเซ็ตเวลากิจกรรมกลับสู่ค่าเริ่มต้นของมื้อนั้นๆ
+    function resetSessionTimer() {
+      if (sessionTimerInterval) clearInterval(sessionTimerInterval);
+      isSessionRunning = false;
+      const config = sessionMealConfigs[currentMeal];
+      sessionTotalSeconds = config.durationSeconds;
+      sessionRemainingSeconds = config.durationSeconds;
+      updateSessionDisplay();
+
+      const btn = document.getElementById('session-btn');
+      const label = document.getElementById('session-btn-label');
+      btn.className = "flex-1 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm active:scale-95 transition-all shadow-md shadow-amber-500/20 flex items-center justify-center gap-1.5";
+      label.innerText = "เริ่มจับเวลาทำ";
     }
 
     // รีเซ็ตการนับเวลาสด
@@ -481,15 +616,26 @@
       activeBtn.classList.add('border-amber-500', 'bg-amber-500/20', 'text-amber-300');
 
       document.getElementById('meal-badge').innerText = mealTitles[m];
+      
+      // อัปเดตการตั้งค่าเวลารอบกิจกรรมและเกณฑ์จุดหยุดทำของมื้อใหม่
+      const config = sessionMealConfigs[m];
+      document.getElementById('session-target-badge').innerText = config.badgeText;
+      
+      const stopList = document.getElementById('stop-signals-list');
+      stopList.innerHTML = config.stopSignals.map(sig => `<li>${sig}</li>`).join('');
+
+      // รีเซ็ตเวลานับถอยหลังรอบกิจกรรมใหม่ตามมื้อ
+      resetSessionTimer();
+
       evaluateMetabolicAndGERD(passedTime);
 
       // พูดชื่อมื้อและคำแนะนำเริ่มต้นสั้นๆ เมื่อผู้ใช้เปลี่ยนมื้อ
       if (m === 'carb') {
-        speakThai("เลือกมื้อข้าวหรือแป้งค่ะ แนะนำกระดกส้นเท้าเพื่อดึงน้ำตาลเข้ากล้ามเนื้อน่องนะคะ");
+        speakThai("มื้อข้าวหรือแป้งค่ะ แนะนำกระดกส้นเท้า 5 ถึง 10 นาทีเพื่อดึงน้ำตาลเข้ากล้ามเนื้อน่องนะคะ");
       } else if (m === 'protein') {
-        speakThai("เลือกมื้อโปรตีนสูงค่ะ กระเพาะต้องการกรดเข้มข้น ห้ามนั่งหลังค่อมเด็ดขาดนะคะ");
+        speakThai("มื้อเน้นโปรตีนค่ะ ไม่ต้องกระดกเท้า ให้ฝึกหายใจ 3 ถึง 5 นาที และนั่งหลังตรงเพื่อรัดหูรูดกระเพาะนะคะ");
       } else if (m === 'heavy') {
-        speakThai("เลือกมื้อบุฟเฟต์หรือของทอดค่ะ แนะนำให้ลุกยืนหรือเดินช้าๆ เพื่อช่วยทางเดินอาหารนะคะ");
+        speakThai("มื้อหนักหรือของทอดค่ะ ให้ลุกขึ้นยืนหรือเดินก้าวช้าๆ 5 ถึง 10 นาที เพื่อช่วยทางเดินอาหารนะคะ");
       }
     }
 
@@ -498,6 +644,44 @@
       passedTime = parseInt(val, 10);
       document.getElementById('time-val').innerText = val;
       evaluateMetabolicAndGERD(passedTime);
+    }
+
+    // ปรับเปลี่ยนรูปแบบตัวนำจังหวะ (Pacer) ตามมื้ออาหารโดยเฉพาะ
+    function updateDynamicPacer(m) {
+      const circle = document.getElementById('pacer-circle');
+      const icon = document.getElementById('pacer-icon');
+      const title = document.getElementById('pacer-title');
+      const hint = document.getElementById('pacer-hint');
+      const ring = document.getElementById('pacer-ring');
+
+      // ล้างคลาสแอนิเมชันเดิมออกทั้งหมด
+      circle.classList.remove('tap-pacer-active', 'breath-pacer-active', 'stroll-pacer-active');
+
+      if (m === 'carb') {
+        // มื้อแป้ง: กระดกส้นเท้า Soleus Push-up ดักจับกลูโคส
+        circle.classList.add('tap-pacer-active');
+        circle.className = "w-16 h-16 rounded-2xl border-2 border-amber-400/80 bg-amber-500/20 flex flex-col items-center justify-center shadow-lg shadow-amber-500/20 tap-pacer-active relative z-10";
+        ring.className = "absolute w-24 h-24 rounded-2xl bg-amber-500/10 pulse-ring";
+        icon.innerText = "🦶";
+        title.innerText = "จังหวะกระดกส้นเท้า (Soleus Pacer - 1.2s)";
+        hint.innerText = "ปลายเท้าแตะพื้น ยกเฉพาะส้นเท้าตามจังหวะ • หน้าท้องไม่เกร็ง (Zero-IAP)";
+      } else if (m === 'protein') {
+        // มื้อโปรตีน: ฝึกหายใจด้วยกะบังลม (Diaphragmatic Breathing) หนีบรัดหูรูดหลอดอาหาร
+        circle.classList.add('breath-pacer-active');
+        circle.className = "w-16 h-16 rounded-2xl border-2 border-sky-400/80 bg-sky-500/20 flex flex-col items-center justify-center shadow-lg shadow-sky-500/20 breath-pacer-active relative z-10";
+        ring.className = "absolute w-24 h-24 rounded-2xl bg-sky-500/10 pulse-ring";
+        icon.innerText = "🫁";
+        title.innerText = "จังหวะบริหารกะบังลม (Breath Pacer: เข้า 4s / ออก 6s)";
+        hint.innerText = "หายใจเข้าท้องพองตามวงกลม 4 วิ • หายใจออกผ่อนคลาย 6 วิ เพื่อให้กะบังลมรัดหูรูดกระเพาะ";
+      } else if (m === 'heavy') {
+        // มื้อหนัก: เดินช้าๆ หรือยืนยืดตัว (Slow Stroll) กระตุ้นการบีบตัวของทางเดินอาหาร
+        circle.classList.add('stroll-pacer-active');
+        circle.className = "w-16 h-16 rounded-2xl border-2 border-emerald-400/80 bg-emerald-500/20 flex flex-col items-center justify-center shadow-lg shadow-emerald-500/20 stroll-pacer-active relative z-10";
+        ring.className = "absolute w-24 h-24 rounded-2xl bg-emerald-500/10 pulse-ring";
+        icon.innerText = "🚶‍♂️";
+        title.innerText = "จังหวะก้าวเดินช้าๆ (Slow Stroll Pacer - 65 BPM)";
+        hint.innerText = "ลุกขึ้นยืนหรือเดินก้าวสั้นๆ ช้าๆ ตามจังหวะ ห้ามจ้ำอ้าว เพื่อให้ทางเดินอาหารเคลื่อนตัว";
+      }
     }
 
     // ประเมินผลกระทบทางชีวภาพและกรดไหลย้อน (พร้อมข้อความกระชับ ชัดเจน)
@@ -539,13 +723,13 @@
           posture: "นั่งหลังตรง อกผาย ไม่เอนพิงโซฟานิ่มๆ เพราะจะทำให้หน้าท้องพับและบีบน้ำย่อยขึ้นมาที่คอหอย"
         },
         protein: {
-          title: "สูตรคลายแรงกดกระเพาะอาหาร (Postural Decompression)",
-          desc: "โปรตีนต้องการกรด HCl เข้มข้นในการย่อยสูง: ห้ามนั่งหลังค่อมเด็ดขาด! ยืดลำตัวตรงเพื่อเปิดมุมกระเพาะอาหาร (Angle of His) ให้อยู่ในแนวลาดลงตามธรรมชาติ ป้องกันกรดไหลย้อน",
-          posture: "หายใจเข้าลึกช้าๆ ให้กะบังลมทำงานเป็นแคลมป์หนีบรัดรอบหลอดอาหารส่วนล่าง (Crural Diaphragm) ห้ามเอนตัวนอนราบ"
+          title: "สูตรฝึกกะบังลมรัดหูรูดหลอดอาหาร (Diaphragmatic Pinch)",
+          desc: "โปรตีนต้องการกรด HCl เข้มข้นในการย่อยสูง: ไม่จำเป็นต้องกระดกส้นเท้า แต่ต้องนั่งยืดลำตัวตรง และฝึกหายใจเข้า 4 วิ - ออก 6 วิ ตามวงกลมสีฟ้า เพื่อให้กะบังลมหนีบรัดหูรูดหลอดอาหารส่วนล่าง (Crural Diaphragm) ป้องกันกรดพุ่งขึ้นคอ",
+          posture: "นั่งยืดกระดูกสันหลัง ห้ามก้มตัวหรือนั่งหลังค่อม จิบน้ำอุณหภูมิห้อง 1-2 อึกเพื่อชะล้างหลอดอาหาร"
         },
         heavy: {
           title: "สูตรเดินช้ากระตุ้นทางเดินอาหาร (Slow Stroll Protocol)",
-          desc: "อาหารมื้อหนักและมันจัดทำให้กระเพาะบีบตัวช้าลง: แนะนำให้ลุกขึ้นยืนหรือเดินช้าๆ 3-5 นาที ช่วยให้ทางเดินอาหารเคลื่อนตัว โดยไม่ทำให้จุกแน่น",
+          desc: "อาหารมื้อหนักและมันจัดทำให้กระเพาะบีบตัวช้าลง: การนั่งเฉยๆ จะยิ่งทำให้อืดแน่น แนะนำให้ลุกขึ้นยืนยืดตัว หรือเดินก้าวช้าๆ 3-5 นาที ตามจังหวะไอคอน เพื่อช่วยให้ทางเดินอาหารเคลื่อนตัว โดยไม่ทำให้จุกแน่น",
           posture: "หลีกเลี่ยงการก้มตัวผูกเชือกรองเท้า หรือยกของหนัก เพราะจะเพิ่มแรงดันในช่องท้อง (IAP) ทันที"
         }
       };
@@ -554,6 +738,9 @@
       document.getElementById('res-title').innerText = item.title;
       document.getElementById('res-desc').innerText = item.desc;
       document.getElementById('posture-desc').innerText = item.posture;
+
+      // อัปเดตวิดเจ็ตแสดงผลเฉพาะมื้อ
+      updateDynamicPacer(currentMeal);
     }
 
     // ระบบสังเคราะห์คลื่นเสียง 40Hz Gamma Wave (หูซ้าย 220Hz + หูขวา 260Hz)
