@@ -5,19 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>โปรแกรมลดอาการง่วงหลังอาหาร และ ป้องกันกรดไหลย้อน</title>
   
-  <!-- ตั้งค่าแอปพลิเคชันบนมือถือ (PWA & Standalone Fullscreen) -->
-  <meta name="theme-color" content="#020617">
+  <!-- ตั้งค่าแอปพลิเคชันบนมือถือ (PWA & Standalone) -->
+  <meta name="theme-color" content="#ffffff">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="PostMeal">
   <meta name="mobile-web-app-capable" content="yes">
 
-  <!-- ไอคอนแอปพลิเคชันแบบ Vector SVG Data URI -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%230f172a'/><text y='68' x='50' font-size='56' text-anchor='middle'>🦶</text></svg>">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%230f172a'/><text y='68' x='50' font-size='56' text-anchor='middle'>🦶</text></svg>">
+  <!-- ไอคอนแอปพลิเคชันแบบ Vector SVG ในตัว -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%23059669'/><text y='68' x='50' font-size='56' text-anchor='middle'>🦶</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%23059669'/><text y='68' x='50' font-size='56' text-anchor='middle'>🦶</text></svg>">
   
   <!-- Web App Manifest ในตัว -->
-  <link rel="manifest" href='data:application/manifest+json,{"name":"Post-Meal Glucose & Posture Pacer","short_name":"PostMeal","start_url":".","display":"standalone","background_color":"%23020617","theme_color":"%23020617","icons":[{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2228%22 fill=%22%230f172a%22/><text y=%2268%22 x=%2250%22 font-size=%2256%22 text-anchor=%22middle%22>🦶</text></svg>","sizes":"192x192 512x512","type":"image/svg+xml"}]}'>
+  <link rel="manifest" href='data:application/manifest+json,{"name":"โปรแกรมลดอาการง่วงหลังอาหาร และ ป้องกันกรดไหลย้อน","short_name":"PostMeal","start_url":".","display":"standalone","background_color":"%23f8fafc","theme_color":"%23059669","icons":[{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2228%22 fill=%22%23059669%22/><text y=%2268%22 x=%2250%22 font-size=%2256%22 text-anchor=%22middle%22>🦶</text></svg>","sizes":"192x192 512x512","type":"image/svg+xml"}]}'>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -32,16 +32,16 @@
       font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
-    
+
     /* แอนิเมชันยกส้นเท้า Soleus Push-up (SPU) 1.2 วินาที */
     @keyframes soleusFootMotion {
       0%, 100% {
         transform: rotate(0deg);
-        transform-origin: 28px 76px;
+        transform-origin: 32px 82px;
       }
       50% {
-        transform: rotate(-24deg);
-        transform-origin: 28px 76px;
+        transform: rotate(-22deg);
+        transform-origin: 32px 82px;
       }
     }
     .soleus-foot-animated {
@@ -49,347 +49,362 @@
     }
 
     /* แอนิเมชันเรืองแสงกล้ามเนื้อน่อง */
-    @keyframes calfMuscleGlow {
+    @keyframes calfMuscleGlowLight {
       0%, 100% {
         opacity: 0.35;
-        filter: drop-shadow(0 0 0px rgba(245, 158, 11, 0));
+        stroke: #d97706;
+        filter: drop-shadow(0 0 1px rgba(217, 119, 6, 0.2));
       }
       50% {
         opacity: 1;
-        filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.9));
+        stroke: #ea580c;
+        filter: drop-shadow(0 0 6px rgba(234, 88, 12, 0.7));
       }
     }
     .calf-glow-animated {
-      animation: calfMuscleGlow 1.2s infinite cubic-bezier(0.4, 0.0, 0.2, 1);
+      animation: calfMuscleGlowLight 1.2s infinite cubic-bezier(0.4, 0.0, 0.2, 1);
     }
 
-    /* แอนิเมชันฝึกกะบังลม หายใจเข้า 4 วินาที ออก 6 วินาที */
+    /* แอนิเมชันปอดและกะบังลม */
     @keyframes lungBreathCycle {
-      0% { transform: scale(0.88); opacity: 0.7; }
-      40% { transform: scale(1.12); opacity: 1; }
-      100% { transform: scale(0.88); opacity: 0.7; }
+      0% { transform: scale(0.9); opacity: 0.8; }
+      40% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.8; }
     }
     .lung-breath-animated {
       animation: lungBreathCycle 10s infinite ease-in-out;
     }
 
-    /* แอนิเมชันก้าวเดินสลับเท้า 65 BPM */
+    /* แอนิเมชันก้าวเดินสลับเท้า */
     @keyframes stepLeftFoot {
-      0%, 100% { opacity: 0.35; transform: scale(0.95); }
-      50% { opacity: 1; transform: scale(1.1); }
+      0%, 100% { opacity: 0.4; transform: scale(0.95); }
+      50% { opacity: 1; transform: scale(1.08); }
     }
     @keyframes stepRightFoot {
-      0%, 100% { opacity: 1; transform: scale(1.1); }
-      50% { opacity: 0.35; transform: scale(0.95); }
+      0%, 100% { opacity: 1; transform: scale(1.08); }
+      50% { opacity: 0.4; transform: scale(0.95); }
     }
     .step-left-animated { animation: stepLeftFoot 1.8s infinite ease-in-out; }
     .step-right-animated { animation: stepRightFoot 1.8s infinite ease-in-out; }
 
-    @keyframes ringPulse {
-      0% { transform: scale(0.92); opacity: 0.8; }
-      50% { transform: scale(1.15); opacity: 0.2; }
-      100% { transform: scale(0.92); opacity: 0.8; }
+    @keyframes softPulse {
+      0% { transform: scale(0.96); opacity: 0.7; }
+      50% { transform: scale(1.06); opacity: 0.2; }
+      100% { transform: scale(0.96); opacity: 0.7; }
     }
-    .pulse-ring { animation: ringPulse 2.4s infinite ease-in-out; }
+    .soft-pulse { animation: softPulse 2.4s infinite ease-in-out; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-2 sm:p-3 selection:bg-amber-500 selection:text-slate-950">
+<body class="bg-gradient-to-br from-slate-50 via-teal-50/40 to-emerald-50/50 text-slate-800 min-h-screen flex items-center justify-center p-2 sm:p-4 selection:bg-emerald-500 selection:text-white">
 
-  <main class="max-w-4xl w-full bg-slate-900/95 border border-slate-800 rounded-2xl p-2.5 sm:p-4 shadow-2xl shadow-black/80 space-y-2 backdrop-blur-xl relative overflow-hidden">
+  <!-- กล่องแอปพลิเคชันหลัก: สีขาวสะอาด สบายตา สไตล์โมเดิร์นคลินิก -->
+  <main class="max-w-4xl w-full bg-white/95 border border-slate-200/90 rounded-3xl p-3 sm:p-5 shadow-xl shadow-slate-300/40 space-y-2.5 backdrop-blur-md relative overflow-hidden">
     
-    <!-- แสง Ambient Glow ตกแต่งพื้นหลัง -->
-    <div class="absolute -top-16 -right-16 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <!-- แสงเรืองตกแต่งแบบคลีนและเป็นมิตร -->
+    <div class="absolute -top-16 -right-16 w-36 h-36 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-16 -left-16 w-36 h-36 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
 
-    <!-- ส่วนหัว (Header): กะทัดรัด พร้อมชื่อ "น้าราม" และปุ่มเสียงโค้ช -->
-    <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 pb-2 border-b border-slate-800/90 relative z-10">
+    <!-- ส่วนหัว (Header): สว่าง ชัดเจน พร้อมระบุเครดิต น้าราม -->
+    <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-slate-100 relative z-10">
       <div>
         <div class="flex items-center gap-1.5 flex-wrap">
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-[10px] font-bold text-amber-400">
-            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-            ลดง่วง & ป้องกันกรดไหลย้อน
+          <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-[11px] font-bold text-emerald-700 shadow-sm">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            ดูแลพลังงาน & สรีระทางเดินอาหาร
           </span>
-          <!-- ระบุเครดิต "พัฒนาระบบโดย น้าราม" อย่างชัดเจนตามคำสั่ง -->
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[11px] font-extrabold text-emerald-300">
+          <!-- ชื่อผู้พัฒนา "น้าราม" เด่นชัด สวยงาม น่าเชื่อถือ -->
+          <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-teal-500 to-emerald-600 text-white text-[11px] font-extrabold shadow-sm">
             ✨ พัฒนาระบบโดย " น้าราม "
           </span>
         </div>
-        <h1 class="text-sm sm:text-base font-black tracking-tight text-white mt-0.5">
+        <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 mt-1">
           โปรแกรมลดอาการง่วงหลังอาหาร และ ป้องกันกรดไหลย้อน
         </h1>
       </div>
-      <div class="flex items-center gap-1.5 self-end sm:self-center">
-        <button type="button" id="voice-toggle-btn" onclick="toggleVoiceCoach()" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold active:scale-95 transition-all">
-          🔊 โค้ชชาย: เปิด
+
+      <!-- ปุ่มควบคุมเสียงโค้ช & ปุ่มทดสอบเสียง -->
+      <div class="flex items-center gap-1.5 self-end sm:self-center flex-wrap">
+        <button type="button" id="voice-toggle-btn" onclick="toggleVoiceCoach()" class="px-2.5 py-1 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1">
+          <span id="voice-status-icon">🔊</span>
+          <span id="voice-status-text">โค้ชชาย: เปิด</span>
         </button>
-        <button type="button" onclick="speakCurrentAdvice()" class="px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold active:scale-95 transition-all flex items-center gap-1" title="ฟังเสียงคำแนะนำ">
-          <span>🔊</span>
+        <button type="button" onclick="speakCurrentAdvice()" class="px-2.5 py-1 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1" title="ฟังเสียงคำแนะนำ">
+          <span>🗣️</span>
           <span>ฟังคำแนะนำ</span>
         </button>
       </div>
     </header>
 
-    <!-- ส่วนที่ 1: เมนูเลือกมื้ออาหารแบบแถบแนวนอนกะทัดรัดพิเศษ ไม่เปลืองพื้นที่ -->
-    <section class="space-y-1">
+    <!-- ส่วนที่ 1: เลือกมื้ออาหารที่รับประทาน (ปุ่มสวย สะอาด ดูน่ากด) -->
+    <section class="space-y-1.5 bg-slate-50/80 p-2.5 rounded-2xl border border-slate-200/70">
       <div class="flex items-center justify-between text-xs">
-        <span class="font-bold text-slate-300">1. มื้อที่เพิ่งทาน:</span>
-        <span id="meal-badge" class="text-[11px] text-amber-400 font-semibold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">🍚 ข้าว / แป้ง</span>
+        <span class="font-bold text-slate-700">1. มื้อที่เพิ่งรับประทาน:</span>
+        <span id="meal-badge" class="text-[11px] text-amber-700 font-bold bg-amber-100/70 px-2.5 py-0.5 rounded-lg border border-amber-200">🍚 ข้าว / เส้น / แป้ง</span>
       </div>
-      <div class="grid grid-cols-3 gap-1.5">
-        <button type="button" onclick="setMeal('carb')" id="m-carb" class="m-btn py-1.5 px-2 rounded-xl border-2 border-amber-500 bg-amber-500/20 text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5 transition-all active:scale-95">
+      <div class="grid grid-cols-3 gap-2">
+        <button type="button" onclick="setMeal('carb')" id="m-carb" class="m-btn py-2 px-2 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-95">
           <span class="text-base">🍚</span>
           <span>ข้าว / แป้ง</span>
         </button>
-        <button type="button" onclick="setMeal('protein')" id="m-protein" class="m-btn py-1.5 px-2 rounded-xl border-2 border-slate-700/80 bg-slate-800/70 text-slate-300 text-xs font-bold flex items-center justify-center gap-1.5 transition-all active:scale-95">
+        <button type="button" onclick="setMeal('protein')" id="m-protein" class="m-btn py-2 px-2 rounded-xl border-2 border-slate-200 bg-white text-slate-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all hover:bg-slate-100 active:scale-95">
           <span class="text-base">🥩</span>
           <span>เนื้อสัตว์ / โปรตีน</span>
         </button>
-        <button type="button" onclick="setMeal('heavy')" id="m-heavy" class="m-btn py-1.5 px-2 rounded-xl border-2 border-slate-700/80 bg-slate-800/70 text-slate-300 text-xs font-bold flex items-center justify-center gap-1.5 transition-all active:scale-95">
+        <button type="button" onclick="setMeal('heavy')" id="m-heavy" class="m-btn py-2 px-2 rounded-xl border-2 border-slate-200 bg-white text-slate-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all hover:bg-slate-100 active:scale-95">
           <span class="text-base">🍔</span>
           <span>บุฟเฟต์ / มันจัด</span>
         </button>
       </div>
     </section>
 
-    <!-- แท็บสลับหน้าสำหรับมือถือ (Mobile Tab Switcher) ป้องกันหน้าจอยาวล้นจอ -->
-    <div class="flex sm:hidden bg-slate-950 p-0.5 rounded-xl border border-slate-800 text-xs font-bold">
-      <button type="button" id="m-tab-timer" onclick="switchMobileTab('timer')" class="flex-1 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 transition-all flex items-center justify-center gap-1">
+    <!-- แท็บสลับหน้าสำหรับมือถือ (ไม่ให้หน้าจอยาวล้น) -->
+    <div class="flex sm:hidden bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold">
+      <button type="button" id="m-tab-timer" onclick="switchMobileTab('timer')" class="flex-1 py-1.5 rounded-lg bg-white text-emerald-700 shadow-sm transition-all flex items-center justify-center gap-1">
         <span>⏱️</span> 1. เวลา & สถานะ
       </button>
-      <button type="button" id="m-tab-activity" onclick="switchMobileTab('activity')" class="flex-1 py-1.5 rounded-lg text-slate-400 transition-all flex items-center justify-center gap-1">
+      <button type="button" id="m-tab-activity" onclick="switchMobileTab('activity')" class="flex-1 py-1.5 rounded-lg text-slate-500 transition-all flex items-center justify-center gap-1">
         <span>🏃</span> 2. กิจกรรม & วิธีทำ
       </button>
     </div>
 
-    <!-- โครงสร้าง 2 คอลัมน์เคียงข้างกัน (Side-by-Side) ไม่ยาวล้นจอ -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 items-start">
+    <!-- โครงสร้าง 2 คอลัมน์เคียงข้างกัน ไม่ยาวล้นจอ -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 items-start">
       
-      <!-- คอลัมน์ที่ 1 (ซ้าย): ตัวจับเวลาสด + สถานะระดับน้ำตาลและกรดไหลย้อน + คลื่นเสียง 40Hz -->
+      <!-- คอลัมน์ที่ 1 (ซ้าย): ตัวนับเวลาสด + สถานะน้ำตาลและกรดไหลย้อน + คลื่น 40Hz -->
       <div id="col-timer" class="space-y-2">
         
-        <!-- การ์ดตัวนับเวลาสด & การปรับเวลาแบบรวมศูนย์ (Unified Timer Card) -->
-        <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 space-y-2">
-          <div class="flex items-center justify-between pb-1 border-b border-slate-800/80">
-            <span class="text-xs font-bold text-slate-200">2. ตัวนับเวลาหลังอาหาร</span>
-            <div class="flex bg-slate-900 p-0.5 rounded-lg border border-slate-700 text-[10px]">
-              <button type="button" id="tab-auto" onclick="switchTimingMode('auto')" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold transition-all">
-                ⏱️ นับสด
+        <!-- การ์ดตัวนับเวลาสด -->
+        <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+          <div class="flex items-center justify-between pb-1.5 border-b border-slate-100">
+            <span class="text-xs font-bold text-slate-700 flex items-center gap-1">
+              <span>⏱️</span> 2. ตัวนับเวลาหลังอาหาร
+            </span>
+            <div class="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-[10px]">
+              <button type="button" id="tab-auto" onclick="switchTimingMode('auto')" class="px-2 py-0.5 rounded bg-white text-emerald-700 font-bold shadow-xs transition-all">
+                นับสด
               </button>
-              <button type="button" id="tab-manual" onclick="switchTimingMode('manual')" class="px-2 py-0.5 rounded text-slate-400 font-semibold transition-all">
-                🎚️ ปรับเอง
+              <button type="button" id="tab-manual" onclick="switchTimingMode('manual')" class="px-2 py-0.5 rounded text-slate-500 font-medium transition-all">
+                ปรับเอง
               </button>
             </div>
           </div>
 
           <!-- โหมดนับเวลาสด -->
-          <div id="panel-auto" class="flex items-center justify-between gap-2">
+          <div id="panel-auto" class="flex items-center justify-between gap-2 pt-0.5">
             <div>
-              <div class="text-[10px] text-slate-400 font-medium">ทานเสร็จผ่านมาแล้ว:</div>
-              <div class="text-2xl sm:text-3xl font-extrabold font-mono text-amber-400 flex items-baseline gap-1">
+              <div class="text-[10px] text-slate-500 font-medium">เวลาหลังมื้ออาหาร:</div>
+              <div class="text-2xl sm:text-3xl font-black font-mono text-emerald-700 flex items-baseline gap-1">
                 <span id="live-timer-display">00:00</span>
                 <span class="text-[10px] text-slate-400 font-sans font-normal">น:วิ</span>
               </div>
             </div>
             <div class="flex gap-1.5">
-              <button type="button" id="live-timer-toggle-btn" onclick="toggleLiveTimer()" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold active:scale-95 transition-all shadow-md shadow-amber-500/20">
-                🍽️ เริ่มนับ
+              <button type="button" id="live-timer-toggle-btn" onclick="toggleLiveTimer()" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs font-bold active:scale-95 transition-all shadow-md shadow-emerald-500/20 flex items-center gap-1">
+                <span>🍽️</span>
+                <span id="live-timer-btn-text">เริ่มนับ</span>
               </button>
-              <button type="button" onclick="resetLiveTimer()" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold active:scale-95 transition-all border border-slate-700" title="รีเซ็ต">
+              <button type="button" onclick="resetLiveTimer()" class="p-1.5 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold active:scale-95 transition-all border border-slate-200" title="รีเซ็ต">
                 ↺
               </button>
             </div>
           </div>
 
-          <!-- โหมดปรับเอง -->
-          <div id="panel-manual" class="space-y-1 hidden">
+          <!-- โหมดปรับเวลาเอง -->
+          <div id="panel-manual" class="space-y-1.5 hidden pt-0.5">
             <div class="flex justify-between items-center text-xs">
-              <span class="text-slate-300 font-semibold">เวลาหลังทาน:</span>
-              <div class="bg-slate-800 px-2 py-0.5 rounded border border-slate-700 text-xs font-bold text-amber-400">
+              <span class="text-slate-600 font-semibold">เวลาที่ผ่านไปแล้ว:</span>
+              <div class="bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200 text-xs font-bold text-emerald-800">
                 <span id="time-val">20</span> นาที
               </div>
             </div>
-            <input type="range" id="time-slider" min="5" max="90" step="5" value="20" oninput="updateTime(this.value)" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-400">
+            <input type="range" id="time-slider" min="5" max="90" step="5" value="20" oninput="updateTime(this.value)" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600">
           </div>
         </div>
 
-        <!-- สถานะระดับน้ำตาล & ความเสี่ยงกรดไหลย้อนแบบแถบแนวนอนกะทัดรัด -->
-        <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 space-y-1 text-xs">
-          <div class="flex items-center justify-between gap-1 bg-slate-900/60 px-2.5 py-1 rounded-lg">
-            <span class="text-slate-400 text-[11px]">น้ำตาลในเลือด:</span>
-            <span id="glucose-stage" class="font-bold text-amber-300 text-xs">ระยะเริ่มดูดซึมกลูโคส</span>
+        <!-- สถานะระดับน้ำตาล & ความเสี่ยงกรดไหลย้อน -->
+        <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm space-y-1.5 text-xs">
+          <div class="flex items-center justify-between gap-1 bg-amber-50/70 border border-amber-100 px-2.5 py-1.5 rounded-xl">
+            <span class="text-slate-600 text-[11px] font-medium">ระดับกลูโคส:</span>
+            <span id="glucose-stage" class="font-bold text-amber-800 text-xs">ระยะเริ่มดูดซึมกลูโคส</span>
           </div>
-          <div class="flex items-center justify-between gap-1 bg-slate-900/60 px-2.5 py-1 rounded-lg">
-            <span class="text-slate-400 text-[11px]">ความเสี่ยงกรด:</span>
-            <span id="gerd-risk-stage" class="font-bold text-rose-400 text-xs">⚠️ สูงสุด (ช่วงกรดหลั่งมาก)</span>
+          <div class="flex items-center justify-between gap-1 bg-rose-50/80 border border-rose-100 px-2.5 py-1.5 rounded-xl">
+            <span class="text-slate-600 text-[11px] font-medium">ความเสี่ยงกรด:</span>
+            <span id="gerd-risk-stage" class="font-bold text-rose-700 text-xs">⚠️ สูงสุด (ช่วงกรดหลั่งมาก)</span>
           </div>
         </div>
 
-        <!-- คลื่นเสียง 40Hz Gamma Wave ในแถบขนาดกะทัดรัด -->
-        <div class="bg-slate-950/80 p-2 rounded-xl border border-slate-800 flex items-center justify-between gap-2">
+        <!-- คลื่นเสียง 40Hz Gamma Wave ในโทนสะอาด สบายตา -->
+        <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between gap-2">
           <div class="text-left">
-            <div class="text-xs font-bold text-slate-200 flex items-center gap-1">
+            <div class="text-xs font-bold text-slate-800 flex items-center gap-1">
               <span>🎧</span> 40Hz Gamma Beat
             </div>
-            <div class="text-[10px] text-slate-400">ปลุกสมองตื่นตัว ไม่ต้องพึ่งกาแฟ</div>
+            <div class="text-[10px] text-slate-500">ปลุกสมองตื่นตัว ไม่ต้องดื่มกาแฟเติมกรด</div>
           </div>
-          <button type="button" onclick="toggleAlertTone()" id="audio-btn" class="px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold hover:bg-amber-500/30 active:scale-95 transition-all flex items-center gap-1 whitespace-nowrap">
+          <button type="button" onclick="toggleAlertTone()" id="audio-btn" class="px-3 py-1.5 rounded-xl bg-teal-50 hover:bg-teal-100 border border-teal-200 text-teal-800 text-xs font-bold active:scale-95 transition-all flex items-center gap-1 whitespace-nowrap shadow-sm">
             <span id="audio-icon">▶</span>
             <span id="audio-label">เปิดเสียง 40Hz</span>
           </button>
         </div>
 
-        <!-- เช็กลิสต์ด่วนกันกรดไหลย้อน -->
-        <div class="bg-slate-950/40 p-2 rounded-xl border border-slate-800/80 flex items-center justify-between text-[10px] sm:text-[11px] text-slate-300">
-          <span class="flex items-center gap-1"><span class="text-rose-400 font-bold">🚫</span> ห้ามฟุบโต๊ะ 60 นาที</span>
-          <span class="text-slate-600">•</span>
-          <span class="flex items-center gap-1"><span class="text-sky-400 font-bold">💧</span> จิบน้ำอุณหภูมิห้อง</span>
+        <!-- เช็กลิสต์ด่วนสรีระป้องกันกรดไหลย้อน -->
+        <div class="bg-slate-50 p-2 rounded-xl border border-slate-200/80 flex items-center justify-between text-[10px] sm:text-[11px] text-slate-600">
+          <span class="flex items-center gap-1 font-medium"><span class="text-rose-500 font-bold">🚫</span> ห้ามฟุบโต๊ะ 60 นาที</span>
+          <span class="text-slate-300">•</span>
+          <span class="flex items-center gap-1 font-medium"><span class="text-sky-600 font-bold">💧</span> จิบน้ำอุณหภูมิห้อง</span>
         </div>
 
-        <!-- กล่องแสดงข้อความสดที่โค้ชชายพูด (Live Subtitle) -->
-        <div class="bg-slate-900/60 p-2 rounded-xl border border-slate-800 text-[11px] text-slate-300 flex items-start gap-1.5">
-          <span class="text-emerald-400 font-bold whitespace-nowrap">🗣️ โค้ชชาย:</span>
-          <span id="voice-subtitle" class="text-slate-200 leading-tight">"สวัสดีครับ พัฒนาระบบโดยน้าราม พร้อมดูแลหลังอาหารไปด้วยกันครับ"</span>
+        <!-- กล่องแสดงข้อความคำบรรยายสด (Live Subtitle) เพื่อความชัดเจนแม้ปิดเสียง -->
+        <div class="bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-100 text-xs text-slate-700 flex items-start gap-1.5">
+          <span class="text-emerald-700 font-bold whitespace-nowrap">🗣️ โค้ชชาย:</span>
+          <span id="voice-subtitle" class="text-slate-800 leading-snug font-medium">"สวัสดีครับ พัฒนาระบบโดยน้าราม พร้อมดูแลสุขภาพไปด้วยกันครับ"</span>
+        </div>
+
+        <!-- ป้ายแนะนำการเปิดเสียงสำหรับโทรศัพท์มือถือ -->
+        <div class="bg-amber-50/60 p-1.5 px-2 rounded-lg border border-amber-100 text-[10px] text-amber-800 flex items-center gap-1">
+          <span>💡</span>
+          <span>หากใช้มือถือแล้วไม่ได้ยินเสียง: แตะหน้าจอ 1 ครั้ง และตรวจดูปุ่มปิดเสียงข้างเครื่อง (Mute Switch) นะครับ</span>
         </div>
 
       </div>
 
-      <!-- คอลัมน์ที่ 2 (ขวา): ภาพเคลื่อนไหวกิจกรรม + ตัวจับเวลารอบ + สรีระต้านกรด -->
+      <!-- คอลัมน์ที่ 2 (ขวา): ภาพเคลื่อนไหวกิจกรรม + สรีระต้านกรด + จับเวลารอบ -->
       <div id="col-activity" class="space-y-2 hidden sm:block">
         
-        <!-- การ์ดกิจกรรมและการแสดงภาพตามชนิดมื้ออาหาร -->
-        <div class="bg-slate-950/90 p-2.5 rounded-xl border border-slate-800 space-y-2 shadow-inner">
+        <!-- การ์ดกิจกรรมและการแสดงภาพตามชนิดอาหาร -->
+        <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm space-y-2">
           
           <!-- หัวข้อและระยะเวลาเป้าหมาย -->
-          <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-1.5">
             <div>
-              <div class="text-[10px] text-slate-400 flex items-center gap-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>สูตรกิจกรรม:</span>
+              <div class="text-[10px] text-slate-500 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>สูตรกิจกรรมเฉพาะมื้อ:</span>
               </div>
-              <h2 id="res-title" class="text-xs sm:text-sm font-bold text-amber-300">สูตรดึงกลูโคสเข้ากล้ามเนื้อน่อง</h2>
+              <h2 id="res-title" class="text-xs sm:text-sm font-bold text-slate-850">สูตรดึงกลูโคสเข้ากล้ามเนื้อน่อง</h2>
             </div>
-            <span id="session-target-badge" class="font-bold text-amber-400 bg-amber-500/15 px-2 py-0.5 rounded border border-amber-500/30 text-xs">
+            <span id="session-target-badge" class="font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200 text-xs">
               5 – 10 นาที
             </span>
           </div>
 
-          <!-- พื้นที่แสดงแอนิเมชันจำลองตามกิจกรรมจริง (กระชับความสูง ~100px ไม่เปลืองหน้าจอ) -->
-          <div id="activity-visual-area" class="w-full bg-slate-900/90 border border-slate-800 rounded-xl p-1.5 flex flex-col items-center justify-center relative overflow-hidden min-h-[110px]">
+          <!-- พื้นที่แสดงแอนิเมชันจำลองกิจกรรมจริง สีสว่าง คมชัด ไม่มืดมน -->
+          <div id="activity-visual-area" class="w-full bg-slate-50 border border-slate-200/90 rounded-2xl p-2 flex flex-col items-center justify-center relative overflow-hidden min-h-[115px]">
             
-            <!-- แบบที่ 1: มื้อข้าว/แป้ง (Soleus Push-up ยกส้นเท้า น่องเรืองแสง) -->
+            <!-- แบบที่ 1: มื้อข้าว/แป้ง (ยกส้นเท้า Soleus น่องเรืองแสง สีสว่างสดใส) -->
             <div id="visual-carb" class="w-full flex flex-col items-center justify-center space-y-1">
-              <div class="relative w-40 h-20 flex items-center justify-center">
-                <div class="absolute w-20 h-20 rounded-full bg-amber-500/10 pulse-ring pointer-events-none"></div>
+              <div class="relative w-44 h-20 flex items-center justify-center">
+                <div class="absolute w-20 h-20 rounded-full bg-amber-400/10 soft-pulse pointer-events-none"></div>
                 <svg viewBox="0 0 200 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                   <!-- พื้นห้อง -->
-                  <line x1="20" y1="105" x2="180" y2="105" stroke="#334155" stroke-width="2.5" stroke-linecap="round"/>
+                  <line x1="20" y1="105" x2="180" y2="105" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round"/>
                   <!-- ต้นขาในท่านั่ง -->
                   <line x1="45" y1="26" x2="115" y2="26" stroke="#475569" stroke-width="11" stroke-linecap="round"/>
                   <!-- หัวเข่า -->
-                  <circle cx="115" cy="26" r="7" fill="#64748b"/>
+                  <circle cx="115" cy="26" r="7" fill="#334155"/>
                   <!-- หน้าแข้ง -->
                   <line x1="115" y1="26" x2="115" y2="82" stroke="#475569" stroke-width="9" stroke-linecap="round"/>
                   <!-- กล้ามเนื้อน่องเรืองแสงตามจังหวะ -->
-                  <path d="M 115,32 Q 138,55 116,76" fill="none" stroke="#f59e0b" stroke-width="8" stroke-linecap="round" class="calf-glow-animated"/>
+                  <path d="M 115,32 Q 138,55 116,76" fill="none" stroke="#ea580c" stroke-width="8" stroke-linecap="round" class="calf-glow-animated"/>
                   <!-- เท้าที่ยกส้นขึ้น-ลงตามจังหวะ 1.2 วินาที -->
                   <g class="soleus-foot-animated">
-                    <circle cx="115" cy="82" r="5" fill="#94a3b8"/>
-                    <path d="M 115,82 L 128,94 L 56,103" fill="none" stroke="#cbd5e1" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="128" cy="94" r="4.5" fill="#f59e0b"/>
+                    <circle cx="115" cy="82" r="5" fill="#64748b"/>
+                    <path d="M 115,82 L 130,94 L 56,103" fill="none" stroke="#0f172a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="130" cy="94" r="5" fill="#f59e0b"/>
                   </g>
                   <!-- ปลายเท้าแตะพื้น -->
-                  <circle cx="56" cy="103" r="4" fill="#10b981"/>
-                  <text x="56" y="115" font-size="7.5" fill="#34d399" text-anchor="middle">ปลายเท้าติดพื้น</text>
-                  <text x="160" y="52" font-size="8" font-weight="bold" fill="#fcd34d" text-anchor="middle">กล้ามเนื้อน่อง</text>
+                  <circle cx="56" cy="103" r="4.5" fill="#059669"/>
+                  <text x="56" y="117" font-size="8" font-weight="bold" fill="#059669" text-anchor="middle">ปลายเท้าติดพื้น</text>
+                  <text x="162" y="52" font-size="8.5" font-weight="bold" fill="#d97706" text-anchor="middle">กล้ามเนื้อน่อง</text>
                 </svg>
               </div>
-              <div class="text-[10px] text-slate-300 font-medium">
-                จังหวะ: <span class="text-amber-400 font-bold">ยกส้นเท้าขึ้นสูง ➔ วางลงเบาๆ (1.2 วินาที)</span>
+              <div class="text-[10.5px] text-slate-600 font-medium text-center">
+                จังหวะ: <span class="text-amber-800 font-bold">ยกส้นเท้าขึ้นสูง ➔ วางลงเบาๆ ปลายเท้าติดพื้น (1.2 วิ)</span>
               </div>
             </div>
 
-            <!-- แบบที่ 2: มื้อโปรตีน (ฝึกหายใจกะบังลม ปอดขยาย/ยุบ) -->
+            <!-- แบบที่ 2: มื้อโปรตีน (ฝึกหายใจกะบังลม ปอดขยาย/ยุบ ในโทนสีฟ้าครามสดใส) -->
             <div id="visual-protein" class="w-full hidden flex-col items-center justify-center space-y-1">
               <div class="relative w-32 h-20 flex items-center justify-center">
-                <div class="absolute w-16 h-16 rounded-full border-2 border-dashed border-sky-400/40 lung-breath-animated"></div>
-                <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-sky-600/30 to-teal-400/20 border-2 border-sky-400 flex flex-col items-center justify-center shadow-md lung-breath-animated z-10">
-                  <span class="text-xl">🫁</span>
+                <div class="absolute w-16 h-16 rounded-full border-2 border-dashed border-sky-400/50 lung-breath-animated"></div>
+                <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-sky-500/20 to-teal-400/30 border-2 border-sky-500 flex flex-col items-center justify-center shadow-md lung-breath-animated z-10">
+                  <span class="text-2xl">🫁</span>
                 </div>
               </div>
-              <div class="text-[10px] text-sky-300 font-medium">
+              <div class="text-[10.5px] text-sky-900 font-medium text-center">
                 จังหวะ: <span class="font-bold">หายใจเข้าท้องพอง (4 วิ) ➔ ผ่อนออกท้องยุบ (6 วิ)</span>
               </div>
             </div>
 
             <!-- แบบที่ 3: มื้อหนัก (เดินช้าทอดน่อง 65 BPM) -->
             <div id="visual-heavy" class="w-full hidden flex-col items-center justify-center space-y-1">
-              <div class="w-full py-1.5 flex items-center justify-center gap-4">
+              <div class="w-full py-1.5 flex items-center justify-center gap-5">
                 <div class="flex flex-col items-center gap-0.5 step-left-animated">
-                  <div class="w-7 h-9 rounded-lg bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center text-sm">
+                  <div class="w-8 h-9 rounded-xl bg-emerald-100 border-2 border-emerald-500 flex items-center justify-center text-sm shadow-xs">
                     🦶
                   </div>
-                  <span class="text-[9px] font-bold text-emerald-300">ก้าวซ้าย</span>
+                  <span class="text-[9.5px] font-bold text-emerald-800">ก้าวซ้าย</span>
                 </div>
-                <div class="text-slate-500 text-[10px] font-mono">
-                  <span class="text-emerald-400 font-bold">65 BPM</span>
+                <div class="text-slate-400 text-xs font-bold font-mono">
+                  <span class="text-emerald-700">65 BPM</span>
                 </div>
                 <div class="flex flex-col items-center gap-0.5 step-right-animated">
-                  <div class="w-7 h-9 rounded-lg bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center text-sm">
+                  <div class="w-8 h-9 rounded-xl bg-emerald-100 border-2 border-emerald-500 flex items-center justify-center text-sm shadow-xs">
                     🦶
                   </div>
-                  <span class="text-[9px] font-bold text-emerald-300">ก้าวขวา</span>
+                  <span class="text-[9.5px] font-bold text-emerald-800">ก้าวขวา</span>
                 </div>
               </div>
-              <div class="text-[10px] text-emerald-300 font-medium">
-                จังหวะ: <span class="font-bold">ก้าวสั้น ทอดน่องสบายๆ ไม่รีบเดิน</span>
+              <div class="text-[10.5px] text-emerald-900 font-medium text-center">
+                จังหวะ: <span class="font-bold">ก้าวสั้น ทอดน่องสบายๆ ไม่จ้ำอ้าว ไม่รีบเดิน</span>
               </div>
             </div>
 
           </div>
 
-          <!-- แถบจับเวลารอบกิจกรรมและปุ่มเริ่มทำ (Session Control) -->
-          <div class="bg-slate-900/90 p-2 rounded-xl border border-slate-800 flex items-center justify-between gap-2">
+          <!-- แถบจับเวลารอบกิจกรรม (Session Control) -->
+          <div class="bg-slate-50 p-2 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
             <div class="flex items-baseline gap-1">
-              <span class="text-[10px] text-slate-400">เวลารอบนี้:</span>
-              <span id="session-timer-display" class="text-lg font-mono font-extrabold text-amber-400">10:00</span>
+              <span class="text-[10px] text-slate-500 font-medium">เวลารอบนี้:</span>
+              <span id="session-timer-display" class="text-lg font-mono font-extrabold text-emerald-800">10:00</span>
             </div>
             <div class="flex gap-1.5">
-              <button type="button" id="session-btn" onclick="toggleSessionTimer()" class="px-3 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs active:scale-95 transition-all shadow-md shadow-amber-500/20 flex items-center gap-1">
+              <button type="button" id="session-btn" onclick="toggleSessionTimer()" class="px-3.5 py-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs active:scale-95 transition-all shadow-md shadow-emerald-600/20 flex items-center gap-1">
                 <span>▶</span>
                 <span id="session-btn-label">เริ่มจับเวลาทำ</span>
               </button>
-              <button type="button" onclick="resetSessionTimer()" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs active:scale-95 transition-all border border-slate-700" title="รีเซ็ตเวลารอบ">
+              <button type="button" onclick="resetSessionTimer()" class="px-2.5 py-1 rounded-xl bg-white hover:bg-slate-100 text-slate-600 font-bold text-xs active:scale-95 transition-all border border-slate-200" title="รีเซ็ตเวลารอบ">
                 ↺
               </button>
             </div>
           </div>
 
           <!-- การจัดสรีระต้านกรดไหลย้อน (Postural Advice) -->
-          <div class="p-2 rounded-xl bg-amber-500/10 border border-amber-500/25 text-left text-xs space-y-0.5">
-            <div class="font-bold text-amber-400 flex items-center gap-1 text-[10px]">
+          <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-200/80 text-left text-xs space-y-0.5">
+            <div class="font-bold text-amber-900 flex items-center gap-1 text-[11px]">
               <span>📐</span> สรีระต้านกรดไหลย้อน:
             </div>
-            <p id="posture-desc" class="text-slate-200 leading-tight font-normal text-[10.5px]">
+            <p id="posture-desc" class="text-slate-700 leading-snug font-medium text-[11px]">
               ยืดลำตัวตรง อกเปิดกว้าง ผ่อนคลายหน้าท้อง เพื่อเปิดมุมรอยต่อกระเพาะอาหาร (Angle of His)
             </p>
           </div>
 
           <!-- สรุปข้อปฏิบัติและสัญญาณหยุด -->
           <div class="grid grid-cols-2 gap-1.5 text-[10px] text-left">
-            <div class="bg-slate-900/70 p-1.5 rounded-lg border border-slate-800">
-              <div class="font-bold text-slate-300 mb-0.5 flex items-center gap-1 text-[9.5px]">
-                <span class="text-emerald-400">✓</span> ข้อปฏิบัติ:
+            <div class="bg-slate-50 p-2 rounded-xl border border-slate-200">
+              <div class="font-bold text-slate-700 mb-0.5 flex items-center gap-1 text-[10px]">
+                <span class="text-emerald-600">✓</span> ข้อปฏิบัติ:
               </div>
-              <ul id="activity-guide-list" class="text-slate-300 space-y-0.5 leading-tight">
+              <ul id="activity-guide-list" class="text-slate-600 space-y-0.5 leading-tight">
                 <li>• ปลายเท้าแตะพื้นตลอดเวลา</li>
                 <li>• หน้าท้องผ่อนคลาย ไม่เกร็ง</li>
               </ul>
             </div>
-            <div class="bg-rose-500/10 p-1.5 rounded-lg border border-rose-500/20">
-              <div class="font-bold text-rose-300 mb-0.5 flex items-center gap-1 text-[9.5px]">
+            <div class="bg-rose-50 p-2 rounded-xl border border-rose-200">
+              <div class="font-bold text-rose-800 mb-0.5 flex items-center gap-1 text-[10px]">
                 <span>🛑</span> ควรหยุดเมื่อ:
               </div>
-              <ul id="stop-signals-list" class="text-slate-200 space-y-0.5 leading-tight">
+              <ul id="stop-signals-list" class="text-rose-700 space-y-0.5 leading-tight">
                 <li>• ครบกำหนดเวลา (มีเสียงเตือน)</li>
                 <li>• หากเริ่มตึงหรือเมื่อยน่อง</li>
               </ul>
@@ -419,28 +434,30 @@
     let sessionTimerInterval = null;
     let isSessionRunning = false;
 
-    // ข้อมูลคำแนะนำและสคริปต์เสียงพูดโค้ชชาย (ลงท้ายด้วย "ครับ" ชัดเจนทุกประโยค)
+    let isAudioUnlocked = false; // ตัวแปรสำหรับปลดล็อกเสียงบนสมาร์ตโฟน (iOS / Android)
+    let globalAudioCtx = null;
+    window.activeSpeechUtterance = null; // ป้องกัน Garbage Collector ลบเสียงพูดทิ้งกลางคันบนมือถือ
+
+    // ข้อมูลคำแนะนำและสคริปต์เสียงพูดโค้ชชาย (ออกเสียง "ครับ" ชัดเจนทุกประโยค)
     const sessionMealConfigs = {
       carb: {
         activityName: "กระดกส้นเท้านั่งทำงาน",
-        activityIcon: "🦶",
         durationSeconds: 600,
         badgeText: "5 – 10 นาที",
         guideItems: [
-          "วางปลายเท้าทั้งสองข้างแตะพื้นตลอดเวลา แล้วยกเฉพาะส้นเท้าขึ้นให้สุดครับ",
-          "หน้าท้องผ่อนคลาย ไม่เกร็งกล้ามเนื้อท้อง เพื่อไม่ให้เพิ่มแรงดันบีบกระเพาะครับ"
+          "วางปลายเท้าทั้งสองข้างแตะพื้น แล้วยกเฉพาะส้นเท้าขึ้นให้สุดครับ",
+          "หน้าท้องผ่อนคลาย ไม่เกร็งหน้าท้อง เพื่อไม่บีบกระเพาะอาหารครับ"
         ],
         stopSignals: [
           "เมื่อทำครบ 10 นาที (ระบบจะส่งเสียงเตือนอัตโนมัติครับ)",
-          "หากเริ่มรู้สึกตึงหรือเมื่อยกล้ามเนื้อน่อง ให้หยุดพักทันทีครับ"
+          "หากเริ่มรู้สึกตึงหรือเมื่อยน่อง ให้หยุดพักได้ทันทีครับ"
         ],
-        startVoice: "เริ่ม จับเวลา สิบ นาที แล้วครับ วาง ปลายเท้า แตะพื้น สบายๆ แล้ว ยกเฉพาะ ส้นเท้า ขึ้นลง ตามจังหวะ ได้เลยครับ หาก เริ่มเมื่อยน่อง กด หยุดพัก ได้ตลอดเวลา ครับ",
-        completionVoice: "ครบกำหนด สิบ นาที แล้วครับ ยอดเยี่ยมมากครับ กล้ามเนื้อน่อง ช่วยดึงน้ำตาล ไปใช้งาน เรียบร้อยแล้วครับ พักขา และ นั่งทำงาน ต่อได้อย่าง สดชื่น เลยครับ",
-        adviceVoice: "สูตรดึงน้ำตาล เข้ากล้ามเนื้อน่อง สำหรับ มื้อข้าวแป้ง ครับ ให้นั่ง หลังตรง วาง ปลายเท้า แตะพื้น แล้ว กระดกส้นเท้า ขึ้นลง กล้ามเนื้อน่อง จะช่วย ดึงน้ำตาล ไปเผาผลาญ ทันที ช่วย ตัดวงจร ง่วงนอน และ ปลอดภัย ต่อกรดไหลย้อน แน่นอน ครับ"
+        startVoice: "เริ่มจับเวลา 10 นาทีแล้วครับ นั่งหลังตรง วางปลายเท้าแตะพื้น แล้วยกเฉพาะส้นเท้าขึ้นลงตามจังหวะได้เลยครับ หากเมื่อยน่อง กดหยุดพักได้ตลอดเวลาครับ",
+        completionVoice: "ครบกำหนด 10 นาทีแล้วครับ เยี่ยมมากครับ กล้ามเนื้อน่องช่วยดึงน้ำตาลไปใช้งานเรียบร้อยแล้วครับ พักขาและนั่งทำงานต่อได้อย่างสดชื่นเลยครับ",
+        adviceVoice: "สูตรดึงน้ำตาลเข้ากล้ามเนื้อน่อง สำหรับมื้อข้าวแป้งครับ ให้นั่งหลังตรง วางปลายเท้าแตะพื้น แล้วกระดกส้นเท้าขึ้นลง กล้ามเนื้อน่องจะช่วยดึงน้ำตาลไปเผาผลาญทันที ช่วยตัดวงจรง่วงนอน และปลอดภัยต่อกรดไหลย้อนแน่นอนครับ"
       },
       protein: {
         activityName: "ฝึกหายใจด้วยกะบังลม",
-        activityIcon: "🫁",
         durationSeconds: 300,
         badgeText: "3 – 5 นาที",
         guideItems: [
@@ -451,13 +468,12 @@
           "เมื่อฝึกหายใจครบ 5 นาที ให้หายใจตามธรรมชาติครับ",
           "ยังคงนั่งหลังตรง อกผาย ต่อจนครบ 60 นาทีครับ"
         ],
-        startVoice: "เริ่ม จับเวลา ห้า นาที แล้วครับ นั่ง ยืดตัวตรง สูดลมหายใจ เข้าช้าๆ ให้ ท้องพอง สี่ วินาที และ ผ่อนออก ยาวๆ หก วินาที ตามจังหวะ วงกลม นะครับ",
-        completionVoice: "ครบ ห้า นาที แล้วครับ เยี่ยมมากครับ ผ่อนคลาย และ หายใจ ตามปกติ ได้เลยครับ แต่นั่ง หลังตรง ต่ออีกนิด เพื่อ ป้องกัน กรดไหลย้อน นะครับ",
-        adviceVoice: "สูตรฝึก กะบังลม สำหรับ มื้อโปรตีน ครับ มื้อนี้ กระเพาะ กำลังหลั่งกรด เข้มข้น นั่ง ยืดตัวตรง และ ฝึกหายใจ เข้า สี่ วินาที ผ่อนออก หก วินาที เพื่อให้ กะบังลม ช่วยหนีบรัด หูรูดกระเพาะ ป้องกัน กรดไหลย้อน ครับ"
+        startVoice: "เริ่มจับเวลา 5 นาทีแล้วครับ นั่งยืดตัวตรง สูดลมหายใจเข้าช้าๆ ให้ท้องพอง 4 วินาที และผ่อนออกยาวๆ 6 วินาที ตามจังหวะวงกลมนะครับ",
+        completionVoice: "ครบ 5 นาทีแล้วครับ ยอดเยี่ยมมากครับ ผ่อนคลายและหายใจตามปกติได้เลยครับ แต่นั่งหลังตรงต่ออีกสักนิด เพื่อป้องกันกรดไหลย้อนนะครับ",
+        adviceVoice: "สูตรฝึกกะบังลม สำหรับมื้อโปรตีนครับ มื้อนี้กระเพาะกำลังหลั่งกรดเข้มข้น นั่งยืดตัวตรง และฝึกหายใจเข้า 4 วินาที ผ่อนออก 6 วินาที เพื่อให้กะบังลมช่วยหนีบรัดหูรูดกระเพาะ ป้องกันกรดไหลย้อนครับ"
       },
       heavy: {
         activityName: "ก้าวเดินช้าทอดน่อง",
-        activityIcon: "🚶‍♂️",
         durationSeconds: 600,
         badgeText: "5 – 10 นาที",
         guideItems: [
@@ -466,18 +482,17 @@
         ],
         stopSignals: [
           "เมื่อเดินช้าครบ 10 นาที ให้กลับมานั่งในท่าตัวตรงครับ",
-          "หยุดทันทีเมื่อเริ่มรู้สึกจุก แน่น ที่ชายโครงครับ"
+          "หยุดทันทีเมื่อเริ่มรู้สึกจุกแน่นที่ชายโครงครับ"
         ],
-        startVoice: "เริ่ม จับเวลา สิบ นาที แล้วครับ ยืน ยืดตัวตรง แล้ว ก้าวเดิน ช้าๆ ทอดน่อง สบายๆ นะครับ หาก เริ่มรู้สึก จุกแน่น ให้ หยุดพัก ทันที ครับ",
-        completionVoice: "ครบ สิบ นาที แล้วครับ ทางเดินอาหาร เริ่ม เคลื่อนตัว ได้ดีขึ้น แล้วครับ กลับมา นั่งทำงาน ในท่าตัวตรง ต่อได้เลย ครับ",
-        adviceVoice: "สูตรเดินช้า กระตุ้นทางเดินอาหาร สำหรับ มื้อหนัก ครับ ของมัน ของทอด ทำให้ ย่อยช้า แนะนำให้ ลุกยืน ยืดตัวตรง หรือ เดินทอดน่อง ช้าๆ เพื่อ ช่วยให้ อาหาร เคลื่อนตัว อย่างสบายตัว ครับ"
+        startVoice: "เริ่มจับเวลา 10 นาทีแล้วครับ ยืนยืดตัวตรง แล้วก้าวเดินช้าๆ ทอดน่องสบายๆ นะครับ หากเริ่มรู้สึกจุกแน่น ให้หยุดพักทันทีครับ",
+        completionVoice: "ครบ 10 นาทีแล้วครับ ทางเดินอาหารเริ่มเคลื่อนตัวได้ดีขึ้นแล้วครับ กลับมานั่งทำงานในท่าตัวตรงต่อได้เลยครับ",
+        adviceVoice: "สูตรเดินช้า กระตุ้นทางเดินอาหาร สำหรับมื้อหนักครับ ของมันของทอดทำให้ย่อยช้า แนะนำให้ลุกยืนยืดตัวตรง หรือเดินทอดน่องช้าๆ เพื่อช่วยให้อาหารเคลื่อนตัวอย่างสบายตัวครับ"
       }
     };
 
     let voiceCoachEnabled = true;
     let announcedMilestones = new Set();
 
-    let audioCtx = null;
     let osc1 = null, osc2 = null, lfo = null;
     let masterGain = null;
     let isAudioPlaying = false;
@@ -488,43 +503,67 @@
       heavy: '🍔 บุฟเฟต์ / มันจัด'
     };
 
-    // เล่นเสียงกระดิ่งคอร์ดคู่ห้าโทนทุ้มนุ่มลึก (D4 -> G4) ก่อนโค้ชชายพูด
-    function playChimeAlert() {
+    // ระบบปลดล็อกเสียงบนมือถือ (iOS / Android Audio Unlocker)
+    function unlockMobileAudio() {
+      if (isAudioUnlocked) return;
       try {
         const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtxClass) return;
-        const chimeCtx = new AudioCtxClass();
-        const now = chimeCtx.currentTime;
+        if (AudioCtxClass && !globalAudioCtx) {
+          globalAudioCtx = new AudioCtxClass();
+        }
+        if (globalAudioCtx && globalAudioCtx.state === 'suspended') {
+          globalAudioCtx.resume();
+        }
 
-        const o1 = chimeCtx.createOscillator();
-        const g1 = chimeCtx.createGain();
-        o1.type = 'triangle';
-        o1.frequency.setValueAtTime(293.66, now); // D4
-        g1.gain.setValueAtTime(0.001, now);
-        g1.gain.exponentialRampToValueAtTime(0.12, now + 0.04);
-        g1.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
-        o1.connect(g1);
-        g1.connect(chimeCtx.destination);
-        o1.start(now);
-        o1.stop(now + 0.3);
+        // ส่ง Speech สั้นๆ เพื่อปลดล็อก Audio Channel บน Safari & Chrome Mobile
+        if ('speechSynthesis' in window) {
+          const dummy = new SpeechSynthesisUtterance('');
+          dummy.volume = 0.01;
+          window.speechSynthesis.speak(dummy);
+        }
 
-        const o2 = chimeCtx.createOscillator();
-        const g2 = chimeCtx.createGain();
-        o2.type = 'sine';
-        o2.frequency.setValueAtTime(392.00, now + 0.08); // G4
-        g2.gain.setValueAtTime(0.001, now + 0.08);
-        g2.gain.exponentialRampToValueAtTime(0.14, now + 0.12);
-        g2.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
-        o2.connect(g2);
-        g2.connect(chimeCtx.destination);
-        o2.start(now + 0.08);
-        o2.stop(now + 0.45);
+        isAudioUnlocked = true;
       } catch (err) {
-        console.debug("Chime error:", err);
+        console.debug("Audio unlock error:", err);
       }
     }
 
-    // ฟังก์ชันค้นหาเสียงผู้ชายภาษาไทยที่ดีที่สุด
+    // ฟังการแตะหน้าจอครั้งแรกเพื่อปลดล็อกเสียงบนมือถือทันที
+    window.addEventListener('touchstart', unlockMobileAudio, { once: true });
+    window.addEventListener('click', unlockMobileAudio, { once: true });
+
+    // สัญญาณเสียงเตือนกระดิ่งนุ่มนวลก่อนพูด
+    function playChimeAlert() {
+      try {
+        unlockMobileAudio();
+        const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtxClass) return;
+        const ctx = globalAudioCtx || new AudioCtxClass();
+        if (ctx.state === 'suspended') ctx.resume();
+
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(329.63, now); // โน้ต E4 อบอุ่น ฟังสบาย
+        osc.frequency.exponentialRampToValueAtTime(440.00, now + 0.12); // โน้ต A4
+
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.18, now + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + 0.36);
+      } catch (err) {
+        console.debug("Chime playback error:", err);
+      }
+    }
+
+    // ฟังก์ชันค้นหาเสียงผู้ชายภาษาไทยที่ดีที่สุด (Edge Natural / Siri / Android Male)
     function getBestThaiMaleVoice() {
       if (!('speechSynthesis' in window)) return null;
       const voices = window.speechSynthesis.getVoices();
@@ -533,56 +572,67 @@
       const thaiVoices = voices.filter(v => v.lang === 'th-TH' || v.lang.startsWith('th'));
       if (thaiVoices.length === 0) return null;
 
-      // 1. ค้นหาเสียงที่ระบุชัดเจนว่าเป็นผู้ชาย
+      // 1. ค้นหาเสียงผู้ชายที่ระบุชัดเจน (เช่น Niwat, Sarawut, Male, ชาย)
       const maleKeywords = ['niwat', 'sarawut', 'male', 'man', 'boy', 'ชาย', 'pattara', 'th-th-x-tth#male', 'th-th-x-cfh#male'];
       const explicitMale = thaiVoices.find(v => {
         const name = v.name.toLowerCase();
-        return maleKeywords.some(keyword => name.includes(keyword));
+        return maleKeywords.some(kw => name.includes(kw));
       });
-      if (explicitMale) return { voice: explicitMale, isExplicitMale: true };
+      if (explicitMale) return explicitMale;
 
-      // 2. ค้นหาเสียงที่ไม่ใช่ชื่อผู้หญิง
+      // 2. ค้นหาเสียงที่ไม่ใช่ผู้หญิง
       const femaleKeywords = ['female', 'kanya', 'premwadee', 'narisa', 'หญิง'];
       const nonFemale = thaiVoices.find(v => {
         const name = v.name.toLowerCase();
         return !femaleKeywords.some(fk => name.includes(fk));
       });
-      if (nonFemale) return { voice: nonFemale, isExplicitMale: false };
+      if (nonFemale) return nonFemale;
 
-      return { voice: thaiVoices[0], isExplicitMale: false };
+      return thaiVoices[0];
     }
 
-    // ฟังก์ชันสังเคราะห์เสียงพูดภาษาไทยโทนผู้ชาย ชัดเจน ไม่ดูดเสียง "ครับ"
+    // ฟังก์ชันสังเคราะห์เสียงพูดภาษาไทย คมชัด เป็นธรรมชาติ ไม่เสียงแตก ไม่บวม
     function speakThai(message) {
-      // อัปเดตข้อความบนหน้าจอ (Subtitle) ให้ผู้ใช้เห็นข้อความจริงได้เสมอ
+      // อัปเดต Subtitle ให้อ่านได้ทันที
       const sub = document.getElementById('voice-subtitle');
       if (sub) {
-        sub.innerText = `"${message.replace(/\s+/g, ' ')}"`;
+        sub.innerText = `"${message}"`;
       }
 
       if (!voiceCoachEnabled || !('speechSynthesis' in window)) return;
+
       try {
+        unlockMobileAudio();
         window.speechSynthesis.cancel();
         playChimeAlert();
 
         setTimeout(() => {
           const utter = new SpeechSynthesisUtterance(message);
           utter.lang = 'th-TH';
-          
-          const voiceResult = getBestThaiMaleVoice();
-          if (voiceResult && voiceResult.voice) {
-            utter.voice = voiceResult.voice;
-            // หากเป็นเสียงผู้ชายแท้ ให้ใช้ pitch 1.0 ธรรมชาติ หากเป็นเสียงทั่วไปให้ใช้ 0.96
-            utter.pitch = voiceResult.isExplicitMale ? 1.0 : 0.96;
-          } else {
-            utter.pitch = 0.98;
+
+          const voice = getBestThaiMaleVoice();
+          if (voice) {
+            utter.voice = voice;
           }
-          
-          // กำหนดความเร็ว 0.94 เพื่อให้เว้นวรรคและออกเสียง "ครับ" ได้อย่างคมชัดทุกพยางค์
-          utter.rate = 0.94;
+
+          // ตั้งค่า Pitch และ Rate ให้เป็นธรรมชาติที่สุด (ไม่ปรับ pitch ต่ำเกินไปจนเสียงบวมหรือหุ่นยนต์)
+          utter.pitch = 1.0; 
+          utter.rate = 0.96; // จังหวะกำลังดี ฟังสบาย ไม่รัว
+          utter.volume = 1.0; // เพิ่มระดับเสียงให้ดังชัดเจนบนโทรศัพท์มือถือ
+
+          // ผูกตัวแปรไว้ป้องกัน Garbage Collector บน Safari / Chrome Mobile
+          window.activeSpeechUtterance = utter;
+
+          utter.onend = () => {
+            window.activeSpeechUtterance = null;
+          };
+
+          utter.onerror = () => {
+            window.activeSpeechUtterance = null;
+          };
 
           window.speechSynthesis.speak(utter);
-        }, 250);
+        }, 180);
       } catch (err) {
         console.error("Speech error:", err);
       }
@@ -591,24 +641,29 @@
     function toggleVoiceCoach() {
       voiceCoachEnabled = !voiceCoachEnabled;
       const btn = document.getElementById('voice-toggle-btn');
+      const text = document.getElementById('voice-status-text');
+      const icon = document.getElementById('voice-status-icon');
+
       if (voiceCoachEnabled) {
-        btn.innerText = "🔊 โค้ชชาย: เปิด";
-        btn.className = "px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold active:scale-95 transition-all";
-        speakThai("เปิดเสียง พูดแจ้งเตือน เรียบร้อย แล้วครับ พัฒนาระบบ โดย น้าราม พร้อม ดูแล สุขภาพ หลังอาหาร ไปด้วยกัน ครับ");
+        text.innerText = "โค้ชชาย: เปิด";
+        icon.innerText = "🔊";
+        btn.className = "px-2.5 py-1 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1";
+        speakThai("เปิดเสียงโค้ชเรียบร้อยแล้วครับ พัฒนาระบบโดยน้าราม พร้อมดูแลสุขภาพไปด้วยกันครับ");
       } else {
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-        btn.innerText = "🔇 โค้ช: ปิด";
-        btn.className = "px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-xs font-bold active:scale-95 transition-all";
+        text.innerText = "โค้ช: ปิด";
+        icon.innerText = "🔇";
+        btn.className = "px-2.5 py-1 rounded-xl bg-slate-100 border border-slate-200 text-slate-500 text-xs font-bold active:scale-95 transition-all flex items-center gap-1";
       }
     }
 
     function speakCurrentAdvice() {
       const config = sessionMealConfigs[currentMeal];
-      const posture = "ข้อควรระวัง สำคัญ ครับ ให้นั่ง ยืดตัวตรง อกผาย ห้าม นอนราบ หรือ ฟุบโต๊ะ ทำงาน นะครับ";
+      const posture = "ข้อควรระวังสำคัญครับ ให้นั่งยืดตัวตรง อกผาย ห้ามนอนราบหรือฟุบโต๊ะทำงานเด็ดขาดนะครับ";
       speakThai(`${config.adviceVoice} ${posture}`);
     }
 
-    // ฟังก์ชันสลับแท็บบนมือถือ (Mobile Tabs) ป้องกันหน้าจอเลื่อนยาว
+    // ฟังก์ชันสลับแท็บบนมือถือ
     function switchMobileTab(tab) {
       const btnTimer = document.getElementById('m-tab-timer');
       const btnActivity = document.getElementById('m-tab-activity');
@@ -616,13 +671,13 @@
       const colActivity = document.getElementById('col-activity');
 
       if (tab === 'timer') {
-        btnTimer.className = "flex-1 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 transition-all flex items-center justify-center gap-1 font-bold";
-        btnActivity.className = "flex-1 py-1.5 rounded-lg text-slate-400 transition-all flex items-center justify-center gap-1 font-semibold";
+        btnTimer.className = "flex-1 py-1.5 rounded-lg bg-white text-emerald-700 shadow-sm transition-all flex items-center justify-center gap-1 font-bold";
+        btnActivity.className = "flex-1 py-1.5 rounded-lg text-slate-500 transition-all flex items-center justify-center gap-1 font-medium";
         colTimer.classList.remove('hidden');
         colActivity.classList.add('hidden');
       } else {
-        btnActivity.className = "flex-1 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 transition-all flex items-center justify-center gap-1 font-bold";
-        btnTimer.className = "flex-1 py-1.5 rounded-lg text-slate-400 transition-all flex items-center justify-center gap-1 font-semibold";
+        btnActivity.className = "flex-1 py-1.5 rounded-lg bg-white text-emerald-700 shadow-sm transition-all flex items-center justify-center gap-1 font-bold";
+        btnTimer.className = "flex-1 py-1.5 rounded-lg text-slate-500 transition-all flex items-center justify-center gap-1 font-medium";
         colActivity.classList.remove('hidden');
         colTimer.classList.add('hidden');
       }
@@ -636,14 +691,14 @@
       const panelManual = document.getElementById('panel-manual');
 
       if (mode === 'auto') {
-        tabAuto.className = "px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold transition-all";
-        tabManual.className = "px-2 py-0.5 rounded text-slate-400 font-semibold transition-all";
+        tabAuto.className = "px-2 py-0.5 rounded bg-white text-emerald-700 font-bold shadow-xs transition-all";
+        tabManual.className = "px-2 py-0.5 rounded text-slate-500 font-medium transition-all";
         panelAuto.classList.remove('hidden');
         panelManual.classList.add('hidden');
         passedTime = Math.floor(liveSeconds / 60);
       } else {
-        tabManual.className = "px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold transition-all";
-        tabAuto.className = "px-2 py-0.5 rounded text-slate-400 font-semibold transition-all";
+        tabManual.className = "px-2 py-0.5 rounded bg-white text-emerald-700 font-bold shadow-xs transition-all";
+        tabAuto.className = "px-2 py-0.5 rounded text-slate-500 font-medium transition-all";
         panelManual.classList.remove('hidden');
         panelAuto.classList.add('hidden');
         passedTime = parseInt(document.getElementById('time-slider').value, 10);
@@ -652,13 +707,14 @@
     }
 
     function toggleSessionTimer() {
+      unlockMobileAudio();
       const btn = document.getElementById('session-btn');
       const label = document.getElementById('session-btn-label');
 
       if (!isSessionRunning) {
         isSessionRunning = true;
-        btn.classList.remove('bg-amber-500', 'hover:bg-amber-400', 'text-slate-950');
-        btn.classList.add('bg-slate-800', 'hover:bg-slate-700', 'text-amber-300', 'border', 'border-slate-700');
+        btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700', 'text-white');
+        btn.classList.add('bg-slate-700', 'hover:bg-slate-800', 'text-white');
         label.innerText = "พักเวลา";
 
         if (sessionRemainingSeconds === sessionTotalSeconds) {
@@ -677,8 +733,8 @@
       } else {
         isSessionRunning = false;
         clearInterval(sessionTimerInterval);
-        btn.classList.remove('bg-slate-800', 'hover:bg-slate-700', 'text-amber-300', 'border', 'border-slate-700');
-        btn.classList.add('bg-amber-500', 'hover:bg-amber-400', 'text-slate-950');
+        btn.classList.remove('bg-slate-700', 'hover:bg-slate-800', 'text-white');
+        btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'text-white');
         label.innerText = "ทำต่อ";
       }
     }
@@ -696,9 +752,9 @@
       const btn = document.getElementById('session-btn');
       const label = document.getElementById('session-btn-label');
 
-      btn.classList.remove('bg-slate-800', 'hover:bg-slate-700', 'text-amber-300', 'border', 'border-slate-700');
-      btn.classList.add('bg-emerald-500', 'hover:bg-emerald-400', 'text-slate-950');
-      label.innerText = "✓ ครบเวลา";
+      btn.classList.remove('bg-slate-700', 'hover:bg-slate-800');
+      btn.classList.add('bg-teal-600', 'text-white');
+      label.innerText = "✓ ครบเวลาแล้ว";
 
       const config = sessionMealConfigs[currentMeal];
       speakThai(config.completionVoice);
@@ -714,7 +770,7 @@
 
       const btn = document.getElementById('session-btn');
       const label = document.getElementById('session-btn-label');
-      btn.className = "px-3 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs active:scale-95 transition-all shadow-md shadow-amber-500/20 flex items-center gap-1";
+      btn.className = "px-3.5 py-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs active:scale-95 transition-all shadow-md shadow-emerald-600/20 flex items-center gap-1";
       label.innerText = "เริ่มจับเวลาทำ";
     }
 
@@ -724,9 +780,8 @@
       liveSeconds = 0;
       announcedMilestones.clear();
       document.getElementById('live-timer-display').innerText = "00:00";
-      const btn = document.getElementById('live-timer-toggle-btn');
-      btn.innerText = "🍽️ เริ่มนับ";
-      btn.className = "px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold active:scale-95 transition-all shadow-md shadow-amber-500/20";
+      const btnText = document.getElementById('live-timer-btn-text');
+      btnText.innerText = "เริ่มนับ";
       if (timingMode === 'auto') {
         passedTime = 0;
         evaluateMetabolicAndGERD(0);
@@ -734,15 +789,16 @@
     }
 
     function setMeal(m) {
+      unlockMobileAudio();
       currentMeal = m;
       document.querySelectorAll('.m-btn').forEach(b => {
-        b.classList.remove('border-amber-500', 'bg-amber-500/20', 'text-amber-300');
-        b.classList.add('border-slate-700/80', 'bg-slate-800/70', 'text-slate-300');
+        b.classList.remove('border-emerald-500', 'bg-emerald-50', 'text-emerald-900', 'font-bold');
+        b.classList.add('border-slate-200', 'bg-white', 'text-slate-700', 'font-semibold');
       });
 
       const activeBtn = document.getElementById('m-' + m);
-      activeBtn.classList.remove('border-slate-700/80', 'bg-slate-800/70', 'text-slate-300');
-      activeBtn.classList.add('border-amber-500', 'bg-amber-500/20', 'text-amber-300');
+      activeBtn.classList.remove('border-slate-200', 'bg-white', 'text-slate-700', 'font-semibold');
+      activeBtn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900', 'font-bold');
 
       document.getElementById('meal-badge').innerText = mealTitles[m];
       
@@ -760,11 +816,11 @@
       evaluateMetabolicAndGERD(passedTime);
 
       if (m === 'carb') {
-        speakThai("เลือก มื้อข้าวแป้ง ครับ มา กระดกส้นเท้า ดึงน้ำตาล ไปใช้ กันครับ จะได้ ไม่เกิด อาการง่วงตื้อ ครับ");
+        speakThai("เลือกมื้อข้าวแป้งครับ มากระดกส้นเท้าดึงน้ำตาลไปใช้กันครับ จะได้ไม่เกิดอาการง่วงตื้อครับ");
       } else if (m === 'protein') {
-        speakThai("เลือก มื้อโปรตีนสูง ครับ กระเพาะ กำลังหลั่งกรด นั่งหลังตรง แล้ว ฝึกหายใจ ตามภาพ ได้เลยครับ");
+        speakThai("เลือกมื้อโปรตีนสูงครับ กระเพาะกำลังหลั่งกรด นั่งหลังตรงแล้วฝึกหายใจตามภาพได้เลยครับ");
       } else if (m === 'heavy') {
-        speakThai("เลือก มื้อหนัก จัดเต็ม ครับ แนะนำให้ ลุกยืน หรือ เดินทอดน่อง ช้าๆ สบายๆ ครับ");
+        speakThai("เลือกมื้อหนักจัดเต็มครับ แนะนำให้ลุกยืนหรือเดินทอดน่องช้าๆ สบายๆ ครับ");
       }
     }
 
@@ -798,24 +854,24 @@
 
       if (mins <= 25) {
         glucoseStageEl.innerText = "ระยะเริ่มดูดซึมกลูโคส";
-        glucoseStageEl.className = "font-bold text-amber-300 text-xs";
+        glucoseStageEl.className = "font-bold text-amber-800 text-xs";
       } else if (mins <= 55) {
         glucoseStageEl.innerText = "จุดพีคน้ำตาลในเลือด ⚠️";
-        glucoseStageEl.className = "font-extrabold text-rose-400 text-xs";
+        glucoseStageEl.className = "font-extrabold text-rose-600 text-xs";
       } else {
         glucoseStageEl.innerText = "ระยะเสี่ยงน้ำตาลตกวูบ";
-        glucoseStageEl.className = "font-bold text-orange-400 text-xs";
+        glucoseStageEl.className = "font-bold text-orange-700 text-xs";
       }
 
       if (mins <= 45) {
         gerdRiskEl.innerText = "⚠️ สูงสุด (ช่วงกรดหลั่งมาก)";
-        gerdRiskEl.className = "font-extrabold text-rose-400 text-xs";
+        gerdRiskEl.className = "font-extrabold text-rose-600 text-xs";
       } else if (mins <= 75) {
         gerdRiskEl.innerText = "⚡ ปานกลาง (อาหารเริ่มย่อย)";
-        gerdRiskEl.className = "font-bold text-amber-300 text-xs";
+        gerdRiskEl.className = "font-bold text-amber-700 text-xs";
       } else {
         gerdRiskEl.innerText = "✅ ปลอดภัย (กระเพาะว่างลง)";
-        gerdRiskEl.className = "font-bold text-emerald-400 text-xs";
+        gerdRiskEl.className = "font-bold text-emerald-700 text-xs";
       }
 
       const protocols = {
@@ -846,14 +902,14 @@
     }
 
     function toggleLiveTimer() {
-      const btn = document.getElementById('live-timer-toggle-btn');
+      unlockMobileAudio();
+      const btnText = document.getElementById('live-timer-btn-text');
       if (!isLiveTimerRunning) {
         isLiveTimerRunning = true;
-        btn.innerText = "⏸ พัก";
-        btn.className = "px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700 text-amber-300 text-xs font-extrabold transition-all";
+        btnText.innerText = "พัก";
 
         if (liveSeconds === 0) {
-          speakThai("เริ่ม นับเวลา หลังอาหาร แล้วครับ นั่งหลังตรง ยืดอก ไว้นะครับ อย่าเพิ่ง ฟุบโต๊ะ หรือ นอนราบ เพื่อ ป้องกัน กรดไหลย้อน ครับ");
+          speakThai("เริ่มนับเวลาหลังอาหารแล้วครับ นั่งหลังตรง ยืดอกไว้นะครับ อย่าเพิ่งฟุบโต๊ะหรือนอนราบ เพื่อป้องกันกรดไหลย้อนครับ");
         }
 
         liveTimerInterval = setInterval(() => {
@@ -873,8 +929,7 @@
       } else {
         isLiveTimerRunning = false;
         clearInterval(liveTimerInterval);
-        btn.innerText = "🍽️ นับต่อ";
-        btn.className = "px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold transition-all shadow-md shadow-amber-500/20";
+        btnText.innerText = "นับต่อ";
       }
     }
 
@@ -883,18 +938,19 @@
 
       if (mins === 25 && !announcedMilestones.has(25)) {
         announcedMilestones.add(25);
-        speakThai("แจ้งเตือน ครับ ขณะนี้ น้ำตาล ในเลือด ขึ้นถึง จุดสูงสุด แล้วครับ เริ่ม ขยับตัว ทำกิจกรรม ตามจังหวะ ภาพ เพื่อความสดชื่น ได้เลยครับ");
+        speakThai("แจ้งเตือนครับ ขณะนี้น้ำตาลในเลือดขึ้นถึงจุดสูงสุดแล้วครับ เริ่มขยับตัวทำกิจกรรมตามจังหวะภาพเพื่อความสดชื่นได้เลยครับ");
       } else if (mins === 45 && !announcedMilestones.has(45)) {
         announcedMilestones.add(45);
-        speakThai("ผ่านไป สี่สิบห้า นาที แล้วครับ อาหาร กำลังย่อย ลงสู่ ลำไส้เล็ก นั่ง หลังตรง ต่ออีกสักนิด นะครับ");
+        speakThai("ผ่านไป 45 นาทีแล้วครับ อาหารกำลังย่อยลงสู่ลำไส้เล็ก นั่งหลังตรงต่ออีกสักนิดนะครับ");
       } else if (mins === 60 && !announcedMilestones.has(60)) {
         announcedMilestones.add(60);
-        speakThai("ครบ หนึ่งชั่วโมง แล้วครับ พ้นช่วง อันตราย ของ กรดไหลย้อน แล้วครับ ปรับตัว ได้ยอดเยี่ยมมาก ครับ");
+        speakThai("ครบ 1 ชั่วโมงแล้วครับ พ้นช่วงอันตรายของกรดไหลย้อนแล้วครับ ปรับตัวได้ยอดเยี่ยมมากครับ");
       }
     }
 
-    // ระบบสังเคราะห์คลื่นเสียง 40Hz Gamma Wave แบบ Binaural Beat
+    // ระบบคลื่นเสียง 40Hz Gamma Beat สะอาด ชัดเจน ไม่แสบหู
     function toggleAlertTone() {
+      unlockMobileAudio();
       const btn = document.getElementById('audio-btn');
       const icon = document.getElementById('audio-icon');
       const label = document.getElementById('audio-label');
@@ -904,36 +960,34 @@
           const AudioContextClass = window.AudioContext || window.webkitAudioContext;
           if (!AudioContextClass) return;
 
-          audioCtx = new AudioContextClass();
-          if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-          }
+          const ctx = globalAudioCtx || new AudioContextClass();
+          if (ctx.state === 'suspended') ctx.resume();
 
-          masterGain = audioCtx.createGain();
-          masterGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
-          masterGain.gain.exponentialRampToValueAtTime(0.22, audioCtx.currentTime + 0.2);
-          masterGain.connect(audioCtx.destination);
+          masterGain = ctx.createGain();
+          masterGain.gain.setValueAtTime(0.001, ctx.currentTime);
+          masterGain.gain.exponentialRampToValueAtTime(0.18, ctx.currentTime + 0.2);
+          masterGain.connect(ctx.destination);
 
-          osc1 = audioCtx.createOscillator();
+          osc1 = ctx.createOscillator();
           osc1.type = 'sine';
-          osc1.frequency.setValueAtTime(400, audioCtx.currentTime);
+          osc1.frequency.setValueAtTime(400, ctx.currentTime);
 
-          osc2 = audioCtx.createOscillator();
+          osc2 = ctx.createOscillator();
           osc2.type = 'sine';
-          osc2.frequency.setValueAtTime(440, audioCtx.currentTime);
+          osc2.frequency.setValueAtTime(440, ctx.currentTime);
 
-          lfo = audioCtx.createOscillator();
-          const lfoGain = audioCtx.createGain();
-          lfo.frequency.setValueAtTime(40, audioCtx.currentTime);
-          lfoGain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+          lfo = ctx.createOscillator();
+          const lfoGain = ctx.createGain();
+          lfo.frequency.setValueAtTime(40, ctx.currentTime);
+          lfoGain.gain.setValueAtTime(0.05, ctx.currentTime);
           lfo.connect(lfoGain.gain);
 
-          if (audioCtx.createStereoPanner) {
-            const panLeft = audioCtx.createStereoPanner();
+          if (ctx.createStereoPanner) {
+            const panLeft = ctx.createStereoPanner();
             panLeft.pan.value = -0.9;
             osc1.connect(panLeft).connect(masterGain);
 
-            const panRight = audioCtx.createStereoPanner();
+            const panRight = ctx.createStereoPanner();
             panRight.pan.value = 0.9;
             osc2.connect(panRight).connect(masterGain);
           } else {
@@ -948,20 +1002,18 @@
           isAudioPlaying = true;
           icon.innerText = "⏹";
           label.innerText = "หยุด 40Hz";
-          btn.classList.remove('bg-amber-500/20', 'border-amber-500/40', 'text-amber-300');
-          btn.classList.add('bg-rose-500/25', 'border-rose-500/60', 'text-rose-300', 'animate-pulse');
+          btn.className = "px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 text-xs font-bold active:scale-95 transition-all flex items-center gap-1 whitespace-nowrap shadow-sm";
         } catch (err) {
           console.error("Audio error:", err);
         }
       } else {
-        if (masterGain && audioCtx) {
-          masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
-          masterGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.15);
+        if (masterGain && globalAudioCtx) {
+          masterGain.gain.setValueAtTime(masterGain.gain.value, globalAudioCtx.currentTime);
+          masterGain.gain.exponentialRampToValueAtTime(0.0001, globalAudioCtx.currentTime + 0.15);
           setTimeout(() => {
             if (osc1) { osc1.stop(); osc1.disconnect(); }
             if (osc2) { osc2.stop(); osc2.disconnect(); }
             if (lfo) { lfo.stop(); lfo.disconnect(); }
-            if (audioCtx) { audioCtx.close(); }
             isAudioPlaying = false;
           }, 160);
         } else {
@@ -970,8 +1022,7 @@
 
         icon.innerText = "▶";
         label.innerText = "เปิดเสียง 40Hz";
-        btn.classList.remove('bg-rose-500/25', 'border-rose-500/60', 'text-rose-300', 'animate-pulse');
-        btn.classList.add('bg-amber-500/20', 'border-amber-500/40', 'text-amber-300');
+        btn.className = "px-3 py-1.5 rounded-xl bg-teal-50 hover:bg-teal-100 border border-teal-200 text-teal-800 text-xs font-bold active:scale-95 transition-all flex items-center gap-1 whitespace-nowrap shadow-sm";
       }
     }
 
