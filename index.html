@@ -447,17 +447,17 @@
 
       </div>
 
-      <!-- คลื่นเสียง 40Hz Gamma Beat -->
+      <!-- คลื่นเสียง 40Hz Gamma Beat (ปรับปรุงระดับเสียงให้ดังชัดเจนและฟังสบาย) -->
       <div class="pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
         <div class="text-left">
           <div class="text-sm font-bold text-slate-200 flex items-center gap-1.5">
-            <span>🎧</span> 40Hz Gamma Wave
+            <span class="text-amber-400 text-base">🎧</span> 40Hz Gamma Wave (เสียงชัดเจน ไพเราะ)
           </div>
-          <div class="text-xs sm:text-sm text-slate-400">ปลุกสมองให้ตื่นตัวโดยไม่ต้องดื่มกาแฟเติมกรด</div>
+          <div class="text-xs text-slate-400">กระตุ้นคลื่นสมองให้ตื่นตัวสดชื่นทันที ไม่ต้องพึ่งกาแฟ</div>
         </div>
-        <button type="button" onclick="toggleAlertTone()" id="audio-btn" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-300 text-xs sm:text-sm font-bold hover:bg-amber-500/25 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-sm">
-          <span id="audio-icon">▶</span>
-          <span id="audio-label">เปิดเสียงแก้ง่วง</span>
+        <button type="button" onclick="toggleAlertTone()" id="audio-btn" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-amber-500/20 border-2 border-amber-500/50 text-amber-300 text-xs sm:text-sm font-bold hover:bg-amber-500/30 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-md shadow-amber-500/10">
+          <span id="audio-icon" class="text-base">▶</span>
+          <span id="audio-label">เปิดเสียงแก้ง่วง 40Hz</span>
         </button>
       </div>
     </section>
@@ -496,7 +496,7 @@
     let sessionTimerInterval = null;
     let isSessionRunning = false;
 
-    // ข้อมูลกิจกรรม คำแนะนำ และสคริปต์เสียงพูดภาษาไทยธรรมชาติที่นุ่มนวล ชัดเจน (Smooth Thai Voice Scripts)
+    // สคริปต์เสียงพูดโค้ชผู้หญิงโทนน่ารัก สดใส เป็นมิตร และออกเสียงภาษาไทยชัดเจนทุกจุด
     const sessionMealConfigs = {
       carb: {
         activityName: "กิจกรรม: กระดกส้นเท้านั่งทำงาน",
@@ -514,9 +514,9 @@
           "หากเริ่มรู้สึกตึงหรือเมื่อยกล้ามเนื้อน่อง ให้หยุดพักและจิบน้ำทันที",
           "เมื่อเวลาหลังอาหารผ่านพ้น 60 นาที (พ้นช่วงน้ำตาลขึ้นสูงสุด)"
         ],
-        startVoice: "เริ่มจับเวลาสิบนาทีค่ะ, ให้ปลายเท้าวางแตะพื้น, แล้วยกเฉพาะส้นเท้าขึ้นลงตามจังหวะภาพนะคะ. หากหายง่วงหรือเริ่มเมื่อยน่องก่อน, สามารถกดหยุดพักได้ทันทีค่ะ",
-        completionVoice: "ครบกำหนดเวลาสิบนาทีแล้วค่ะ, กล้ามเนื้อน่องช่วยดึงน้ำตาลไปใช้เรียบร้อยแล้วค่ะ. หยุดพักขาและนั่งทำงานต่อได้อย่างสบายใจเลยนะคะ",
-        adviceVoice: "สูตรดึงน้ำตาลเข้ากล้ามเนื้อน่องค่ะ, สำหรับมื้อข้าวหรือแป้ง, ให้วางปลายเท้าแตะพื้นแล้วกระดกส้นเท้าขึ้นลงตามจังหวะ. กล้ามเนื้อน่องจะช่วยเปิดช่องรับน้ำตาลไปเผาผลาญทันที, ช่วยตัดวงจรความง่วงนอน, โดยไม่สร้างแรงกดในช่องท้อง, ปลอดภัยต่อกระเพาะอาหารค่ะ"
+        startVoice: "เริ่มจับเวลาสิบนาทีแล้วค่า, ให้วางปลายเท้าแตะพื้นสบายๆ, แล้วยกเฉพาะส้นเท้าขึ้นลงตามภาพได้เลยนะคะ. สู้ๆ ค่า, ถ้าหายง่วงหรือเริ่มเมื่อยน่องก่อน, กดหยุดพักได้ตลอดเลยน้า",
+        completionVoice: "ครบกำหนดสิบนาทีแล้วค่า, เก่งมากๆ เลยค่ะ! กล้ามเนื้อน่องช่วยดึงน้ำตาลไปใช้เรียบร้อยแล้วน้า, พักขาและนั่งทำงานต่อได้อย่างสดชื่นเลยนะคะ",
+        adviceVoice: "สูตรดึงน้ำตาลเข้ากล้ามเนื้อน่องสำหรับมื้อข้าวแป้งค่า: ให้นั่งตัวตรง วางปลายเท้าแตะพื้นแล้วกระดกส้นเท้าขึ้นลงตามจังหวะนะคะ, กล้ามเนื้อน่องจะช่วยดึงน้ำตาลไปเผาผลาญทันที, ช่วยตัดวงจรความง่วงนอนได้ดีที่สุด, และไม่บีบกระเพาะอาหาร ปลอดภัยต่อกรดไหลย้อนแน่นอนค่า"
       },
       protein: {
         activityName: "กิจกรรม: ฝึกหายใจด้วยกะบังลม",
@@ -533,9 +533,9 @@
           "หากเริ่มรู้สึกวิงเวียนศีรษะจากการหายใจลึก ให้หยุดทันที",
           "สิ่งที่ต้องทำต่อ: ยังคงนั่งหลังตรง อกผาย จนครบ 60 นาทีเพื่อกันกรดไหลย้อน"
         ],
-        startVoice: "เริ่มจับเวลาห้านาทีค่ะ, ให้นั่งยืดตัวตรง, สูดหายใจเข้าช้าๆ ทางจมูกสี่วินาที, และผ่อนลมหายใจออกยาวๆ หกวินาทีตามวงกลมสีฟ้านะคะ. หากเริ่มเวียนหัวให้หยุดพักได้ทันทีค่ะ",
-        completionVoice: "ครบห้านาทีแล้วค่ะ, สามารถหยุดตั้งใจนับลมหายใจได้แล้วค่ะ. ให้นั่งหลังตรงยืดอกทำงานต่อตามปกติ เพื่อป้องกันกรดไหลย้อนนะคะ",
-        adviceVoice: "สูตรฝึกกะบังลมรัดหูรูดหลอดอาหารค่ะ, มื้อโปรตีนต้องการกรดเข้มข้นในการย่อยสูง, ไม่ต้องกระดกเท้านะคะ, แต่ต้องนั่งยืดลำตัวตรง, และฝึกหายใจเข้าสี่วินาที, ผ่อนออกหกวินาทีตามวงกลมสีฟ้า, เพื่อให้กล้ามเนื้อกะบังลมช่วยหนีบรัดหูรูดหลอดอาหาร, ป้องกันน้ำย่อยไหลย้อนขึ้นมาที่คอหอยค่ะ"
+        startVoice: "เริ่มจับเวลาห้านาทีแล้วค่า, นั่งยืดตัวตรงสวยๆ นะคะ, สูดลมหายใจเข้าลึกๆ ให้ท้องพองสี่วินาที, แล้วผ่อนออกยาวๆ หกวินาทีตามวงกลมสีฟ้าน้า, ทำใจสบายๆ ค่า",
+        completionVoice: "ครบห้านาทีแล้วค่า, ยอดเยี่ยมที่สุดเลยค่ะ! ผ่อนคลายและหายใจตามธรรมชาติได้แล้วน้า, แต่นั่งหลังตรงยืดอกต่ออีกนิด เพื่อป้องกันกรดไหลย้อนนะคะ",
+        adviceVoice: "สูตรฝึกกะบังลมสำหรับมื้อโปรตีนค่า: มื้อนี้กระเพาะกำลังหลั่งกรดเข้มข้นมาย่อยอาหารน้า, ไม่ต้องกระดกเท้านะคะ, แต่ให้นั่งยืดตัวตรง และฝึกหายใจเข้าสี่วินาที ผ่อนออกหกวินาทีตามวงกลมสีฟ้า, เพื่อให้กะบังลมช่วยหนีบรัดหูรูดกระเพาะ, ป้องกันกรดไหลย้อนขึ้นมาที่คอหอยค่า"
       },
       heavy: {
         activityName: "กิจกรรม: ก้าวเดินช้าทอดน่อง",
@@ -552,9 +552,9 @@
           "หยุดทันทีเมื่อเริ่มรู้สึก 'จุก เสียด แน่น' ที่ชายโครง",
           "ห้ามก้าวเดินเร็วหรือจ้ำอ้าว และห้ามเดินจนเหนื่อยหอบ"
         ],
-        startVoice: "เริ่มจับเวลาสิบนาทีค่ะ, ให้ลุกขึ้นยืนหรือก้าวเดินช้าๆ ทอดน่องตามจังหวะก้าวเท้าซ้ายขวานะคะ. เดินสบายๆ ไม่ต้องรีบ, หากเริ่มรู้สึกจุกแน่นให้หยุดพักทันทีค่ะ",
-        completionVoice: "ครบสิบนาทีแล้วค่ะ, เพียงพอสำหรับการช่วยให้ทางเดินอาหารเคลื่อนตัวแล้วค่ะ. กลับมานั่งทำงานในท่าตัวตรงได้เลยนะคะ",
-        adviceVoice: "สูตรเดินช้ากระตุ้นทางเดินอาหารค่ะ, มื้อหนักหรือของมันทำให้กระเพาะบีบตัวช้าลง, การนั่งเฉยๆ จะทำให้อืดแน่น, แนะนำให้ลุกขึ้นยืนยืดตัว, หรือเดินก้าวช้าๆ ทอดน่องตามจังหวะ, เพื่อช่วยให้อาหารเคลื่อนตัวลงสู่ลำไส้เล็ก, โดยไม่ทำให้จุกแน่นค่ะ"
+        startVoice: "เริ่มจับเวลาสิบนาทีแล้วค่า, ลุกขึ้นยืนยืดตัวตรง, แล้วก้าวเดินช้าๆ ทอดน่องสบายๆ ตามจังหวะได้เลยน้า, เดินชิลๆ ไม่ต้องรีบนะคะ, ถ้าเริ่มจุกแน่นให้หยุดพักทันทีค่า",
+        completionVoice: "ครบสิบนาทีแล้วค่า, เก่งมากเลยค่ะ! ทางเดินอาหารเริ่มเคลื่อนตัวได้ดีแล้วน้า, กลับมานั่งทำงานในท่าตัวตรงได้เลยนะคะ",
+        adviceVoice: "สูตรเดินช้ากระตุ้นทางเดินอาหารสำหรับมื้อหนักค่า: ของมันของทอดทำให้กระเพาะย่อยช้าลงน้า, การนั่งนิ่งๆ จะทำให้อืดแน่นท้องค่ะ, แนะนำให้ลุกยืนยืดตัวตรง หรือเดินทอดน่องช้าๆ ตามจังหวะก้าวเท้า, เพื่อช่วยให้อาหารเคลื่อนตัวลงสู่ลำไส้เล็กอย่างสบายตัวค่า"
       }
     };
 
@@ -562,9 +562,9 @@
     let voiceCoachEnabled = true;
     let announcedMilestones = new Set(); // บันทึกช่วงเวลาที่พูดเตือนไปแล้ว ป้องกันการพูดซ้ำ
 
-    // Web Audio API ระบบสังเคราะห์คลื่น Binaural Beat
+    // Web Audio API ระบบสังเคราะห์คลื่น 40Hz Gamma Wave
     let audioCtx = null;
-    let osc1 = null, osc2 = null;
+    let osc1 = null, osc2 = null, lfo = null;
     let masterGain = null;
     let isAudioPlaying = false;
 
@@ -574,7 +574,7 @@
       heavy: 'ไขมันสูง & บุฟเฟต์'
     };
 
-    // เล่นเสียงสัญญาณกระดิ่งนุ่มนวล (Soft Warm Chime) ก่อนที่ระบบจะพูดเตือน
+    // เสียงกระดิ่งแจ้งเตือนสไตล์ระฆังแก้วใสน่ารัก (Sweet Melodic Bell Chime: E5 -> A5)
     function playChimeAlert() {
       try {
         const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
@@ -582,85 +582,80 @@
         const chimeCtx = new AudioCtxClass();
         const now = chimeCtx.currentTime;
 
-        // โน้ตแรก ความถี่ 523.25Hz (C5) นุ่มนวล
+        // โน้ตแรก ความถี่ 659.25Hz (E5) ใส ไพเราะ
         const o1 = chimeCtx.createOscillator();
         const g1 = chimeCtx.createGain();
-        o1.type = 'sine';
-        o1.frequency.setValueAtTime(523.25, now);
+        o1.type = 'triangle';
+        o1.frequency.setValueAtTime(659.25, now);
         g1.gain.setValueAtTime(0.001, now);
-        g1.gain.exponentialRampToValueAtTime(0.06, now + 0.04);
-        g1.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
+        g1.gain.exponentialRampToValueAtTime(0.12, now + 0.04);
+        g1.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
         o1.connect(g1);
         g1.connect(chimeCtx.destination);
         o1.start(now);
-        o1.stop(now + 0.28);
+        o1.stop(now + 0.35);
 
-        // โน้ตที่สอง ความถี่ 783.99Hz (G5) ให้ความรู้สึกสดชื่น
+        // โน้ตที่สอง ความถี่ 880Hz (A5) สดใสร่าเริง
         const o2 = chimeCtx.createOscillator();
         const g2 = chimeCtx.createGain();
         o2.type = 'sine';
-        o2.frequency.setValueAtTime(783.99, now + 0.12);
+        o2.frequency.setValueAtTime(880.0, now + 0.12);
         g2.gain.setValueAtTime(0.001, now + 0.12);
-        g2.gain.exponentialRampToValueAtTime(0.07, now + 0.16);
-        g2.gain.exponentialRampToValueAtTime(0.0001, now + 0.48);
+        g2.gain.exponentialRampToValueAtTime(0.14, now + 0.16);
+        g2.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
         o2.connect(g2);
         g2.connect(chimeCtx.destination);
         o2.start(now + 0.12);
-        o2.stop(now + 0.48);
+        o2.stop(now + 0.55);
       } catch (err) {
-        console.debug("Chime playback error: ", err);
+        console.debug("Chime error:", err);
       }
     }
 
-    // ค้นหาเสียงพากย์ภาษาไทยที่ดีที่สุดในอุปกรณ์ (Natural / Siri / Google Thai Voice Picker)
-    function getBestThaiVoice() {
+    // ค้นหาเสียงผู้หญิงภาษาไทยที่ดีที่สุดในเครื่อง (Sweet Female Thai Voice Picker)
+    function getBestThaiFemaleVoice() {
       if (!('speechSynthesis' in window)) return null;
       const voices = window.speechSynthesis.getVoices();
       if (!voices || voices.length === 0) return null;
 
       // กรองเฉพาะเสียงภาษาไทย
-      const thaiVoices = voices.filter(v => v.lang === 'th-TH' || v.lang.includes('th'));
+      const thaiVoices = voices.filter(v => v.lang === 'th-TH' || v.lang.startsWith('th'));
       if (thaiVoices.length === 0) return null;
 
-      // จัดลำดับความคมชัดเป็นธรรมชาติ: ค้นหาเสียง Siri, Google, Premium, หรือ Enhanced ก่อน
-      const preferredVoice = thaiVoices.find(v => 
-        v.name.includes('Siri') || 
-        v.name.includes('Premium') || 
-        v.name.includes('Enhanced') || 
-        v.name.includes('Natural') || 
-        v.name.includes('Kanya') || 
-        v.name.includes('Google') || 
-        v.name.includes('Premwadee') || 
-        v.name.includes('Niwat')
-      );
+      // จัดลำดับความน่ารักและเป็นธรรมชาติ โดยค้นหาเสียงผู้หญิงเป็นหลัก
+      const femaleKeywords = ['kanya', 'siri', 'female', 'google', 'premwadee', 'narisa', 'natural', 'enhanced'];
+      const bestFemale = thaiVoices.find(v => {
+        const name = v.name.toLowerCase();
+        return femaleKeywords.some(keyword => name.includes(keyword));
+      });
 
-      return preferredVoice || thaiVoices[0];
+      return bestFemale || thaiVoices[0];
     }
 
-    // ฟังก์ชันสั่งงานเสียงพูดภาษาไทยแบบ Smooth เป็นธรรมชาติ ไม่กระตุก
+    // ฟังก์ชันสั่งงานเสียงพูดผู้หญิงภาษาไทย น่ารัก นุ่มนวล ชัดเจน ไม่กระตุก
     function speakThai(message) {
       if (!voiceCoachEnabled || !('speechSynthesis' in window)) return;
       try {
-        window.speechSynthesis.cancel(); // ล้างคิวเสียงพูดเดิมที่อาจคั่งค้าง
-        playChimeAlert(); // เล่นกระดิ่งนุ่มนวลก่อนพูด
+        window.speechSynthesis.cancel(); // ล้างคิวเดิมก่อน
+        playChimeAlert(); // เล่นกระดิ่งใสก่อนพูด
 
         setTimeout(() => {
           const utter = new SpeechSynthesisUtterance(message);
           utter.lang = 'th-TH';
           
-          // ปรับความเร็วและโทนเสียงให้มีความนุ่มนวลและจังหวะผ่อนคลายเหมือนโค้ชจริง
-          utter.rate = 0.92; // ช้าลงเล็กน้อยจาก 1.0 เพื่อให้ออกเสียงภาษาไทยได้ชัดเจน ไม่รัว
-          utter.pitch = 1.0; // โทนเสียงระดับธรรมชาติ
+          // ปรับโทนเสียงให้มีความสดใส น่ารัก ชัดถ้อยชัดคำ
+          utter.pitch = 1.18; // ยกคีย์เสียงให้อ่อนหวาน เป็นมิตร สดใสแบบผู้หญิง
+          utter.rate = 0.95;  // ความเร็วพอเหมาะ ชัดเจนทุกพยางค์ ไม่พูดรัว
 
-          const bestVoice = getBestThaiVoice();
-          if (bestVoice) {
-            utter.voice = bestVoice;
+          const femaleVoice = getBestThaiFemaleVoice();
+          if (femaleVoice) {
+            utter.voice = femaleVoice;
           }
 
           window.speechSynthesis.speak(utter);
-        }, 260);
+        }, 280);
       } catch (err) {
-        console.error("Speech Synthesis Error: ", err);
+        console.error("Speech error:", err);
       }
     }
 
@@ -671,7 +666,7 @@
       if (voiceCoachEnabled) {
         btn.innerText = "🔊 เปิดอยู่";
         btn.className = "px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs sm:text-sm font-bold active:scale-95 transition-all";
-        speakThai("เปิดระบบเสียงพูดโค้ชเรียบร้อยแล้วค่ะ");
+        speakThai("เปิดเสียงพูดเตือนให้เรียบร้อยแล้วค่า, พร้อมดูแลสุขภาพหลังมื้อนี้นะคะ");
       } else {
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
         btn.innerText = "🔇 ปิดเสียง";
@@ -679,10 +674,10 @@
       }
     }
 
-    // ปุ่มสำหรับกดฟังเสียงแนะนำปัจจุบันได้ตลอดเวลา ด้วยสคริปต์ภาษาไทยที่ลื่นไหล
+    // ปุ่มสำหรับกดฟังเสียงแนะนำปัจจุบันได้ตลอดเวลา
     function speakCurrentAdvice() {
       const config = sessionMealConfigs[currentMeal];
-      const posture = "ข้อควรจำในการนั่งทำงานค่ะ: ยืดลำตัวขึ้นตรง, อกเปิดกว้าง, ไม่นั่งหลังค่อมหรือฟุบโต๊ะนะคะ";
+      const posture = "ข้อควรระวังสำคัญนะคะ: นั่งยืดตัวตรง อกผายสวยๆ ห้ามนอนราบหรือฟุบโต๊ะทำงานน้า";
       speakThai(`${config.adviceVoice}. ${posture}`);
     }
 
@@ -716,13 +711,11 @@
       const label = document.getElementById('session-btn-label');
 
       if (!isSessionRunning) {
-        // เริ่มจับเวลากิจกรรม
         isSessionRunning = true;
         btn.classList.remove('bg-amber-500', 'hover:bg-amber-400', 'text-slate-950');
         btn.classList.add('bg-slate-800', 'hover:bg-slate-700', 'text-amber-300', 'border', 'border-slate-700');
         label.innerText = "⏸ พักเวลา";
 
-        // เสียงพูดแนะนำภาษาไทยธรรมชาติเมื่อเริ่มทำกิจกรรม
         if (sessionRemainingSeconds === sessionTotalSeconds) {
           const config = sessionMealConfigs[currentMeal];
           speakThai(config.startVoice);
@@ -733,12 +726,10 @@
             sessionRemainingSeconds--;
             updateSessionDisplay();
           } else {
-            // ทำครบตามเวลาที่กำหนดแล้ว (Auto-Stop Trigger)
             finishSessionTimer();
           }
         }, 1000);
       } else {
-        // กดพักการจับเวลา
         isSessionRunning = false;
         clearInterval(sessionTimerInterval);
         btn.classList.remove('bg-slate-800', 'hover:bg-slate-700', 'text-amber-300', 'border', 'border-slate-700');
@@ -755,7 +746,7 @@
         `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
     }
 
-    // ทำครบกำหนดเวลากิจกรรม (แจ้งเตือนด้วยเสียงพูดให้หยุดทำทันที)
+    // ทำครบกำหนดเวลากิจกรรม (แจ้งเตือนด้วยเสียงโค้ชผู้หญิงสั่งหยุดอย่างน่ารัก)
     function finishSessionTimer() {
       clearInterval(sessionTimerInterval);
       isSessionRunning = false;
@@ -766,7 +757,6 @@
       btn.classList.add('bg-emerald-500', 'hover:bg-emerald-400', 'text-slate-950');
       label.innerText = "✓ ครบเวลาแล้ว";
 
-      // ส่งเสียงพูดสั่งให้ผู้ใช้หยุดทำกิจกรรม
       const config = sessionMealConfigs[currentMeal];
       speakThai(config.completionVoice);
     }
@@ -816,37 +806,30 @@
 
       document.getElementById('meal-badge').innerText = mealTitles[m];
       
-      // อัปเดตข้อมูลกิจกรรมและข้อปฏิบัติ
       const config = sessionMealConfigs[m];
       document.getElementById('activity-type-name').innerText = config.activityName;
       document.getElementById('activity-type-icon').innerText = config.activityIcon;
       document.getElementById('session-target-badge').innerText = config.badgeText;
       
-      // อัปเดตข้อปฏิบัติถูกต้อง
       const guideList = document.getElementById('activity-guide-list');
       guideList.innerHTML = config.guideItems.map(item => 
         `<li class="flex items-start gap-1.5"><span class="text-emerald-400 font-bold">✓</span> <span>${item}</span></li>`
       ).join('');
 
-      // อัปเดตสัญญาณเตือนที่ควรหยุด
       const stopList = document.getElementById('stop-signals-list');
       stopList.innerHTML = config.stopSignals.map(sig => `<li>${sig}</li>`).join('');
 
-      // รีเซ็ตเวลานับถอยหลังรอบกิจกรรมใหม่ตามมื้อ
       resetSessionTimer();
-
-      // สลับการแสดงผลแอนิเมชันของกิจกรรมให้ตรงกับมื้อ
       updateActivityVisualDisplay(m);
-
       evaluateMetabolicAndGERD(passedTime);
 
-      // พูดชื่อมื้อและคำแนะนำเริ่มต้นด้วยน้ำเสียงนุ่มนวล
+      // เสียงพูดเตือนเมื่อกดเลือกชนิดมื้ออาหาร
       if (m === 'carb') {
-        speakThai("เลือกมื้อข้าวหรือแป้งค่ะ, แนะนำให้ทำท่ากระดกส้นเท้าเพื่อดึงน้ำตาลเข้ากล้ามเนื้อน่องนะคะ");
+        speakThai("มื้อนี้เน้นข้าวแป้งใช่ไหมคะ, มากระดกส้นเท้าดึงน้ำตาลไปใช้กันค่า จะได้ไม่ง่วงตื้อน้า");
       } else if (m === 'protein') {
-        speakThai("เลือกมื้อโปรตีนสูงค่ะ, ไม่ต้องกระดกเท้านะคะ, ให้ฝึกหายใจเข้าออกลึกๆ และนั่งหลังตรงเพื่อรัดหูรูดกระเพาะอาหารค่ะ");
+        speakThai("มื้อนี้โปรตีนเน้นๆ เลย, กระเพาะกำลังหลั่งกรดมาย่อยน้า, นั่งหลังตรง ยืดอก แล้วฝึกหายใจลึกๆ ตามภาพเลยนะคะ");
       } else if (m === 'heavy') {
-        speakThai("เลือกมื้อหนักหรือของทอดค่ะ, แนะนำให้ลุกขึ้นยืนหรือเดินก้าวช้าๆ ทอดน่อง เพื่อช่วยทางเดินอาหารนะคะ");
+        speakThai("มื้อนี้ของอร่อยจัดเต็มเลยน้า, กระเพาะทำงานหนักหน่อยค่ะ, แนะนำให้ลุกขึ้นยืนหรือเดินทอดน่องช้าๆ สบายๆ นะคะ");
       }
     }
 
@@ -863,7 +846,6 @@
       const visualProtein = document.getElementById('visual-protein');
       const visualHeavy = document.getElementById('visual-heavy');
 
-      // ซ่อนทั้งหมดก่อน
       visualCarb.classList.add('hidden');
       visualProtein.classList.add('hidden');
       visualHeavy.classList.add('hidden');
@@ -877,7 +859,7 @@
       }
     }
 
-    // ประเมินผลกระทบทางชีวภาพและกรดไหลย้อน (พร้อมข้อความกระชับ ชัดเจน)
+    // ประเมินผลกระทบทางชีวภาพและกรดไหลย้อน
     function evaluateMetabolicAndGERD(mins) {
       const glucoseStageEl = document.getElementById('glucose-stage');
       const gerdRiskEl = document.getElementById('gerd-risk-stage');
@@ -945,7 +927,7 @@
 
         // เสียงพูดเตือนเมื่อกดเริ่มนับ
         if (liveSeconds === 0) {
-          speakThai("เริ่มนับเวลาหลังอาหารแล้วค่ะ, ให้นั่งหลังตรงยืดอก, และหลีกเลี่ยงการนอนราบหรือฟุบโต๊ะทำงานนะคะ");
+          speakThai("สวัสดีค่า เริ่มนับเวลาหลังอาหารให้แล้วน้า, นั่งยืดตัวหลังตรงสวยๆ ไว้ก่อนนะคะ, อย่าเพิ่งรีบฟุบโต๊ะหรือนอนน้า เดี๋ยวน้องกรดจะไหลย้อนขึ้นมาค่า");
         }
 
         liveTimerInterval = setInterval(() => {
@@ -970,23 +952,24 @@
       }
     }
 
-    // ตรวจสอบหลักไมล์เวลาเพื่อแจ้งเตือนด้วยเสียงพูดภาษาไทยที่นุ่มนวล
+    // ตรวจสอบหลักไมล์เวลาเพื่อแจ้งเตือนด้วยเสียงพูดภาษาไทยที่น่ารัก ชัดเจน
     function checkVoiceMilestones(mins, secs) {
       if (secs !== 0) return;
 
       if (mins === 25 && !announcedMilestones.has(25)) {
         announcedMilestones.add(25);
-        speakThai("แจ้งเตือนค่ะ, ขณะนี้ระดับน้ำตาลในเลือดกำลังขึ้นสู่จุดสูงสุดแล้วค่ะ, เริ่มทำกิจกรรมตามจังหวะภาพเพื่อเผาผลาญน้ำตาลได้เลยนะคะ");
+        speakThai("แจ้งเตือนช่วงสำคัญแล้วค่า! ตอนนี้น้ำตาลในเลือดขึ้นถึงจุดสูงสุดแล้วน้า, มาเริ่มขยับตัวทำกิจกรรมตามจังหวะภาพกันเถอะค่ะ จะได้ไม่ง่วงซึมเนอะ");
       } else if (mins === 45 && !announcedMilestones.has(45)) {
         announcedMilestones.add(45);
-        speakThai("เวลาผ่านไปสี่สิบห้านาทีแล้วค่ะ, อาหารเริ่มทยอยเคลื่อนตัวสู่ลำไส้เล็กแล้วค่ะ, ยังคงนั่งหลังตรงเพื่อป้องกันกรดไหลย้อนนะคะ");
+        speakThai("เก่งมากเลยค่า ผ่านมาสี่สิบห้านาทีแล้วน้า, อาหารกำลังทยอยย่อยลงสู่ลำไส้เล็กแล้วค่ะ, นั่งหลังตรงสวยๆ ต่ออีกนิดเดียวนะคะ");
       } else if (mins === 60 && !announcedMilestones.has(60)) {
         announcedMilestones.add(60);
-        speakThai("ครบหนึ่งชั่วโมงแล้วค่ะ, พ้นช่วงวิกฤตของกรดไหลย้อนแล้วค่ะ, ร่างกายของคุณปรับสมดุลพลังงานได้ดีเยี่ยมแล้วค่ะ");
+        speakThai("ครบหนึ่งชั่วโมงแล้วค่า เย้! พ้นช่วงอันตรายของกรดไหลย้อนแล้วน้า, ร่างกายปรับสมดุลได้ยอดเยี่ยมมากเลยค่ะ, นั่งพักผ่อนตามสบายได้เลยน้า");
       }
     }
 
-    // ระบบสังเคราะห์คลื่นเสียง 40Hz Gamma Wave (หูซ้าย 220Hz + หูขวา 260Hz)
+    // ระบบสังเคราะห์คลื่นเสียง 40Hz Gamma Wave ให้ดังชัดเจน ไพเราะ ไม่แตกพร่า
+    // โดยใช้คู่คลื่น 400Hz (ซ้าย) และ 440Hz (ขวา) ผลต่าง 40Hz ชัดเจนแม้เปิดผ่านลำโพงโทรศัพท์มือถือ
     function toggleAlertTone() {
       const btn = document.getElementById('audio-btn');
       const icon = document.getElementById('audio-icon');
@@ -1002,28 +985,37 @@
             audioCtx.resume();
           }
 
+          // ปรับระดับความดัง Master Gain ให้ดังชัดเจน ได้ยินทันที (0.24) พร้อมระบบ Fade-in นุ่มนวล
           masterGain = audioCtx.createGain();
           masterGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
-          masterGain.gain.exponentialRampToValueAtTime(0.06, audioCtx.currentTime + 0.3);
+          masterGain.gain.exponentialRampToValueAtTime(0.24, audioCtx.currentTime + 0.2);
           masterGain.connect(audioCtx.destination);
 
-          // ออสซิลเลเตอร์ซ้าย 220Hz
+          // ออสซิลเลเตอร์ช่องซ้าย 400Hz (โทนอุ่น ฟังสบาย)
           osc1 = audioCtx.createOscillator();
           osc1.type = 'sine';
-          osc1.frequency.setValueAtTime(220, audioCtx.currentTime);
+          osc1.frequency.setValueAtTime(400, audioCtx.currentTime);
 
-          // ออสซิลเลเตอร์ขวา 260Hz -> ผลต่าง 40Hz
+          // ออสซิลเลเตอร์ช่องขวา 440Hz (คอร์ดมาตรฐาน A4) -> ผลต่าง 40Hz Gamma Wave
           osc2 = audioCtx.createOscillator();
           osc2.type = 'sine';
-          osc2.frequency.setValueAtTime(260, audioCtx.currentTime);
+          osc2.frequency.setValueAtTime(440, audioCtx.currentTime);
 
+          // เพิ่มตัวเหนี่ยวนำแอมพลิจูด 40Hz (Isochronic LFO) เพื่อให้ได้ยินจังหวะกะพริบ 40Hz ชัดเจนแม้เปิดลำโพงเดี่ยวของมือถือ
+          lfo = audioCtx.createOscillator();
+          const lfoGain = audioCtx.createGain();
+          lfo.frequency.setValueAtTime(40, audioCtx.currentTime);
+          lfoGain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+          lfo.connect(lfoGain.gain);
+
+          // จัดมิติสเตอริโอ ซ้าย-ขวา
           if (audioCtx.createStereoPanner) {
             const panLeft = audioCtx.createStereoPanner();
-            panLeft.pan.value = -1;
+            panLeft.pan.value = -0.9;
             osc1.connect(panLeft).connect(masterGain);
 
             const panRight = audioCtx.createStereoPanner();
-            panRight.pan.value = 1;
+            panRight.pan.value = 0.9;
             osc2.connect(panRight).connect(masterGain);
           } else {
             osc1.connect(masterGain);
@@ -1032,33 +1024,36 @@
 
           osc1.start();
           osc2.start();
+          lfo.start();
 
           isAudioPlaying = true;
           icon.innerText = "⏹";
-          label.innerText = "หยุดคลื่นเสียง";
-          btn.classList.remove('bg-amber-500/15', 'border-amber-500/40', 'text-amber-300');
-          btn.classList.add('bg-rose-500/20', 'border-rose-500/50', 'text-rose-300');
+          label.innerText = "หยุดคลื่นเสียง 40Hz";
+          btn.classList.remove('bg-amber-500/20', 'border-amber-500/50', 'text-amber-300');
+          btn.classList.add('bg-rose-500/25', 'border-rose-500/60', 'text-rose-300', 'animate-pulse');
         } catch (err) {
           console.error("Audio error:", err);
         }
       } else {
+        // ปิดเสียงอย่างนุ่มนวล (Fade-out)
         if (masterGain && audioCtx) {
           masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
-          masterGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.2);
+          masterGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.15);
           setTimeout(() => {
             if (osc1) { osc1.stop(); osc1.disconnect(); }
             if (osc2) { osc2.stop(); osc2.disconnect(); }
+            if (lfo) { lfo.stop(); lfo.disconnect(); }
             if (audioCtx) { audioCtx.close(); }
             isAudioPlaying = false;
-          }, 200);
+          }, 160);
         } else {
           isAudioPlaying = false;
         }
 
         icon.innerText = "▶";
-        label.innerText = "เปิดเสียงแก้ง่วง";
-        btn.classList.remove('bg-rose-500/20', 'border-rose-500/50', 'text-rose-300');
-        btn.classList.add('bg-amber-500/15', 'border-amber-500/40', 'text-amber-300');
+        label.innerText = "เปิดเสียงแก้ง่วง 40Hz";
+        btn.classList.remove('bg-rose-500/25', 'border-rose-500/60', 'text-rose-300', 'animate-pulse');
+        btn.classList.add('bg-amber-500/20', 'border-amber-500/50', 'text-amber-300');
       }
     }
 
