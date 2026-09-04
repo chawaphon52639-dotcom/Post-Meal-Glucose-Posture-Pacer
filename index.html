@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>โปรแกรมลดอาการง่วงหลังอาหาร และ ป้องกันกรดไหลย้อน - พัฒนาระบบโดย น้าราม</title>
   
+  <!-- ป้องกันเบราว์เซอร์จำแคชค้าง (Cache Buster) -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <meta name="theme-color" content="#140d09">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -28,30 +33,16 @@
 
     /* 1. แอนิเมชันยกส้นเท้า Soleus Push-up (SPU) 1.2 วินาที */
     @keyframes soleusFootMotion {
-      0%, 100% {
-        transform: rotate(0deg);
-        transform-origin: 32px 82px;
-      }
-      50% {
-        transform: rotate(-22deg);
-        transform-origin: 32px 82px;
-      }
+      0%, 100% { transform: rotate(0deg); transform-origin: 32px 82px; }
+      50% { transform: rotate(-22deg); transform-origin: 32px 82px; }
     }
     .soleus-foot-animated {
       animation: soleusFootMotion 1.2s infinite cubic-bezier(0.4, 0.0, 0.2, 1);
     }
 
     @keyframes calfMuscleGlowAmber {
-      0%, 100% {
-        opacity: 0.45;
-        stroke: #f59e0b;
-        filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.3));
-      }
-      50% {
-        opacity: 1;
-        stroke: #fef08a;
-        filter: drop-shadow(0 0 9px rgba(251, 191, 36, 0.95));
-      }
+      0%, 100% { opacity: 0.45; stroke: #f59e0b; filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.3)); }
+      50% { opacity: 1; stroke: #fef08a; filter: drop-shadow(0 0 9px rgba(251, 191, 36, 0.95)); }
     }
     .calf-glow-animated {
       animation: calfMuscleGlowAmber 1.2s infinite cubic-bezier(0.4, 0.0, 0.2, 1);
@@ -67,26 +58,81 @@
       animation: lungBreathCycle 10s infinite ease-in-out;
     }
 
-    /* 3. แอนิเมชันยืดอกเปิดกระดูกสันหลัง */
-    @keyframes spineStretch {
-      0%, 100% { transform: translateY(0px) scale(0.98); }
-      50% { transform: translateY(-4px) scale(1.04); }
+    /* 3. แอนิเมชันคนยืดอกและบิดตัวจริง (Realistic Torso Stretch & Twist) */
+    @keyframes personTorsoTwist {
+      0% { transform: rotate(0deg) translateY(0); }
+      25% { transform: rotate(-12deg) translateY(-2px); }
+      50% { transform: rotate(0deg) translateY(0); }
+      75% { transform: rotate(12deg) translateY(-2px); }
+      100% { transform: rotate(0deg) translateY(0); }
     }
-    .spine-stretch-animated {
-      animation: spineStretch 4s infinite ease-in-out;
+    .person-twist-animated {
+      animation: personTorsoTwist 4.5s infinite ease-in-out;
+      transform-origin: 100px 75px;
     }
 
-    /* 4. แอนิเมชันก้าวเดินสลับเท้า */
-    @keyframes stepLeftFoot {
-      0%, 100% { opacity: 0.35; transform: scale(0.94); }
-      50% { opacity: 1; transform: scale(1.08); }
+    @keyframes spineGlowPulse {
+      0%, 100% { opacity: 0.4; filter: drop-shadow(0 0 2px #10b981); }
+      50% { opacity: 1; filter: drop-shadow(0 0 7px #34d399); }
     }
-    @keyframes stepRightFoot {
-      0%, 100% { opacity: 1; transform: scale(1.08); }
-      50% { opacity: 0.35; transform: scale(0.94); }
+    .spine-glow-animated {
+      animation: spineGlowPulse 2.2s infinite ease-in-out;
     }
-    .step-left-animated { animation: stepLeftFoot 1.8s infinite ease-in-out; }
-    .step-right-animated { animation: stepRightFoot 1.8s infinite ease-in-out; }
+
+    /* 4. แอนิเมชันคนเดินจริง (Realistic Walking Human 65 BPM) */
+    @keyframes walkGaitBob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3.5px); }
+    }
+    .walker-bob-animated {
+      animation: walkGaitBob 0.92s infinite ease-in-out;
+    }
+
+    @keyframes walkLegCycleFront {
+      0% { transform: rotate(-24deg); }
+      50% { transform: rotate(24deg); }
+      100% { transform: rotate(-24deg); }
+    }
+    @keyframes walkLegCycleBack {
+      0% { transform: rotate(24deg); }
+      50% { transform: rotate(-24deg); }
+      100% { transform: rotate(24deg); }
+    }
+    .walk-leg-front {
+      animation: walkLegCycleFront 0.92s infinite ease-in-out;
+      transform-origin: 100px 65px;
+    }
+    .walk-leg-back {
+      animation: walkLegCycleBack 0.92s infinite ease-in-out;
+      transform-origin: 100px 65px;
+    }
+
+    @keyframes walkArmCycleFront {
+      0% { transform: rotate(25deg); }
+      50% { transform: rotate(-20deg); }
+      100% { transform: rotate(25deg); }
+    }
+    @keyframes walkArmCycleBack {
+      0% { transform: rotate(-20deg); }
+      50% { transform: rotate(25deg); }
+      100% { transform: rotate(-20deg); }
+    }
+    .walk-arm-front {
+      animation: walkArmCycleFront 0.92s infinite ease-in-out;
+      transform-origin: 100px 42px;
+    }
+    .walk-arm-back {
+      animation: walkArmCycleBack 0.92s infinite ease-in-out;
+      transform-origin: 100px 42px;
+    }
+
+    @keyframes groundMoveFlow {
+      0% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: -32; }
+    }
+    .ground-line-animated {
+      animation: groundMoveFlow 1.1s infinite linear;
+    }
 
     /* 5. แอนิเมชันหมุนข้อเท้า */
     @keyframes ankleRotate {
@@ -107,7 +153,7 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* สไตล์สำหรับการพิมพ์และบันทึกเป็น PDF (Print Style) */
+    /* สไตล์สำหรับการพิมพ์และบันทึกเป็น PDF */
     @media print {
       body * { visibility: hidden; }
       #manual-card, #manual-card * { visibility: visible; }
@@ -163,7 +209,6 @@
 
       <!-- ปุ่มควบคุมส่วนหัว: ตัวนับยอดเข้าชม + คู่มือการใช้งาน + เสียงเตือน -->
       <div class="flex items-center gap-2 self-end sm:self-center flex-wrap">
-        <!-- 1. ตัวนับจำนวนการเข้าชม / ใช้งานสะสม -->
         <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#140b07] border border-amber-800/80 text-amber-200 text-xs font-bold shadow-sm" title="จำนวนครั้งที่มีการเปิดเข้าชมและใช้งาน">
           <span class="text-sm">👥</span>
           <span class="text-[11px] text-stone-300">เข้าชม:</span>
@@ -171,13 +216,11 @@
           <span class="text-[10px] text-amber-400/80">ครั้ง</span>
         </div>
 
-        <!-- 2. ปุ่มเปิดคู่มือการใช้งาน -->
         <button type="button" onclick="openManualModal()" class="px-3 py-1.5 rounded-xl bg-[#2e1c12] hover:bg-[#3d2518] border border-amber-500/60 text-amber-200 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1.5">
           <span>📖</span>
           <span>คู่มือการใช้งาน</span>
         </button>
 
-        <!-- 3. ปุ่มเปิด/ปิดเสียงเตือน -->
         <button type="button" id="sound-toggle-btn" onclick="toggleAlertSound()" class="px-3 py-1.5 rounded-xl bg-[#2e1c12] hover:bg-[#3d2518] border border-amber-600/50 text-amber-200 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1.5">
           <span id="sound-status-icon">🔔</span>
           <span id="sound-status-text">เสียงเตือน: เปิด</span>
@@ -199,6 +242,7 @@
     <!-- ==================== หน้าต่างที่ 1: โปรแกรมลดง่วง & ต้านกรด ==================== -->
     <div id="tab-pacer-view" class="space-y-3">
       
+      <!-- เมนูเลือกมื้ออาหาร -->
       <section class="space-y-1.5 bg-[#291a12] p-3 rounded-2xl border border-[#4d2e1f]">
         <div class="flex items-center justify-between text-xs">
           <span class="font-bold text-amber-200">1. เลือกมื้อที่เพิ่งรับประทาน:</span>
@@ -223,9 +267,9 @@
       <!-- โครงสร้างแสดงผลพร้อมกันทั้ง 2 ฝั่งตลอดเวลา -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
         
+        <!-- ฝั่งซ้าย: ตัวนับเวลา และระบบเตือนจังหวะชีวภาพ -->
         <div id="col-timer" class="space-y-2.5 w-full">
           
-          <!-- การ์ดตัวนับเวลาสด -->
           <div class="bg-[#0b281f] p-3.5 rounded-2xl border border-emerald-700/60 shadow-sm space-y-2.5">
             <div class="flex items-center justify-between pb-2 border-b border-emerald-800/60">
               <span class="text-xs font-bold text-emerald-200 flex items-center gap-1.5">
@@ -299,13 +343,14 @@
             </button>
           </div>
 
-          <!-- เช็กลิสต์ด่วนสรีระป้องกันกรดไหลย้อน -->
+          <!-- เช็กลิสต์ด่วนสรีระ -->
           <div class="bg-[#051711] p-2.5 rounded-xl border border-emerald-800/80 flex items-center justify-between text-[11px] text-emerald-100">
             <span class="flex items-center gap-1.5 font-medium"><span class="text-rose-400 font-bold">🚫</span> ห้ามฟุบโต๊ะ 60 นาที</span>
             <span class="text-emerald-800">•</span>
             <span class="flex items-center gap-1.5 font-medium"><span class="text-sky-400 font-bold">💧</span> จิบน้ำอุณหภูมิห้อง</span>
           </div>
 
+          <!-- กล่องควบคุมและทดสอบป๊อปอัปอัตโนมัติ -->
           <div class="bg-[#241610] p-3.5 rounded-2xl border border-amber-700/60 text-xs text-amber-100 space-y-2.5 shadow-sm">
             <div class="flex items-center justify-between border-b border-amber-800/70 pb-2">
               <span class="font-extrabold text-amber-300 flex items-center gap-1.5 text-xs">
@@ -316,7 +361,6 @@
               </span>
             </div>
 
-            <!-- รายการกำหนดการแจ้งเตือน 3 ช่วงเวลาสำคัญ -->
             <div class="space-y-1.5 text-[11px] text-stone-200">
               <div class="flex items-center justify-between bg-[#140b07] px-2.5 py-1.5 rounded-xl border border-amber-900/60">
                 <span class="flex items-center gap-1.5">
@@ -347,7 +391,6 @@
               </div>
             </div>
 
-            <!-- เมนูเลือกช่วงเวลาเพื่อทดสอบป๊อปอัป -->
             <div class="pt-1 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 border-t border-amber-900/50">
               <div class="flex items-center gap-1.5 text-[10.5px] text-amber-200/90">
                 <span>เลือกช่วงเวลา:</span>
@@ -366,11 +409,11 @@
 
         </div>
 
+        <!-- ฝั่งขวา: 5 กิจกรรม พร้อมกราฟิกแอนิเมชันคนทำจริง -->
         <div id="col-activity" class="space-y-2.5 w-full">
           
           <div class="bg-[#241610] p-3.5 rounded-2xl border border-amber-700/60 shadow-sm space-y-2.5">
             
-            <!-- ส่วนเลือกกิจกรรม 5 รูปแบบ -->
             <div class="space-y-2">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-bold text-amber-100 flex items-center gap-1.5">
@@ -381,7 +424,6 @@
                 </span>
               </div>
               
-              <!-- เมนูกิจกรรม 5 แบบ กดเลือกแล้วป๊อปอัปจะเด้งขึ้นมาทันที -->
               <div class="grid grid-cols-5 gap-1.5 text-center">
                 <button type="button" onclick="clickActivityButton('spu')" id="act-btn-spu" class="act-btn p-2 rounded-xl border-2 border-amber-500 bg-[#3d2417] text-white transition-all flex flex-col items-center gap-0.5 shadow-md">
                   <span class="text-base">🦶</span>
@@ -393,11 +435,11 @@
                 </button>
                 <button type="button" onclick="clickActivityButton('stretch')" id="act-btn-stretch" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
                   <span class="text-base">🧘</span>
-                  <span class="text-[9.5px] font-medium leading-tight">ยืดอกเปิด</span>
+                  <span class="text-[9.5px] font-medium leading-tight">ยืดอกบิด</span>
                 </button>
                 <button type="button" onclick="clickActivityButton('walk')" id="act-btn-walk" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
                   <span class="text-base">🚶</span>
-                  <span class="text-[9.5px] font-medium leading-tight">เดินช้า</span>
+                  <span class="text-[9.5px] font-medium leading-tight">คนเดินจริง</span>
                 </button>
                 <button type="button" onclick="clickActivityButton('ankle')" id="act-btn-ankle" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
                   <span class="text-base">🔄</span>
@@ -421,11 +463,12 @@
               </span>
             </div>
 
-            <div id="activity-visual-area" class="w-full bg-[#140b07] border border-amber-800/80 rounded-2xl p-2 flex flex-col items-center justify-center relative overflow-hidden min-h-[115px]">
+            <!-- ==================== พื้นที่แสดงกราฟิกแอนิเมชันคนทำจริง ==================== -->
+            <div id="activity-visual-area" class="w-full bg-[#140b07] border border-amber-800/80 rounded-2xl p-2.5 flex flex-col items-center justify-center relative overflow-hidden min-h-[140px]">
               
               <!-- 1. ภาพกระดกส้นเท้า Soleus Push-up -->
               <div id="vis-spu" class="w-full flex flex-col items-center justify-center space-y-1">
-                <div class="relative w-48 h-20 flex items-center justify-center">
+                <div class="relative w-52 h-24 flex items-center justify-center">
                   <div class="absolute w-20 h-20 rounded-full bg-amber-500/15 soft-pulse pointer-events-none"></div>
                   <svg viewBox="0 0 200 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                     <line x1="20" y1="105" x2="180" y2="105" stroke="#523120" stroke-width="3" stroke-linecap="round"/>
@@ -450,10 +493,10 @@
 
               <!-- 2. ภาพฝึกหายใจกะบังลม -->
               <div id="vis-breath" class="w-full hidden flex-col items-center justify-center space-y-1">
-                <div class="relative w-32 h-20 flex items-center justify-center">
-                  <div class="absolute w-16 h-16 rounded-full border-2 border-dashed border-teal-400/60 lung-breath-animated"></div>
-                  <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-teal-500/20 to-emerald-400/30 border-2 border-teal-400 flex flex-col items-center justify-center shadow-md lung-breath-animated z-10">
-                    <span class="text-2xl">🫁</span>
+                <div class="relative w-36 h-24 flex items-center justify-center">
+                  <div class="absolute w-20 h-20 rounded-full border-2 border-dashed border-teal-400/60 lung-breath-animated"></div>
+                  <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-teal-500/20 to-emerald-400/30 border-2 border-teal-400 flex flex-col items-center justify-center shadow-md lung-breath-animated z-10">
+                    <span class="text-3xl">🫁</span>
                   </div>
                 </div>
                 <div class="text-[10.5px] text-teal-200 font-medium text-center">
@@ -461,53 +504,113 @@
                 </div>
               </div>
 
-              <!-- 3. ภาพยืดอกเปิดแนวกระดูกสันหลัง -->
+              <!-- 3. กราฟิกคนยืดอกและบิดตัวจริง (Thoracic Stretch & Twist Human Figure) -->
               <div id="vis-stretch" class="w-full hidden flex-col items-center justify-center space-y-1">
-                <div class="relative w-36 h-20 flex items-center justify-center spine-stretch-animated">
-                  <svg viewBox="0 0 160 100" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="80" y1="85" x2="80" y2="40" stroke="#10b981" stroke-width="6" stroke-linecap="round"/>
-                    <circle cx="80" cy="28" r="9" fill="#34d399"/>
-                    <path d="M 80,45 Q 60,35 45,20" fill="none" stroke="#2dd4bf" stroke-width="5" stroke-linecap="round"/>
-                    <path d="M 80,45 Q 100,35 115,20" fill="none" stroke="#2dd4bf" stroke-width="5" stroke-linecap="round"/>
-                    <circle cx="45" cy="20" r="4" fill="#5eead4"/>
-                    <circle cx="115" cy="20" r="4" fill="#5eead4"/>
-                    <text x="80" y="97" font-size="8" font-weight="bold" fill="#34d399" text-anchor="middle">ยืดลำตัวตรง • อกเปิดกว้าง</text>
+                <div class="relative w-56 h-24 flex items-center justify-center">
+                  <svg viewBox="0 0 200 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <!-- เส้นระนาบพื้น -->
+                    <line x1="40" y1="112" x2="160" y2="112" stroke="#42291c" stroke-width="2.5" stroke-linecap="round"/>
+                    
+                    <!-- ขาและสะโพกยืนตรงมั่นคง -->
+                    <line x1="90" y1="78" x2="88" y2="110" stroke="#78716c" stroke-width="5" stroke-linecap="round"/>
+                    <line x1="110" y1="78" x2="112" y2="110" stroke="#78716c" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M 82,110 L 93,110 M 107,110 L 118,110" stroke="#a8a29e" stroke-width="4" stroke-linecap="round"/>
+                    <ellipse cx="100" cy="78" rx="14" ry="6" fill="#57534e"/>
+
+                    <!-- ท่อนบน: ตัวคนยืดอก ประสานมือขึ้นเหนือศีรษะ และบิดตัวสลับซ้าย-ขวาจริง -->
+                    <g class="person-twist-animated">
+                      <!-- แนวกระดูกสันหลังเรืองแสงสีเขียวมรกต -->
+                      <line x1="100" y1="78" x2="100" y2="44" stroke="#10b981" stroke-width="5" stroke-linecap="round" class="spine-glow-animated"/>
+                      
+                      <!-- แผ่นอกและลำตัว -->
+                      <path d="M 88,48 C 88,62 92,76 100,76 C 108,76 112,62 112,48 Z" fill="#047857" opacity="0.85"/>
+                      
+                      <!-- รอยต่อกระเพาะอาหาร (Angle of His) เรืองแสงเปิดกว้าง -->
+                      <circle cx="100" cy="62" r="5" fill="#34d399" class="soft-pulse"/>
+                      
+                      <!-- ศีรษะ -->
+                      <circle cx="100" cy="34" r="8.5" fill="#fde047"/>
+
+                      <!-- แขนทั้งสองข้างยืดขึ้นสูง ประสานมือกันเหนือศีรษะ -->
+                      <path d="M 88,46 Q 80,24 97,14" fill="none" stroke="#34d399" stroke-width="4.5" stroke-linecap="round"/>
+                      <path d="M 112,46 Q 120,24 103,14" fill="none" stroke="#34d399" stroke-width="4.5" stroke-linecap="round"/>
+                      <circle cx="100" cy="13" r="4.5" fill="#fef08a"/>
+
+                      <!-- ลูกศรโค้งคู่หมุนบิดตัวซ้าย-ขวา -->
+                      <path d="M 72,56 Q 100,68 128,56" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="3,3"/>
+                      <polygon points="71,53 71,59 76,56" fill="#fbbf24"/>
+                      <polygon points="129,53 129,59 124,56" fill="#fbbf24"/>
+                    </g>
+                    
+                    <text x="100" y="118" font-size="8" font-weight="bold" fill="#34d399" text-anchor="middle">ประสานมือยืดแขนสุดตัว • บิดเอวเปิดช่องอก</text>
                   </svg>
                 </div>
                 <div class="text-[10.5px] text-emerald-200 font-medium text-center">
-                  ท่าทาง: <span class="font-bold text-emerald-300">ประสานมือยืดแขนขึ้น อกผาย คลายแรงกดทับกระเพาะอาหาร</span>
+                  ท่าทางจริง: <span class="font-bold text-emerald-300">ประสานมือชูแขนสุดตัว ยืดกระดูกสันหลัง บิดเปิดช่องอกสลับซ้าย-ขวา</span>
                 </div>
               </div>
 
-              <!-- 4. ภาพเดินช้าทอดน่อง -->
+              <!-- 4. กราฟิกคนเดินจริง (Realistic Walking Human 65 BPM) -->
               <div id="vis-walk" class="w-full hidden flex-col items-center justify-center space-y-1">
-                <div class="w-full py-1.5 flex items-center justify-center gap-5">
-                  <div class="flex flex-col items-center gap-0.5 step-left-animated">
-                    <div class="w-9 h-10 rounded-xl bg-[#2e1a12] border-2 border-amber-400 flex items-center justify-center text-sm shadow-sm">
-                      🦶
-                    </div>
-                    <span class="text-[9.5px] font-bold text-amber-300">ก้าวซ้าย</span>
-                  </div>
-                  <div class="text-amber-400 text-xs font-bold font-mono bg-[#140b07] px-2 py-0.5 rounded border border-amber-800">
-                    <span>65 BPM</span>
-                  </div>
-                  <div class="flex flex-col items-center gap-0.5 step-right-animated">
-                    <div class="w-9 h-10 rounded-xl bg-[#2e1a12] border-2 border-amber-400 flex items-center justify-center text-sm shadow-sm">
-                      🦶
-                    </div>
-                    <span class="text-[9.5px] font-bold text-amber-300">ก้าวขวา</span>
-                  </div>
+                <div class="relative w-56 h-24 flex items-center justify-center">
+                  <svg viewBox="0 0 200 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <!-- เส้นทางเดินเลื่อนเคลื่อนไหวต่อเนื่อง -->
+                    <line x1="20" y1="108" x2="180" y2="108" stroke="#f59e0b" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 8" class="ground-line-animated"/>
+
+                    <!-- โมเดลคนเดินจริงขยับลำตัว ก้าวขา และแกว่งแขนสลับซ้าย-ขวา -->
+                    <g class="walker-bob-animated">
+                      
+                      <!-- แขนหลัง (แกว่งสลับทิศทาง) -->
+                      <g class="walk-arm-back">
+                        <line x1="100" y1="44" x2="88" y2="60" stroke="#d97706" stroke-width="4.5" stroke-linecap="round"/>
+                        <line x1="88" y1="60" x2="80" y2="72" stroke="#d97706" stroke-width="4" stroke-linecap="round"/>
+                        <circle cx="80" cy="72" r="2.5" fill="#fef08a"/>
+                      </g>
+
+                      <!-- ขาหลัง (ก้าวสลับทิศทาง) -->
+                      <g class="walk-leg-back">
+                        <line x1="100" y1="66" x2="86" y2="86" stroke="#a8a29e" stroke-width="5.5" stroke-linecap="round"/>
+                        <line x1="86" y1="86" x2="76" y2="106" stroke="#78716c" stroke-width="4.5" stroke-linecap="round"/>
+                        <path d="M 76,106 L 68,107" stroke="#fbbf24" stroke-width="4" stroke-linecap="round"/>
+                      </g>
+
+                      <!-- ลำตัวคนเดินโน้มไปข้างหน้าเล็กน้อยตามธรรมชาติ -->
+                      <line x1="100" y1="66" x2="102" y2="42" stroke="#f59e0b" stroke-width="7" stroke-linecap="round"/>
+                      
+                      <!-- ศีรษะคนเดิน -->
+                      <circle cx="104" cy="30" r="8.5" fill="#fde047"/>
+
+                      <!-- ขาหน้า (ก้าวไปข้างหน้า ส้นแตะพื้น) -->
+                      <g class="walk-leg-front">
+                        <line x1="100" y1="66" x2="114" y2="86" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
+                        <line x1="114" y1="86" x2="124" y2="106" stroke="#eab308" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M 124,106 L 134,106" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+                      </g>
+
+                      <!-- แขนหน้า (แกว่งไปข้างหน้าตามธรรมชาติ) -->
+                      <g class="walk-arm-front">
+                        <line x1="100" y1="44" x2="112" y2="58" stroke="#fbbf24" stroke-width="4.5" stroke-linecap="round"/>
+                        <line x1="112" y1="58" x2="122" y2="70" stroke="#fef08a" stroke-width="4" stroke-linecap="round"/>
+                        <circle cx="122" cy="70" r="3" fill="#ffffff"/>
+                      </g>
+
+                    </g>
+                    
+                    <!-- ป้ายแสดงจังหวะก้าว 65 BPM -->
+                    <rect x="142" y="18" width="46" height="18" rx="6" fill="#140b07" stroke="#f59e0b" stroke-width="1.2"/>
+                    <text x="165" y="30" font-size="8.5" font-weight="black" fill="#fde047" text-anchor="middle">65 BPM</text>
+                  </svg>
                 </div>
                 <div class="text-[10.5px] text-amber-200 font-medium text-center">
-                  จังหวะ: <span class="font-bold text-amber-300">ก้าวสั้น ทอดน่องสบายๆ ไม่จ้ำอ้าว ช่วยทางเดินอาหารเคลื่อนตัว</span>
+                  การเคลื่อนไหวจริง: <span class="font-bold text-amber-300">ก้าวเท้าสั้นๆ แกว่งแขนสบายๆ ทอดน่องช่วยลำเลียงอาหาร</span>
                 </div>
               </div>
 
               <!-- 5. ภาพหมุนข้อเท้าและยืดน่อง -->
               <div id="vis-ankle" class="w-full hidden flex-col items-center justify-center space-y-1">
-                <div class="relative w-28 h-20 flex items-center justify-center">
-                  <div class="w-14 h-14 rounded-full border-2 border-dashed border-amber-400 ankle-rotate-animated flex items-center justify-center bg-amber-950/40">
-                    <span class="text-xl">🔄</span>
+                <div class="relative w-36 h-24 flex items-center justify-center">
+                  <div class="w-16 h-16 rounded-full border-2 border-dashed border-amber-400 ankle-rotate-animated flex items-center justify-center bg-amber-950/40">
+                    <span class="text-2xl">🔄</span>
                   </div>
                 </div>
                 <div class="text-[10.5px] text-amber-200 font-medium text-center">
@@ -517,6 +620,7 @@
 
             </div>
 
+            <!-- แถบจับเวลารอบกิจกรรม -->
             <div class="bg-[#140b07] p-2.5 rounded-xl border border-amber-800/80 flex items-center justify-between gap-2">
               <div class="flex items-baseline gap-1.5">
                 <span class="text-[10.5px] text-amber-400/80 font-medium">เวลารอบนี้:</span>
@@ -533,7 +637,7 @@
               </div>
             </div>
 
-            <!-- การจัดสรีระต้านกรดไหลย้อน (Postural Advice) -->
+            <!-- คำแนะนำสรีระ -->
             <div class="p-2.5 rounded-xl bg-[#140b07] border border-amber-500/40 text-left text-xs space-y-0.5">
               <div class="font-bold text-amber-300 flex items-center gap-1 text-[11px]">
                 <span>📐</span> คำแนะนำสรีระ:
@@ -543,7 +647,7 @@
               </p>
             </div>
 
-            <!-- สรุปข้อปฏิบัติและสัญญาณหยุด -->
+            <!-- ข้อปฏิบัติและจุดหยุด -->
             <div class="grid grid-cols-2 gap-2 text-[10px] text-left">
               <div class="bg-[#140b07] p-2 rounded-xl border border-emerald-800/80">
                 <div class="font-bold text-emerald-300 mb-0.5 flex items-center gap-1 text-[10px]">
@@ -594,7 +698,7 @@
         </button>
       </div>
 
-      <!-- สวิตช์หมวดหมู่คัมภีร์: 1. อาหาร | 2. เครื่องดื่ม | 3. วิธีดูแลตัวเอง -->
+      <!-- สวิตช์หมวดหมู่คัมภีร์ -->
       <div class="flex bg-[#140b07] p-1.5 rounded-xl border border-[#382115] text-xs font-bold">
         <button type="button" id="sub-gerd-food" onclick="switchGerdSection('food')" class="flex-1 py-2 rounded-lg bg-amber-600 text-slate-950 font-black shadow-xs transition-all flex items-center justify-center gap-1">
           <span>🍚</span> อาหารควรทาน & เลี่ยง
@@ -607,9 +711,8 @@
         </button>
       </div>
 
+      <!-- หมวดที่ 1: อาหาร -->
       <div id="gerd-sec-food" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        
-        <!-- ควรทาน (Good Foods) -->
         <div class="bg-[#0c261e] p-3.5 rounded-2xl border-2 border-emerald-600/70 shadow-sm space-y-2.5">
           <div class="flex items-center gap-2 pb-1.5 border-b border-emerald-800 text-emerald-300 font-bold text-xs sm:text-sm">
             <span class="w-5 h-5 rounded-full bg-emerald-500/30 flex items-center justify-center text-xs text-emerald-300 border border-emerald-400">✓</span>
@@ -654,7 +757,6 @@
           </ul>
         </div>
 
-        <!-- ควรหลีกเลี่ยง (Foods to Avoid) -->
         <div class="bg-[#241610] p-3.5 rounded-2xl border-2 border-rose-700/70 shadow-sm space-y-2.5">
           <div class="flex items-center gap-2 pb-1.5 border-b border-rose-900/80 text-rose-300 font-bold text-xs sm:text-sm">
             <span class="w-5 h-5 rounded-full bg-rose-500/30 flex items-center justify-center text-xs text-rose-300 border border-rose-400">✕</span>
@@ -698,12 +800,10 @@
             </li>
           </ul>
         </div>
-
       </div>
 
+      <!-- หมวดที่ 2: เครื่องดื่ม -->
       <div id="gerd-sec-drink" class="grid grid-cols-1 sm:grid-cols-2 gap-3 hidden">
-        
-        <!-- ควรดื่ม (Safe Drinks) -->
         <div class="bg-[#0c261e] p-3.5 rounded-2xl border-2 border-emerald-600/70 shadow-sm space-y-2.5">
           <div class="flex items-center gap-2 pb-1.5 border-b border-emerald-800 text-emerald-300 font-bold text-xs sm:text-sm">
             <span class="w-5 h-5 rounded-full bg-emerald-500/30 flex items-center justify-center text-xs text-emerald-300 border border-emerald-400">✓</span>
@@ -748,7 +848,6 @@
           </ul>
         </div>
 
-        <!-- ควรหลีกเลี่ยง (Drinks to Avoid) -->
         <div class="bg-[#241610] p-3.5 rounded-2xl border-2 border-rose-700/70 shadow-sm space-y-2.5">
           <div class="flex items-center gap-2 pb-1.5 border-b border-rose-900/80 text-rose-300 font-bold text-xs sm:text-sm">
             <span class="w-5 h-5 rounded-full bg-rose-500/30 flex items-center justify-center text-xs text-rose-300 border border-rose-400">✕</span>
@@ -792,9 +891,9 @@
             </li>
           </ul>
         </div>
-
       </div>
 
+      <!-- หมวดที่ 3: 7 กฎเหล็ก -->
       <div id="gerd-sec-care" class="space-y-2 hidden">
         <div class="bg-[#241610] p-3.5 rounded-2xl border border-amber-800/70 shadow-sm space-y-2.5">
           <div class="flex items-center justify-between border-b border-amber-800/70 pb-2">
@@ -874,17 +973,14 @@
   <div id="alert-popup-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4 bg-black/85 backdrop-blur-md hidden transition-all duration-300" onclick="handleBackdropClick(event)">
     <div id="alert-popup-card" class="bg-gradient-to-b from-[#2e1c14] to-[#150c08] border-2 border-amber-500/80 rounded-3xl p-5 max-w-sm w-full text-center shadow-2xl shadow-black/90 relative transform scale-95 transition-all duration-200 space-y-3.5">
       
-      <!-- ปุ่มกากบาทปิดมุมบนขวา -->
       <button type="button" onclick="closePopupModal()" class="absolute top-3 right-3 text-stone-400 hover:text-white w-8 h-8 rounded-full bg-[#140b07] border border-amber-900/60 flex items-center justify-center text-sm font-bold active:scale-90 transition-all">
         ✕
       </button>
 
-      <!-- วงกลมไอคอนกิจกรรมป๊อปอัปขนาดใหญ่ -->
       <div id="popup-icon-wrapper" class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-tr from-amber-500/25 to-emerald-500/25 border-2 border-amber-400 flex items-center justify-center text-4xl shadow-lg shadow-amber-500/20">
         <span id="popup-icon-display">🦶</span>
       </div>
 
-      <!-- ป้ายหมวดหมู่ป๊อปอัป -->
       <div>
         <span id="popup-badge" class="inline-block px-3 py-0.5 rounded-full text-[11px] font-extrabold bg-amber-500 text-slate-950 shadow-sm">
           ⚠️ ช่วงวิกฤต (นาทีที่ 25)
@@ -894,12 +990,10 @@
         </h3>
       </div>
 
-      <!-- คำอธิบายป๊อปอัป -->
       <div id="popup-desc" class="text-xs text-stone-200 leading-relaxed bg-[#140b07] p-3 rounded-xl border border-amber-900/60 text-left max-h-48 overflow-y-auto no-scrollbar">
         น้ำตาลกำลังแตะจุดพีค แนะนำให้ทำ <b>กระดกส้นเท้าใต้โต๊ะ (Soleus Push-up)</b> เพื่อดึงน้ำตาลเข้ากล้ามเนื้อทันทีครับ
       </div>
 
-      <!-- ปุ่มดำเนินการ -->
       <div class="flex gap-2 pt-1">
         <button type="button" id="popup-action-btn" onclick="handlePopupAction()" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1">
           <span id="popup-action-icon">▶</span>
@@ -917,7 +1011,6 @@
   <div id="manual-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md hidden transition-all duration-300" onclick="handleManualBackdropClick(event)">
     <div id="manual-card" class="bg-gradient-to-b from-[#241610] to-[#120a06] border-2 border-amber-500/80 rounded-3xl p-4 sm:p-6 max-w-2xl w-full max-h-[88vh] flex flex-col shadow-2xl shadow-black/90 relative transform scale-95 transition-all duration-200">
       
-      <!-- ส่วนหัวของคู่มือ (Modal Header) -->
       <div class="flex items-start justify-between pb-3 border-b border-amber-800/70 shrink-0">
         <div class="flex items-center gap-2.5">
           <div class="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/50 flex items-center justify-center text-2xl shadow-sm">
@@ -939,7 +1032,6 @@
 
       <div class="overflow-y-auto py-3.5 space-y-3.5 text-xs text-stone-200 pr-1.5 leading-relaxed">
         
-        <!-- บทนำ -->
         <div class="bg-[#140b07] p-3 rounded-2xl border border-amber-900/70 space-y-1">
           <div class="font-extrabold text-amber-300 text-xs flex items-center gap-1.5">
             <span>💡</span> ทำไมต้องมีโปรแกรมนี้?
@@ -949,7 +1041,6 @@
           </p>
         </div>
 
-        <!-- ขั้นตอนที่ 1 -->
         <div class="bg-[#140b07] p-3 rounded-2xl border border-amber-900/70 space-y-1.5">
           <div class="font-extrabold text-amber-300 text-xs flex items-center gap-1.5">
             <span class="w-5 h-5 rounded-full bg-amber-500 text-slate-950 font-black flex items-center justify-center text-[11px]">1</span>
@@ -958,11 +1049,10 @@
           <ul class="space-y-1 text-[11px] text-stone-300 pl-2">
             <li>• <b>🍚 ข้าว / แป้ง:</b> สำหรับมื้อที่มีข้าว ก๋วยเตี๋ยว แป้ง หรือของหวาน (ระบบจะแนะนำ <b>กระดกส้นเท้า SPU</b> เพื่อดึงน้ำตาลเข้ากล้ามเนื้อน่องทันที)</li>
             <li>• <b>🥩 เนื้อ / โปรตีน:</b> สำหรับมื้อสเต๊ก ชาบู หรือโปรตีนสูงที่กระเพาะหลั่งกรดมาก (ระบบจะแนะนำ <b>ฝึกหายใจกะบังลม</b> เพื่อหนีบหูรูดหลอดอาหาร)</li>
-            <li>• <b>🍔 บุฟเฟต์ / มันจัด:</b> สำหรับมื้อหนัก ของทอด หรืออาหารปริมาณมาก (ระบบจะแนะนำ <b>เดินช้าทอดน่อง 65 BPM</b> ช่วยลำเลียงอาหาร)</li>
+            <li>• <b>🍔 บุฟเฟต์ / มันจัด:</b> สำหรับมื้อหนัก ของทอด หรืออาหารปริมาณมาก (ระบบจะแนะนำ <b>ก้าวเดินช้าทอดน่อง 65 BPM</b> ช่วยลำเลียงอาหาร)</li>
           </ul>
         </div>
 
-        <!-- ขั้นตอนที่ 2 -->
         <div class="bg-[#140b07] p-3 rounded-2xl border border-amber-900/70 space-y-1.5">
           <div class="font-extrabold text-amber-300 text-xs flex items-center gap-1.5">
             <span class="w-5 h-5 rounded-full bg-amber-500 text-slate-950 font-black flex items-center justify-center text-[11px]">2</span>
@@ -984,22 +1074,20 @@
           </div>
         </div>
 
-        <!-- ขั้นตอนที่ 3 -->
         <div class="bg-[#140b07] p-3 rounded-2xl border border-amber-900/70 space-y-1.5">
           <div class="font-extrabold text-amber-300 text-xs flex items-center gap-1.5">
             <span class="w-5 h-5 rounded-full bg-amber-500 text-slate-950 font-black flex items-center justify-center text-[11px]">3</span>
             <span>เลือกทำ 1 ใน 5 กิจกรรมฟื้นฟูหลังมื้อ</span>
           </div>
           <div class="space-y-1 text-[11px] text-stone-300">
-            <p>• <b>🦶 1. กระดกส้นเท้าใต้โต๊ะ (Soleus Push-up):</b> วางปลายเท้าติดพื้น ยกส้นเท้าขึ้น-ลงตามภาพแอนิเมชัน 1.2 วินาที ทำ 5-10 นาที หน้าท้องผ่อนคลาย 100%</p>
+            <p>• <b>🦶 1. กระดกส้นเท้าใต้โต๊ะ (Soleus Push-up):</b> วางปลายเท้าติดพื้น ยกส้นเท้าขึ้น-ลงตามภาพแอนิเมชัน 1.2 วินาที ทำ 10 นาที หน้าท้องผ่อนคลาย 100%</p>
             <p>• <b>🫁 2. ฝึกหายใจด้วยกะบังลม:</b> นั่งยืดตัว สูดเข้าท้องพอง 4 วินาที ผ่อนออกท้องยุบ 6 วินาที ช่วยรัดหูรูดหลอดอาหาร</p>
-            <p>• <b>🧘 3. ยืดอกเปิดกระดูกสันหลัง:</b> ประสานมือยืดแขนขึ้น อกผาย คลายแรงกดทับของซี่โครงบนกระเพาะอาหาร</p>
-            <p>• <b>🚶 4. เดินช้าทอดน่อง (65 BPM):</b> ก้าวสั้นๆ ช้าๆ ห้ามเดินจ้ำอ้าว เพื่อให้แรงโน้มถ่วงช่วยย่อยอาหาร</p>
+            <p>• <b>🧘 3. ยืดอกบิดตัวเปิดกระดูกสันหลัง:</b> ประสานมือยืดแขนขึ้น อกผาย บิดเอวเปิดช่องอกสลับซ้าย-ขวา คลายแรงกดทับของซี่โครงบนกระเพาะอาหาร</p>
+            <p>• <b>🚶 4. ก้าวเดินช้าทอดน่อง (65 BPM):</b> โมเดลคนก้าวเดินจริง ก้าวสั้นๆ ช้าๆ ห้ามเดินจ้ำอ้าว เพื่อให้แรงโน้มถ่วงช่วยย่อยอาหาร</p>
             <p>• <b>🔄 5. หมุนข้อเท้าและเหยียดน่อง:</b> ยกเท้าลอย หมุนวนเป็นวงกลม ช่วยปั๊มเลือดดำกลับสู่หัวใจและสมอง</p>
           </div>
         </div>
 
-        <!-- ขั้นตอนที่ 4 -->
         <div class="bg-[#140b07] p-3 rounded-2xl border border-amber-900/70 space-y-1.5">
           <div class="font-extrabold text-amber-300 text-xs flex items-center gap-1.5">
             <span class="w-5 h-5 rounded-full bg-amber-500 text-slate-950 font-black flex items-center justify-center text-[11px]">4</span>
@@ -1010,7 +1098,6 @@
           </p>
         </div>
 
-        <!-- ข้อควรระวังและกฎเหล็ก -->
         <div class="bg-[#24120a] p-3 rounded-2xl border border-rose-800/80 space-y-1">
           <div class="font-extrabold text-rose-300 text-xs flex items-center gap-1.5">
             <span>🛑</span> ข้อห้ามเด็ดขาดเพื่อป้องกันกรดไหลย้อน
@@ -1024,7 +1111,6 @@
 
       </div>
 
-      <!-- ส่วนท้ายและปุ่มดาวน์โหลดคู่มือ -->
       <div class="pt-3 border-t border-amber-800/70 flex flex-wrap items-center justify-between gap-2 shrink-0 no-print">
         <div class="flex items-center gap-2 flex-wrap">
           <button type="button" onclick="downloadManualText()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-md active:scale-95 transition-all flex items-center gap-1.5">
@@ -1044,6 +1130,7 @@
     </div>
   </div>
 
+  <!-- ==================== JavaScript Core Logic ==================== -->
   <script>
     let currentMainTab = 'pacer';
     let currentMeal = 'carb';
@@ -1121,7 +1208,7 @@
       stretch: {
         id: 'stretch',
         icon: '🧘',
-        title: '3. ยืดอกบิดตัวเปิดกระดูกสันหลัง (Thoracic Extension & Twist)',
+        title: '3. ยืดอกบิดตัวเปิดกระดูกสันหลัง (Thoracic Stretch & Twist)',
         sub: 'เปิดมุมรอยต่อกระเพาะอาหาร (Angle of His) คลายแรงดันกดทับช่องท้อง',
         durationSeconds: 300,
         badgeText: '3 – 5 นาที',
@@ -1382,7 +1469,7 @@
     }
 
     function initVisitCounter() {
-      const BASE_VISITS = 1247;
+      const BASE_VISITS = 1248;
       let currentDeviceVisits = 0;
       try {
         currentDeviceVisits = parseInt(localStorage.getItem('postmeal_app_visits') || '0', 10);
@@ -1446,7 +1533,7 @@
    ขั้นตอนที่ 1: เลือกมื้ออาหารที่เพิ่งรับประทาน
       - ข้าว / แป้ง: สำหรับมื้อคาร์โบไฮเดรตสูง (แนะนำ: กระดกส้นเท้า Soleus Push-up)
       - เนื้อ / โปรตีน: สำหรับมื้อเนื้อสัตว์ย่อยยาก (แนะนำ: ฝึกหายใจกะบังลม)
-      - บุฟเฟต์ / มันจัด: สำหรับมื้อหนัก (แนะนำ: เดินช้าทอดน่อง 65 BPM)
+      - บุฟเฟต์ / มันจัด: สำหรับมื้อหนัก (แนะนำ: ก้าวเดินช้าทอดน่อง 65 BPM)
 
    ขั้นตอนที่ 2: แตะปุ่ม "เริ่มนับ" หลังอาหารทันที
       - ระบบจะเริ่มนับเวลาสด และเด้งป๊อปอัปพร้อมเสียงกระดิ่งใน 3 ช่วงเวลาสำคัญ:
@@ -1457,8 +1544,8 @@
    ขั้นตอนที่ 3: เลือก 1 ใน 5 กิจกรรมฟื้นฟูหลังมื้อ
       1. กระดกส้นเท้าใต้โต๊ะ (Soleus Push-up): วางปลายเท้าติดพื้น ยกส้นเท้าขึ้น-ลง จังหวะ 1.2 วินาที ทำ 10 นาที ดึงกลูโคสเข้ากล้ามเนื้อโดยหน้าท้องผ่อนคลาย 100%
       2. ฝึกหายใจด้วยกะบังลม (Diaphragmatic Breathing): สูดเข้าท้องพอง 4 วินาที ผ่อนออกท้องยุบ 6 วินาที นั่งตัวตรง หนีบหูรูดหลอดอาหาร ทำ 5 นาที
-      3. ยืดอกเปิดกระดูกสันหลัง (Thoracic Extension): ยืดแขนเปิดช่องอก คลายแรงดันในช่องท้อง ทำ 3-5 นาที
-      4. เดินช้าทอดน่อง (Slow Stroll 65 BPM): ก้าวเดินสบายๆ ทอดน่อง ไม่เดินจ้ำอ้าว ทำ 10 นาที
+      3. ยืดอกบิดตัวเปิดกระดูกสันหลัง (Thoracic Stretch & Twist): ประสานมือยืดแขนสุดตัว บิดเอวเปิดช่องอกสลับซ้าย-ขวา ทำ 3-5 นาที
+      4. ก้าวเดินช้าทอดน่อง (Slow Stroll 65 BPM): โมเดลคนเดินจริง ก้าวสั้นๆ ทอดน่องสบายๆ ไม่เดินจ้ำอ้าว ทำ 10 นาที
       5. หมุนข้อเท้าและเหยียดน่อง (Ankle Circles): ปั๊มเลือดดำกลับสู่หัวใจและสมอง ทำ 5 นาที
 
    ขั้นตอนที่ 4: คลื่นเสียง 40Hz Gamma Beat
@@ -1737,17 +1824,15 @@
 
       document.getElementById('meal-badge').innerText = mealTitles[m];
 
-      let targetAct = 'spu';
       if (m === 'carb') {
-        targetAct = 'spu';
+        selectActivity('spu');
       } else if (m === 'protein') {
-        targetAct = 'breath';
+        selectActivity('breath');
       } else if (m === 'heavy') {
-        targetAct = 'walk';
+        selectActivity('walk');
       }
 
       evaluateMetabolicAndGERD(passedTime);
-      clickActivityButton(targetAct);
     }
 
     function switchTimingMode(mode) {
@@ -1935,7 +2020,7 @@
       }
     }
 
-    // ป้องกันการค้างแคชในเบราว์เซอร์มือถือ (รีเฟรชใหม่อัตโนมัติเมื่อย้อนกลับมาเปิดแอป)
+    // ป้องกันการค้างแคชในเบราว์เซอร์มือถือ
     window.addEventListener('pageshow', (event) => {
       if (event.persisted) {
         window.location.reload();
