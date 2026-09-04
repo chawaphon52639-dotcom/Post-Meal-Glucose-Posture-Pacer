@@ -169,26 +169,18 @@
     }
     .soft-pulse { animation: softPulseGlow 2.4s infinite ease-in-out; }
 
-    /* กรอบเรดาร์ตรวจจับข้อเท้า AI */
-    @keyframes scannerBeamMove {
-      0% { top: 12%; opacity: 0.8; }
-      50% { top: 84%; opacity: 1; }
-      100% { top: 12%; opacity: 0.8; }
+    /* ไฮไลต์เรืองแสงเมื่อเด้งนำทางมาที่กิจกรรม */
+    @keyframes targetGlowPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+      50% { box-shadow: 0 0 25px 4px rgba(245, 158, 11, 0.65); }
     }
-    .scanner-beam {
-      position: absolute;
-      left: 10%;
-      right: 10%;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, #10b981, #34d399, transparent);
-      box-shadow: 0 0 10px #10b981;
-      animation: scannerBeamMove 2s infinite ease-in-out;
+    .activity-target-highlight {
+      animation: targetGlowPulse 1.8s ease-in-out 2;
     }
 
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* สไตล์สำหรับการพิมพ์และบันทึกเป็น PDF */
     @media print {
       body * { visibility: hidden; }
       #manual-card, #manual-card * { visibility: visible; }
@@ -248,9 +240,8 @@
         </h1>
       </div>
 
-      <!-- ปุ่มควบคุมส่วนหัว: ตัวนับยอดเข้าชม + คู่มือการใช้งาน + เสียงเตือน -->
+      <!-- ปุ่มควบคุมส่วนหัว: รีเฟรช + ตัวนับยอดเข้าชม + คู่มือการใช้งาน + เสียงเตือน -->
       <div class="flex items-center gap-2 self-end sm:self-center flex-wrap">
-        <!-- ปุ่มรีเฟรชก่อนเริ่มใช้งาน (ล้างแคชค้างมือถือ โหลดหน้าใหม่เอี่ยม 100%) -->
         <button type="button" onclick="forceHardRefresh()" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-700 text-slate-950 text-xs font-black active:scale-95 transition-all shadow-md flex items-center gap-1.5 border border-amber-300/60" title="แตะเพื่อล้างข้อมูลเดิมและโหลดหน้าจอใหม่เอี่ยม">
           <span class="text-sm">🔄</span>
           <span>รีเฟรช ก่อนเริ่มใช้งาน</span>
@@ -297,7 +288,7 @@
             <span id="meal-badge" class="text-[11px] text-amber-300 font-bold bg-[#170e09] px-3 py-0.5 rounded-lg border border-amber-500/40">🍚 ข้าว / แป้ง</span>
           </div>
           <!-- ปุ่มลัด 1.1: AI ถ่ายรูปสแกนจานข้าว -->
-          <button type="button" onclick="openMealScanModal()" class="px-2.5 py-1 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-[11px] font-black active:scale-95 transition-all shadow-md flex items-center gap-1.5 border border-emerald-300/60" title="ให้ AI สแกนภาพจานข้าวและเลือกโหมดอัตโนมัติ">
+          <button type="button" onclick="openMealScanModal()" class="px-3 py-1 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-xs font-black active:scale-95 transition-all shadow-md flex items-center gap-1.5 border border-emerald-300/60" title="ให้ AI สแกนภาพจานข้าวและเลือกโหมดอัตโนมัติ">
             <span>📸</span>
             <span>AI สแกนจานข้าว</span>
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-950 animate-ping"></span>
@@ -319,10 +310,243 @@
         </div>
       </section>
 
-      <!-- โครงสร้างแสดงผลพร้อมกันทั้ง 2 ฝั่งตลอดเวลา (จัดลำดับอัจฉริยะ: มือถือกิจกรรมขึ้นก่อน / คอมพิวเตอร์อยู่คู่กัน) -->
+      <!-- โครงสร้างแสดงผลพร้อมกันทั้ง 2 ฝั่ง (มือถือกิจกรรมขึ้นก่อน order-1 / คอมพิวเตอร์อยู่คู่กัน) -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
         
-        <!-- ฝั่งซ้าย: ตัวนับเวลา และระบบเตือนจังหวะชีวภาพ (บนมือถือแสดงด้านล่าง order-2 / บนคอมพิวเตอร์แสดงฝั่งซ้าย md:order-1) -->
+        <!-- ฝั่งบนสำหรับมือถือ / ฝั่งขวาสำหรับคอมพิวเตอร์: 5 กิจกรรม พร้อมกราฟิกคนทำจริง (ไม่มีเมนูกล้องส่องเท้าใต้โต๊ะแล้ว) -->
+        <div id="col-activity" class="order-1 md:order-2 space-y-2.5 w-full">
+          
+          <div class="bg-[#241610] p-3.5 rounded-2xl border border-amber-700/60 shadow-sm space-y-2.5">
+            
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-amber-100 flex items-center gap-1.5">
+                  <span>🏃</span> เลือก 1 ใน 5 กิจกรรมฟื้นฟูหลังมื้อ:
+                </span>
+                <span id="activity-rec-tag" class="text-[10px] text-amber-300 font-bold bg-[#140b07] px-2.5 py-0.5 rounded-full border border-amber-500/40">
+                  ⭐ มื้อนี้แนะนำ
+                </span>
+              </div>
+              
+              <div class="grid grid-cols-5 gap-1.5 text-center">
+                <button type="button" onclick="clickActivityButton('spu')" id="act-btn-spu" class="act-btn p-2 rounded-xl border-2 border-amber-500 bg-[#3d2417] text-white transition-all flex flex-col items-center gap-0.5 shadow-md">
+                  <span class="text-base">🦶</span>
+                  <span class="text-[9.5px] font-bold leading-tight">กระดกส้น</span>
+                </button>
+                <button type="button" onclick="clickActivityButton('breath')" id="act-btn-breath" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
+                  <span class="text-base">🫁</span>
+                  <span class="text-[9.5px] font-medium leading-tight">กะบังลม</span>
+                </button>
+                <button type="button" onclick="clickActivityButton('stretch')" id="act-btn-stretch" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
+                  <span class="text-base">🧘</span>
+                  <span class="text-[9.5px] font-medium leading-tight">ยืดอกบิด</span>
+                </button>
+                <button type="button" onclick="clickActivityButton('walk')" id="act-btn-walk" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
+                  <span class="text-base">🚶</span>
+                  <span class="text-[9.5px] font-medium leading-tight">คนเดินจริง</span>
+                </button>
+                <button type="button" onclick="clickActivityButton('ankle')" id="act-btn-ankle" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
+                  <span class="text-base">🔄</span>
+                  <span class="text-[9.5px] font-medium leading-tight">หมุนข้อเท้า</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- หัวข้อกิจกรรมที่เลือกและระยะเวลารอบ -->
+            <div class="flex items-center justify-between border-t border-amber-800/60 pt-2">
+              <div>
+                <h2 id="current-act-title" class="text-xs sm:text-sm font-bold text-white">
+                  1. กระดกส้นเท้าใต้โต๊ะ (Soleus Push-up)
+                </h2>
+                <div id="current-act-sub" class="text-[10.5px] text-amber-200/80">
+                  ดึงกลูโคสเข้ากล้ามเนื้อน่องโดยตรง หน้าท้องผ่อนคลาย ไม่กดกระเพาะ
+                </div>
+              </div>
+              <span id="activity-time-badge" class="font-bold text-amber-300 bg-[#120a06] px-2.5 py-0.5 rounded-lg border border-amber-500/40 text-xs whitespace-nowrap">
+                10 นาที
+              </span>
+            </div>
+
+            <!-- พื้นที่แสดงกราฟิกแอนิเมชันคนทำจริง (สะอาด ไร้ปุ่มกล้องส่องเท้า) -->
+            <div id="activity-visual-area" class="w-full bg-[#140b07] border border-amber-800/80 rounded-2xl p-2.5 flex flex-col items-center justify-center relative overflow-hidden min-h-[140px]">
+              
+              <!-- 1. ภาพกระดกส้นเท้า Soleus Push-up (คลีน สวยงาม ไม่มีปุ่มกล้องใต้โต๊ะแล้ว) -->
+              <div id="vis-spu" class="w-full flex flex-col items-center justify-center space-y-1">
+                <div class="relative w-52 h-24 flex items-center justify-center">
+                  <div class="absolute w-20 h-20 rounded-full bg-amber-500/15 soft-pulse pointer-events-none"></div>
+                  <svg viewBox="0 0 200 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="20" y1="105" x2="180" y2="105" stroke="#523120" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="45" y1="26" x2="115" y2="26" stroke="#a8a29e" stroke-width="11" stroke-linecap="round"/>
+                    <circle cx="115" cy="26" r="7" fill="#d6d3d1"/>
+                    <line x1="115" y1="26" x2="115" y2="82" stroke="#a8a29e" stroke-width="9" stroke-linecap="round"/>
+                    <path d="M 115,32 Q 138,55 116,76" fill="none" stroke="#f59e0b" stroke-width="8" stroke-linecap="round" class="calf-glow-animated"/>
+                    <g class="soleus-foot-animated">
+                      <circle cx="115" cy="82" r="5" fill="#78716c"/>
+                      <path d="M 115,82 L 130,94 L 56,103" fill="none" stroke="#fafaf9" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                      <circle cx="130" cy="94" r="5" fill="#fbbf24"/>
+                    </g>
+                    <circle cx="56" cy="103" r="5" fill="#10b981"/>
+                    <text x="56" y="117" font-size="8" font-weight="bold" fill="#34d399" text-anchor="middle">ปลายเท้าติดพื้น</text>
+                    <text x="162" y="52" font-size="8.5" font-weight="bold" fill="#fbbf24" text-anchor="middle">กล้ามเนื้อน่อง</text>
+                  </svg>
+                </div>
+                <div class="text-[10.5px] text-amber-200 font-medium text-center">
+                  จังหวะ: <span class="text-amber-300 font-bold">ยกส้นเท้าขึ้นสูง ➔ วางลงเบาๆ ปลายเท้าติดพื้น (1.2 วิ)</span>
+                </div>
+              </div>
+
+              <!-- 2. ภาพฝึกหายใจกะบังลม -->
+              <div id="vis-breath" class="w-full hidden flex-col items-center justify-center space-y-1">
+                <div class="relative w-36 h-24 flex items-center justify-center">
+                  <div class="absolute w-20 h-20 rounded-full border-2 border-dashed border-teal-400/60 lung-breath-animated"></div>
+                  <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-teal-500/20 to-emerald-400/30 border-2 border-teal-400 flex flex-col items-center justify-center shadow-md lung-breath-animated z-10">
+                    <span class="text-3xl">🫁</span>
+                  </div>
+                </div>
+                <div class="text-[10.5px] text-teal-200 font-medium text-center">
+                  จังหวะ: <span class="font-bold text-teal-300">หายใจเข้าท้องพอง (4 วิ) ➔ ผ่อนออกท้องยุบ (6 วิ) หนีบหูรูดกระเพาะ</span>
+                </div>
+              </div>
+
+              <!-- 3. กราฟิกคนยืดอกและบิดตัวจริง (Thoracic Stretch & Twist Human Figure) -->
+              <div id="vis-stretch" class="w-full hidden flex-col items-center justify-center space-y-1">
+                <div class="relative w-56 h-24 flex items-center justify-center">
+                  <svg viewBox="0 0 200 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="40" y1="112" x2="160" y2="112" stroke="#42291c" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="90" y1="78" x2="88" y2="110" stroke="#78716c" stroke-width="5" stroke-linecap="round"/>
+                    <line x1="110" y1="78" x2="112" y2="110" stroke="#78716c" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M 82,110 L 93,110 M 107,110 L 118,110" stroke="#a8a29e" stroke-width="4" stroke-linecap="round"/>
+                    <ellipse cx="100" cy="78" rx="14" ry="6" fill="#57534e"/>
+
+                    <g class="person-twist-animated">
+                      <line x1="100" y1="78" x2="100" y2="44" stroke="#10b981" stroke-width="5" stroke-linecap="round" class="spine-glow-animated"/>
+                      <path d="M 88,48 C 88,62 92,76 100,76 C 108,76 112,62 112,48 Z" fill="#047857" opacity="0.85"/>
+                      <circle cx="100" cy="62" r="5" fill="#34d399" class="soft-pulse"/>
+                      <circle cx="100" cy="34" r="8.5" fill="#fde047"/>
+                      <path d="M 88,46 Q 80,24 97,14" fill="none" stroke="#34d399" stroke-width="4.5" stroke-linecap="round"/>
+                      <path d="M 112,46 Q 120,24 103,14" fill="none" stroke="#34d399" stroke-width="4.5" stroke-linecap="round"/>
+                      <circle cx="100" cy="13" r="4.5" fill="#fef08a"/>
+                      <path d="M 72,56 Q 100,68 128,56" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="3,3"/>
+                      <polygon points="71,53 71,59 76,56" fill="#fbbf24"/>
+                      <polygon points="129,53 129,59 124,56" fill="#fbbf24"/>
+                    </g>
+                    
+                    <text x="100" y="118" font-size="8" font-weight="bold" fill="#34d399" text-anchor="middle">ประสานมือยืดแขนสุดตัว • บิดเอวเปิดช่องอก</text>
+                  </svg>
+                </div>
+                <div class="text-[10.5px] text-emerald-200 font-medium text-center">
+                  ท่าทางจริง: <span class="font-bold text-emerald-300">ประสานมือชูแขนสุดตัว ยืดกระดูกสันหลัง บิดเปิดช่องอกสลับซ้าย-ขวา</span>
+                </div>
+              </div>
+
+              <!-- 4. กราฟิกคนเดินจริง (Realistic Walking Human 65 BPM) -->
+              <div id="vis-walk" class="w-full hidden flex-col items-center justify-center space-y-1">
+                <div class="relative w-56 h-24 flex items-center justify-center">
+                  <svg viewBox="0 0 200 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="20" y1="108" x2="180" y2="108" stroke="#f59e0b" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 8" class="ground-line-animated"/>
+
+                    <g class="walker-bob-animated">
+                      <g class="walk-arm-back">
+                        <line x1="100" y1="44" x2="88" y2="60" stroke="#d97706" stroke-width="4.5" stroke-linecap="round"/>
+                        <line x1="88" y1="60" x2="80" y2="72" stroke="#d97706" stroke-width="4" stroke-linecap="round"/>
+                        <circle cx="80" cy="72" r="2.5" fill="#fef08a"/>
+                      </g>
+                      <g class="walk-leg-back">
+                        <line x1="100" y1="66" x2="86" y2="86" stroke="#a8a29e" stroke-width="5.5" stroke-linecap="round"/>
+                        <line x1="86" y1="86" x2="76" y2="106" stroke="#78716c" stroke-width="4.5" stroke-linecap="round"/>
+                        <path d="M 76,106 L 68,107" stroke="#fbbf24" stroke-width="4" stroke-linecap="round"/>
+                      </g>
+                      <line x1="100" y1="66" x2="102" y2="42" stroke="#f59e0b" stroke-width="7" stroke-linecap="round"/>
+                      <circle cx="104" cy="30" r="8.5" fill="#fde047"/>
+                      <g class="walk-leg-front">
+                        <line x1="100" y1="66" x2="114" y2="86" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
+                        <line x1="114" y1="86" x2="124" y2="106" stroke="#eab308" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M 124,106 L 134,106" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+                      </g>
+                      <g class="walk-arm-front">
+                        <line x1="100" y1="44" x2="112" y2="58" stroke="#fbbf24" stroke-width="4.5" stroke-linecap="round"/>
+                        <line x1="112" y1="58" x2="122" y2="70" stroke="#fef08a" stroke-width="4" stroke-linecap="round"/>
+                        <circle cx="122" cy="70" r="3" fill="#ffffff"/>
+                      </g>
+                    </g>
+                    
+                    <rect x="142" y="18" width="46" height="18" rx="6" fill="#140b07" stroke="#f59e0b" stroke-width="1.2"/>
+                    <text x="165" y="30" font-size="8.5" font-weight="black" fill="#fde047" text-anchor="middle">65 BPM</text>
+                  </svg>
+                </div>
+                <div class="text-[10.5px] text-amber-200 font-medium text-center">
+                  การเคลื่อนไหวจริง: <span class="font-bold text-amber-300">ก้าวเท้าสั้นๆ แกว่งแขนสบายๆ ทอดน่องช่วยลำเลียงอาหาร</span>
+                </div>
+              </div>
+
+              <!-- 5. ภาพหมุนข้อเท้าและยืดน่อง -->
+              <div id="vis-ankle" class="w-full hidden flex-col items-center justify-center space-y-1">
+                <div class="relative w-36 h-24 flex items-center justify-center">
+                  <div class="w-16 h-16 rounded-full border-2 border-dashed border-amber-400 ankle-rotate-animated flex items-center justify-center bg-amber-950/40">
+                    <span class="text-2xl">🔄</span>
+                  </div>
+                </div>
+                <div class="text-[10.5px] text-amber-200 font-medium text-center">
+                  จังหวะ: <span class="font-bold text-amber-300">ยกปลายเท้าลอย หมุนวนเป็นวงกลม ช้าๆ ตามและทวนเข็มนาฬิกา</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- แถบจับเวลารอบกิจกรรม -->
+            <div class="bg-[#140b07] p-2.5 rounded-xl border border-amber-800/80 flex items-center justify-between gap-2">
+              <div class="flex items-baseline gap-1.5">
+                <span class="text-[10.5px] text-amber-400/80 font-medium">เวลารอบนี้:</span>
+                <span id="session-timer-display" class="text-lg font-mono font-extrabold text-amber-300">10:00</span>
+              </div>
+              <div class="flex gap-2">
+                <button type="button" id="session-btn" onclick="toggleSessionTimer()" class="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs active:scale-95 transition-all shadow-sm flex items-center gap-1">
+                  <span>▶</span>
+                  <span id="session-btn-label">เริ่มจับเวลาทำ</span>
+                </button>
+                <button type="button" onclick="resetSessionTimer()" class="px-2.5 py-1.5 rounded-xl bg-[#241610] hover:bg-[#321e16] text-amber-200 font-bold text-xs active:scale-95 transition-all border border-amber-800" title="รีเซ็ตเวลารอบ">
+                  ↺
+                </button>
+              </div>
+            </div>
+
+            <!-- คำแนะนำสรีระ -->
+            <div class="p-2.5 rounded-xl bg-[#140b07] border border-amber-500/40 text-left text-xs space-y-0.5">
+              <div class="font-bold text-amber-300 flex items-center gap-1 text-[11px]">
+                <span>📐</span> คำแนะนำสรีระ:
+              </div>
+              <p id="current-act-posture" class="text-stone-200 leading-snug font-medium text-[11px]">
+                นั่งตัวตรง อกผาย วางปลายเท้าแตะพื้น ขยับเฉพาะข้อเท้า หน้าท้องผ่อนคลาย 100%
+              </p>
+            </div>
+
+            <!-- ข้อปฏิบัติและจุดหยุด -->
+            <div class="grid grid-cols-2 gap-2 text-[10px] text-left">
+              <div class="bg-[#140b07] p-2 rounded-xl border border-emerald-800/80">
+                <div class="font-bold text-emerald-300 mb-0.5 flex items-center gap-1 text-[10px]">
+                  <span>✓</span> ข้อปฏิบัติ:
+                </div>
+                <ul id="activity-guide-list" class="text-stone-300 space-y-0.5 leading-tight">
+                  <li>• ปลายเท้าแตะพื้นตลอดเวลา</li>
+                  <li>• หน้าท้องผ่อนคลาย ไม่เกร็ง</li>
+                </ul>
+              </div>
+              <div class="bg-[#140b07] p-2 rounded-xl border border-rose-800/60">
+                <div class="font-bold text-rose-300 mb-0.5 flex items-center gap-1 text-[10px]">
+                  <span>🛑</span> ควรหยุดเมื่อ:
+                </div>
+                <ul id="stop-signals-list" class="text-rose-200/90 space-y-0.5 leading-tight">
+                  <li>• ทำครบกำหนดเวลา (มีเสียงเตือน)</li>
+                  <li>• หากเริ่มรู้สึกตึงหรือเมื่อย</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ฝั่งล่างสำหรับมือถือ / ฝั่งซ้ายสำหรับคอมพิวเตอร์: ตัวนับเวลา และระบบเตือนจังหวะชีวภาพ -->
         <div id="col-timer" class="order-2 md:order-1 space-y-2.5 w-full">
           
           <div class="bg-[#0b281f] p-3.5 rounded-2xl border border-emerald-700/60 shadow-sm space-y-2.5">
@@ -460,279 +684,6 @@
                 <span>แตะทดสอบป๊อปอัปทันที</span>
               </button>
             </div>
-          </div>
-
-        </div>
-
-        <!-- ฝั่งขวา: 5 กิจกรรม พร้อมกราฟิกแอนิเมชันคนทำจริง (บนมือถือขึ้นมาอยู่บนสุดทันที order-1 / บนคอมพิวเตอร์แสดงฝั่งขวา md:order-2) -->
-        <div id="col-activity" class="order-1 md:order-2 space-y-2.5 w-full">
-          
-          <div class="bg-[#241610] p-3.5 rounded-2xl border border-amber-700/60 shadow-sm space-y-2.5">
-            
-            <div class="space-y-2">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-amber-100 flex items-center gap-1.5">
-                  <span>🏃</span> เลือก 1 ใน 5 กิจกรรมฟื้นฟูหลังมื้อ:
-                </span>
-                <span id="activity-rec-tag" class="text-[10px] text-amber-300 font-bold bg-[#140b07] px-2.5 py-0.5 rounded-full border border-amber-500/40">
-                  ⭐ มื้อนี้แนะนำ
-                </span>
-              </div>
-              
-              <div class="grid grid-cols-5 gap-1.5 text-center">
-                <button type="button" onclick="clickActivityButton('spu')" id="act-btn-spu" class="act-btn p-2 rounded-xl border-2 border-amber-500 bg-[#3d2417] text-white transition-all flex flex-col items-center gap-0.5 shadow-md">
-                  <span class="text-base">🦶</span>
-                  <span class="text-[9.5px] font-bold leading-tight">กระดกส้น</span>
-                </button>
-                <button type="button" onclick="clickActivityButton('breath')" id="act-btn-breath" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
-                  <span class="text-base">🫁</span>
-                  <span class="text-[9.5px] font-medium leading-tight">กะบังลม</span>
-                </button>
-                <button type="button" onclick="clickActivityButton('stretch')" id="act-btn-stretch" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
-                  <span class="text-base">🧘</span>
-                  <span class="text-[9.5px] font-medium leading-tight">ยืดอกบิด</span>
-                </button>
-                <button type="button" onclick="clickActivityButton('walk')" id="act-btn-walk" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
-                  <span class="text-base">🚶</span>
-                  <span class="text-[9.5px] font-medium leading-tight">คนเดินจริง</span>
-                </button>
-                <button type="button" onclick="clickActivityButton('ankle')" id="act-btn-ankle" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
-                  <span class="text-base">🔄</span>
-                  <span class="text-[9.5px] font-medium leading-tight">หมุนข้อเท้า</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- หัวข้อกิจกรรมที่เลือกและระยะเวลารอบ -->
-            <div class="flex items-center justify-between border-t border-amber-800/60 pt-2">
-              <div>
-                <h2 id="current-act-title" class="text-xs sm:text-sm font-bold text-white">
-                  1. กระดกส้นเท้าใต้โต๊ะ (Soleus Push-up)
-                </h2>
-                <div id="current-act-sub" class="text-[10.5px] text-amber-200/80">
-                  ดึงกลูโคสเข้ากล้ามเนื้อน่องโดยตรง หน้าท้องผ่อนคลาย ไม่กดกระเพาะ
-                </div>
-              </div>
-              <span id="activity-time-badge" class="font-bold text-amber-300 bg-[#120a06] px-2.5 py-0.5 rounded-lg border border-amber-500/40 text-xs whitespace-nowrap">
-                10 นาที
-              </span>
-            </div>
-
-            <!-- ==================== พื้นที่แสดงกราฟิกแอนิเมชันคนทำจริง ==================== -->
-            <div id="activity-visual-area" class="w-full bg-[#140b07] border border-amber-800/80 rounded-2xl p-2.5 flex flex-col items-center justify-center relative overflow-hidden min-h-[140px]">
-              
-              <!-- 1. ภาพกระดกส้นเท้า Soleus Push-up -->
-              <div id="vis-spu" class="w-full flex flex-col items-center justify-center space-y-1">
-                <div class="relative w-52 h-24 flex items-center justify-center">
-                  <div class="absolute w-20 h-20 rounded-full bg-amber-500/15 soft-pulse pointer-events-none"></div>
-                  <svg viewBox="0 0 200 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="20" y1="105" x2="180" y2="105" stroke="#523120" stroke-width="3" stroke-linecap="round"/>
-                    <line x1="45" y1="26" x2="115" y2="26" stroke="#a8a29e" stroke-width="11" stroke-linecap="round"/>
-                    <circle cx="115" cy="26" r="7" fill="#d6d3d1"/>
-                    <line x1="115" y1="26" x2="115" y2="82" stroke="#a8a29e" stroke-width="9" stroke-linecap="round"/>
-                    <path d="M 115,32 Q 138,55 116,76" fill="none" stroke="#f59e0b" stroke-width="8" stroke-linecap="round" class="calf-glow-animated"/>
-                    <g class="soleus-foot-animated">
-                      <circle cx="115" cy="82" r="5" fill="#78716c"/>
-                      <path d="M 115,82 L 130,94 L 56,103" fill="none" stroke="#fafaf9" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-                      <circle cx="130" cy="94" r="5" fill="#fbbf24"/>
-                    </g>
-                    <circle cx="56" cy="103" r="5" fill="#10b981"/>
-                    <text x="56" y="117" font-size="8" font-weight="bold" fill="#34d399" text-anchor="middle">ปลายเท้าติดพื้น</text>
-                    <text x="162" y="52" font-size="8.5" font-weight="bold" fill="#fbbf24" text-anchor="middle">กล้ามเนื้อน่อง</text>
-                  </svg>
-                </div>
-                <div class="text-[10.5px] text-amber-200 font-medium text-center">
-                  จังหวะ: <span class="text-amber-300 font-bold">ยกส้นเท้าขึ้นสูง ➔ วางลงเบาๆ ปลายเท้าติดพื้น (1.2 วิ)</span>
-                </div>
-
-                <!-- ปุ่มลัด 1.2: กล้อง AI ตรวจจับการกระดกข้อเท้าใต้โต๊ะ -->
-                <div class="pt-1">
-                  <button type="button" onclick="openHeelCounterModal()" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white text-[11px] font-black active:scale-95 transition-all shadow-sm border border-emerald-400/50 flex items-center gap-1.5">
-                    <span class="text-xs">📷</span>
-                    <span>เปิดกล้อง AI นับรอบใต้โต๊ะอัตโนมัติ</span>
-                    <span id="mini-rep-badge" class="px-1.5 py-0.2 rounded bg-[#061e16] text-emerald-300 text-[10px] font-mono border border-emerald-500/50">0 ครั้ง</span>
-                  </button>
-                </div>
-              </div>
-
-              <!-- 2. ภาพฝึกหายใจกะบังลม -->
-              <div id="vis-breath" class="w-full hidden flex-col items-center justify-center space-y-1">
-                <div class="relative w-36 h-24 flex items-center justify-center">
-                  <div class="absolute w-20 h-20 rounded-full border-2 border-dashed border-teal-400/60 lung-breath-animated"></div>
-                  <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-teal-500/20 to-emerald-400/30 border-2 border-teal-400 flex flex-col items-center justify-center shadow-md lung-breath-animated z-10">
-                    <span class="text-3xl">🫁</span>
-                  </div>
-                </div>
-                <div class="text-[10.5px] text-teal-200 font-medium text-center">
-                  จังหวะ: <span class="font-bold text-teal-300">หายใจเข้าท้องพอง (4 วิ) ➔ ผ่อนออกท้องยุบ (6 วิ) หนีบหูรูดกระเพาะ</span>
-                </div>
-              </div>
-
-              <!-- 3. กราฟิกคนยืดอกและบิดตัวจริง (Thoracic Stretch & Twist Human Figure) -->
-              <div id="vis-stretch" class="w-full hidden flex-col items-center justify-center space-y-1">
-                <div class="relative w-56 h-24 flex items-center justify-center">
-                  <svg viewBox="0 0 200 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <!-- เส้นระนาบพื้น -->
-                    <line x1="40" y1="112" x2="160" y2="112" stroke="#42291c" stroke-width="2.5" stroke-linecap="round"/>
-                    
-                    <!-- ขาและสะโพกยืนตรงมั่นคง -->
-                    <line x1="90" y1="78" x2="88" y2="110" stroke="#78716c" stroke-width="5" stroke-linecap="round"/>
-                    <line x1="110" y1="78" x2="112" y2="110" stroke="#78716c" stroke-width="5" stroke-linecap="round"/>
-                    <path d="M 82,110 L 93,110 M 107,110 L 118,110" stroke="#a8a29e" stroke-width="4" stroke-linecap="round"/>
-                    <ellipse cx="100" cy="78" rx="14" ry="6" fill="#57534e"/>
-
-                    <!-- ท่อนบน: ตัวคนยืดอก ประสานมือขึ้นเหนือศีรษะ และบิดตัวสลับซ้าย-ขวาจริง -->
-                    <g class="person-twist-animated">
-                      <!-- แนวกระดูกสันหลังเรืองแสงสีเขียวมรกต -->
-                      <line x1="100" y1="78" x2="100" y2="44" stroke="#10b981" stroke-width="5" stroke-linecap="round" class="spine-glow-animated"/>
-                      
-                      <!-- แผ่นอกและลำตัว -->
-                      <path d="M 88,48 C 88,62 92,76 100,76 C 108,76 112,62 112,48 Z" fill="#047857" opacity="0.85"/>
-                      
-                      <!-- รอยต่อกระเพาะอาหาร (Angle of His) เรืองแสงเปิดกว้าง -->
-                      <circle cx="100" cy="62" r="5" fill="#34d399" class="soft-pulse"/>
-                      
-                      <!-- ศีรษะ -->
-                      <circle cx="100" cy="34" r="8.5" fill="#fde047"/>
-
-                      <!-- แขนทั้งสองข้างยืดขึ้นสูง ประสานมือกันเหนือศีรษะ -->
-                      <path d="M 88,46 Q 80,24 97,14" fill="none" stroke="#34d399" stroke-width="4.5" stroke-linecap="round"/>
-                      <path d="M 112,46 Q 120,24 103,14" fill="none" stroke="#34d399" stroke-width="4.5" stroke-linecap="round"/>
-                      <circle cx="100" cy="13" r="4.5" fill="#fef08a"/>
-
-                      <!-- ลูกศรโค้งคู่หมุนบิดตัวซ้าย-ขวา -->
-                      <path d="M 72,56 Q 100,68 128,56" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="3,3"/>
-                      <polygon points="71,53 71,59 76,56" fill="#fbbf24"/>
-                      <polygon points="129,53 129,59 124,56" fill="#fbbf24"/>
-                    </g>
-                    
-                    <text x="100" y="118" font-size="8" font-weight="bold" fill="#34d399" text-anchor="middle">ประสานมือยืดแขนสุดตัว • บิดเอวเปิดช่องอก</text>
-                  </svg>
-                </div>
-                <div class="text-[10.5px] text-emerald-200 font-medium text-center">
-                  ท่าทางจริง: <span class="font-bold text-emerald-300">ประสานมือชูแขนสุดตัว ยืดกระดูกสันหลัง บิดเปิดช่องอกสลับซ้าย-ขวา</span>
-                </div>
-              </div>
-
-              <!-- 4. กราฟิกคนเดินจริง (Realistic Walking Human 65 BPM) -->
-              <div id="vis-walk" class="w-full hidden flex-col items-center justify-center space-y-1">
-                <div class="relative w-56 h-24 flex items-center justify-center">
-                  <svg viewBox="0 0 200 120" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <!-- เส้นทางเดินเลื่อนเคลื่อนไหวต่อเนื่อง -->
-                    <line x1="20" y1="108" x2="180" y2="108" stroke="#f59e0b" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 8" class="ground-line-animated"/>
-
-                    <!-- โมเดลคนเดินจริงขยับลำตัว ก้าวขา และแกว่งแขนสลับซ้าย-ขวา -->
-                    <g class="walker-bob-animated">
-                      
-                      <!-- แขนหลัง (แกว่งสลับทิศทาง) -->
-                      <g class="walk-arm-back">
-                        <line x1="100" y1="44" x2="88" y2="60" stroke="#d97706" stroke-width="4.5" stroke-linecap="round"/>
-                        <line x1="88" y1="60" x2="80" y2="72" stroke="#d97706" stroke-width="4" stroke-linecap="round"/>
-                        <circle cx="80" cy="72" r="2.5" fill="#fef08a"/>
-                      </g>
-
-                      <!-- ขาหลัง (ก้าวสลับทิศทาง) -->
-                      <g class="walk-leg-back">
-                        <line x1="100" y1="66" x2="86" y2="86" stroke="#a8a29e" stroke-width="5.5" stroke-linecap="round"/>
-                        <line x1="86" y1="86" x2="76" y2="106" stroke="#78716c" stroke-width="4.5" stroke-linecap="round"/>
-                        <path d="M 76,106 L 68,107" stroke="#fbbf24" stroke-width="4" stroke-linecap="round"/>
-                      </g>
-
-                      <!-- ลำตัวคนเดินโน้มไปข้างหน้าเล็กน้อยตามธรรมชาติ -->
-                      <line x1="100" y1="66" x2="102" y2="42" stroke="#f59e0b" stroke-width="7" stroke-linecap="round"/>
-                      
-                      <!-- ศีรษะคนเดิน -->
-                      <circle cx="104" cy="30" r="8.5" fill="#fde047"/>
-
-                      <!-- ขาหน้า (ก้าวไปข้างหน้า ส้นแตะพื้น) -->
-                      <g class="walk-leg-front">
-                        <line x1="100" y1="66" x2="114" y2="86" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
-                        <line x1="114" y1="86" x2="124" y2="106" stroke="#eab308" stroke-width="5" stroke-linecap="round"/>
-                        <path d="M 124,106 L 134,106" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
-                      </g>
-
-                      <!-- แขนหน้า (แกว่งไปข้างหน้าตามธรรมชาติ) -->
-                      <g class="walk-arm-front">
-                        <line x1="100" y1="44" x2="112" y2="58" stroke="#fbbf24" stroke-width="4.5" stroke-linecap="round"/>
-                        <line x1="112" y1="58" x2="122" y2="70" stroke="#fef08a" stroke-width="4" stroke-linecap="round"/>
-                        <circle cx="122" cy="70" r="3" fill="#ffffff"/>
-                      </g>
-
-                    </g>
-                    
-                    <!-- ป้ายแสดงจังหวะก้าว 65 BPM -->
-                    <rect x="142" y="18" width="46" height="18" rx="6" fill="#140b07" stroke="#f59e0b" stroke-width="1.2"/>
-                    <text x="165" y="30" font-size="8.5" font-weight="black" fill="#fde047" text-anchor="middle">65 BPM</text>
-                  </svg>
-                </div>
-                <div class="text-[10.5px] text-amber-200 font-medium text-center">
-                  การเคลื่อนไหวจริง: <span class="font-bold text-amber-300">ก้าวเท้าสั้นๆ แกว่งแขนสบายๆ ทอดน่องช่วยลำเลียงอาหาร</span>
-                </div>
-              </div>
-
-              <!-- 5. ภาพหมุนข้อเท้าและยืดน่อง -->
-              <div id="vis-ankle" class="w-full hidden flex-col items-center justify-center space-y-1">
-                <div class="relative w-36 h-24 flex items-center justify-center">
-                  <div class="w-16 h-16 rounded-full border-2 border-dashed border-amber-400 ankle-rotate-animated flex items-center justify-center bg-amber-950/40">
-                    <span class="text-2xl">🔄</span>
-                  </div>
-                </div>
-                <div class="text-[10.5px] text-amber-200 font-medium text-center">
-                  จังหวะ: <span class="font-bold text-amber-300">ยกปลายเท้าลอย หมุนวนเป็นวงกลม ช้าๆ ตามและทวนเข็มนาฬิกา</span>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- แถบจับเวลารอบกิจกรรม -->
-            <div class="bg-[#140b07] p-2.5 rounded-xl border border-amber-800/80 flex items-center justify-between gap-2">
-              <div class="flex items-baseline gap-1.5">
-                <span class="text-[10.5px] text-amber-400/80 font-medium">เวลารอบนี้:</span>
-                <span id="session-timer-display" class="text-lg font-mono font-extrabold text-amber-300">10:00</span>
-              </div>
-              <div class="flex gap-2">
-                <button type="button" id="session-btn" onclick="toggleSessionTimer()" class="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs active:scale-95 transition-all shadow-sm flex items-center gap-1">
-                  <span>▶</span>
-                  <span id="session-btn-label">เริ่มจับเวลาทำ</span>
-                </button>
-                <button type="button" onclick="resetSessionTimer()" class="px-2.5 py-1.5 rounded-xl bg-[#241610] hover:bg-[#321e16] text-amber-200 font-bold text-xs active:scale-95 transition-all border border-amber-800" title="รีเซ็ตเวลารอบ">
-                  ↺
-                </button>
-              </div>
-            </div>
-
-            <!-- คำแนะนำสรีระ -->
-            <div class="p-2.5 rounded-xl bg-[#140b07] border border-amber-500/40 text-left text-xs space-y-0.5">
-              <div class="font-bold text-amber-300 flex items-center gap-1 text-[11px]">
-                <span>📐</span> คำแนะนำสรีระ:
-              </div>
-              <p id="current-act-posture" class="text-stone-200 leading-snug font-medium text-[11px]">
-                นั่งตัวตรง อกผาย วางปลายเท้าแตะพื้น ขยับเฉพาะข้อเท้า หน้าท้องผ่อนคลาย 100%
-              </p>
-            </div>
-
-            <!-- ข้อปฏิบัติและจุดหยุด -->
-            <div class="grid grid-cols-2 gap-2 text-[10px] text-left">
-              <div class="bg-[#140b07] p-2 rounded-xl border border-emerald-800/80">
-                <div class="font-bold text-emerald-300 mb-0.5 flex items-center gap-1 text-[10px]">
-                  <span>✓</span> ข้อปฏิบัติ:
-                </div>
-                <ul id="activity-guide-list" class="text-stone-300 space-y-0.5 leading-tight">
-                  <li>• ปลายเท้าแตะพื้นตลอดเวลา</li>
-                  <li>• หน้าท้องผ่อนคลาย ไม่เกร็ง</li>
-                </ul>
-              </div>
-              <div class="bg-[#140b07] p-2 rounded-xl border border-rose-800/60">
-                <div class="font-bold text-rose-300 mb-0.5 flex items-center gap-1 text-[10px]">
-                  <span>🛑</span> ควรหยุดเมื่อ:
-                </div>
-                <ul id="stop-signals-list" class="text-rose-200/90 space-y-0.5 leading-tight">
-                  <li>• ทำครบกำหนดเวลา (มีเสียงเตือน)</li>
-                  <li>• หากเริ่มรู้สึกตึงหรือเมื่อย</li>
-                </ul>
-              </div>
-            </div>
-
           </div>
 
         </div>
@@ -1217,40 +1168,26 @@
         </button>
       </div>
 
-      <!-- พื้นที่อัปโหลด/พรีวิวรูปภาพ และ กล้องถ่ายสด -->
+      <!-- พื้นที่อัปโหลด/พรีวิวรูปภาพ -->
       <div class="space-y-2.5 overflow-y-auto pr-1 text-xs">
         
-        <!-- ส่วนที่ 1: หน้าต่างกล้องวิดีโอถ่ายสด (Live Camera Viewfinder) -->
-        <div id="meal-live-camera-container" class="hidden relative w-full aspect-[4/3] bg-black rounded-2xl overflow-hidden border-2 border-emerald-600/70 shadow-inner flex items-center justify-center">
-          <video id="meal-live-video" playsinline autoplay muted class="w-full h-full object-cover"></video>
-          <canvas id="meal-snap-canvas" class="hidden"></canvas>
+        <!-- กรอบกล่องพรีวิวภาพ & ปุ่มเลือกภาพ/ถ่ายรูป -->
+        <div id="meal-dropzone" class="w-full min-h-[180px] bg-[#140b07] border-2 border-dashed border-emerald-600/50 hover:border-emerald-400 rounded-2xl flex flex-col items-center justify-center p-3 text-center relative overflow-hidden transition-all">
           
-          <!-- กรอบเล็งจานข้าว HUD Overlay -->
-          <div class="absolute inset-0 pointer-events-none flex flex-col items-center justify-center p-3">
-            <div class="w-48 h-40 border-2 border-dashed border-emerald-400/90 rounded-2xl relative flex items-center justify-center">
-              <div class="scanner-beam"></div>
-              <span class="text-[10px] font-bold text-emerald-200 bg-black/75 px-2.5 py-0.5 rounded-full border border-emerald-500/50 shadow-md">
-                เล็งจานข้าวให้อยู่ในกรอบนี้
-              </span>
+          <!-- พรีวิวรูปภาพเมื่อถ่ายหรือเลือกเสร็จแล้ว (แสดงผลชัวร์ 100% ด้วย Object URL) -->
+          <div id="meal-preview-container" class="hidden w-full flex-col items-center space-y-2">
+            <img id="meal-preview-img" src="" alt="พรีวิวอาหาร" class="w-full max-h-52 object-cover rounded-xl shadow-md border border-emerald-700/60">
+            <div class="flex items-center gap-2 pt-0.5">
+              <button type="button" onclick="triggerCameraCapture()" class="px-3 py-1.5 rounded-xl bg-[#241610] hover:bg-[#321f16] text-amber-200 text-[11px] font-bold border border-amber-600/60 flex items-center gap-1 active:scale-95 transition-all shadow-sm">
+                <span>📸</span> ถ่ายใหม่
+              </button>
+              <button type="button" onclick="triggerGalleryPick()" class="px-3 py-1.5 rounded-xl bg-[#241610] hover:bg-[#321f16] text-amber-200 text-[11px] font-bold border border-amber-600/60 flex items-center gap-1 active:scale-95 transition-all shadow-sm">
+                <span>📁</span> เลือกรูปอื่น
+              </button>
             </div>
           </div>
-
-          <!-- ปุ่มชัตเตอร์ถ่ายภาพและปุ่มปิดกล้อง -->
-          <div class="absolute bottom-2.5 inset-x-0 flex items-center justify-center gap-2 pointer-events-auto px-3">
-            <button type="button" onclick="captureMealLivePhoto()" class="px-4 py-2 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-emerald-400 text-slate-950 font-black text-xs shadow-lg active:scale-95 transition-all flex items-center gap-1.5 border border-amber-300">
-              <span class="text-sm">📸</span>
-              <span>แตะเพื่อถ่ายรูปจานนี้</span>
-            </button>
-            <button type="button" onclick="stopMealLiveCamera(true)" class="p-2 rounded-full bg-black/80 hover:bg-black text-stone-300 text-xs border border-stone-600 active:scale-95" title="ปิดกล้อง">
-              ✕
-            </button>
-          </div>
-        </div>
-
-        <!-- ส่วนที่ 2: กรอบกล่องเลือกและพรีวิวภาพ -->
-        <div id="meal-dropzone" class="w-full min-h-[170px] bg-[#140b07] border-2 border-dashed border-emerald-600/50 hover:border-emerald-400 rounded-2xl flex flex-col items-center justify-center p-3 text-center relative overflow-hidden transition-all">
-          <img id="meal-preview-img" src="" alt="พรีวิวอาหาร" class="hidden w-full max-h-48 object-cover rounded-xl shadow-md border border-emerald-700/60">
           
+          <!-- กล่องตัวเลือกเริ่มต้น (Placeholder) -->
           <div id="meal-placeholder" class="flex flex-col items-center justify-center space-y-2.5 py-3 w-full">
             <div class="w-14 h-14 rounded-full bg-emerald-950/80 border border-emerald-600/50 flex items-center justify-center text-2xl text-emerald-300 shadow-inner">
               🍲
@@ -1260,20 +1197,23 @@
               <p class="text-[10.5px] text-stone-400 mt-0.5">AI จะประเมินแคลอรี่โดยประมาณ และเลือกกิจกรรมต้านกรดให้อัตโนมัติ</p>
             </div>
             
-            <!-- ปุ่มตัวเลือก 2 ทางเลือก: ถ่ายกล้องสด หรือ เลือกจากคลังภาพ -->
+            <!-- ปุ่มตัวเลือก 2 ทางเลือก: ถ่ายกล้องสดตรงๆ หรือ เลือกจากคลังภาพ -->
             <div class="flex flex-wrap items-center justify-center gap-2 pt-1 w-full">
-              <button type="button" onclick="startMealLiveCamera()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-[11px] shadow-sm flex items-center gap-1.5 active:scale-95 transition-all border border-emerald-300/60">
-                <span class="text-sm">📷</span>
-                <span>เปิดกล้องถ่ายสด</span>
+              <button type="button" onclick="triggerCameraCapture()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs shadow-md flex items-center gap-1.5 active:scale-95 transition-all border border-emerald-300/60">
+                <span class="text-base">📸</span>
+                <span>ถ่ายรูปอาหาร (เปิดกล้อง)</span>
               </button>
 
-              <label class="cursor-pointer px-3.5 py-2 rounded-xl bg-[#241610] hover:bg-[#331f16] text-amber-200 font-bold text-[11px] shadow-sm flex items-center gap-1.5 active:scale-95 transition-all border border-amber-600/60">
-                <span class="text-sm">📁</span>
+              <button type="button" onclick="triggerGalleryPick()" class="px-3.5 py-2.5 rounded-xl bg-[#241610] hover:bg-[#331f16] text-amber-200 font-bold text-xs shadow-sm flex items-center gap-1.5 active:scale-95 transition-all border border-amber-600/60">
+                <span class="text-base">📁</span>
                 <span>เลือกจากคลังภาพ</span>
-                <input type="file" id="meal-file-input" accept="image/*" class="hidden" onchange="handleMealPhotoSelected(event)">
-              </label>
+              </button>
             </div>
           </div>
+
+          <!-- อินพุตกล้องสดระดับฮาร์ดแวร์ (Direct Hardware Camera Input) & คลังภาพ -->
+          <input type="file" id="meal-camera-input" accept="image/*" capture="environment" class="hidden" onchange="handleMealPhotoSelected(event)">
+          <input type="file" id="meal-gallery-input" accept="image/*" class="hidden" onchange="handleMealPhotoSelected(event)">
         </div>
 
         <!-- แถบสถานะการวิเคราะห์ (Loading Spinner) -->
@@ -1346,113 +1286,6 @@
     </div>
   </div>
 
-  <!-- ==================== หน้าต่าง 1.2: AI กล้องตรวจจับการกระดกส้นเท้า (AI Camera Heel Counter) ==================== -->
-  <div id="ai-heel-counter-modal" class="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/90 backdrop-blur-md hidden transition-all duration-300" onclick="handleHeelBackdrop(event)">
-    <div id="ai-heel-counter-card" class="bg-gradient-to-b from-[#1c120c] to-[#0c0704] border-2 border-emerald-500/80 rounded-3xl p-3 sm:p-4 max-w-md w-full max-h-[92vh] flex flex-col shadow-2xl shadow-black/90 relative transform scale-95 transition-all duration-200 space-y-2.5">
-      
-      <!-- หัวข้อระบบ AI Counter -->
-      <div class="flex items-center justify-between pb-2 border-b border-emerald-800/70 shrink-0">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/60 flex items-center justify-center text-lg shadow-sm">
-            🦶
-          </div>
-          <div>
-            <div class="flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-              <span class="text-[10px] font-bold text-emerald-300">Live Computer Vision 60 FPS</span>
-            </div>
-            <h3 class="text-xs sm:text-sm font-black text-white">
-              ระบบ AI ตรวจจับการกระดกข้อเท้าใต้โต๊ะ
-            </h3>
-          </div>
-        </div>
-        <button type="button" onclick="closeHeelCounterModal()" class="text-stone-400 hover:text-white w-7 h-7 rounded-full bg-[#140b07] border border-amber-900/60 flex items-center justify-center text-xs font-bold active:scale-90 transition-all">
-          ✕
-        </button>
-      </div>
-
-      <!-- พื้นที่กล้องพร้อมกรอบ Target Tracking HUD -->
-      <div class="relative w-full aspect-[4/3] bg-black rounded-2xl overflow-hidden border-2 border-emerald-700/60 shadow-inner flex items-center justify-center">
-        <!-- วิดีโอสดจากกล้อง -->
-        <video id="heel-video" playsinline muted autoplay class="w-full h-full object-cover"></video>
-        <canvas id="heel-canvas" class="hidden"></canvas>
-
-        <!-- กรอบ HUD ตรวจจับตำแหน่งข้อเท้า -->
-        <div class="absolute inset-0 pointer-events-none flex flex-col items-center justify-center p-3">
-          <div id="heel-guide-box" class="w-48 h-40 border-2 border-dashed border-emerald-400/90 rounded-2xl relative flex items-center justify-center transition-all">
-            <div class="scanner-beam"></div>
-            <!-- มุมกรอบ HUD -->
-            <div class="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-emerald-300"></div>
-            <div class="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-emerald-300"></div>
-            <div class="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-emerald-300"></div>
-            <div class="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-emerald-300"></div>
-            <span id="heel-status-cue" class="text-[10.5px] font-bold text-emerald-200 bg-black/75 px-2.5 py-1 rounded-full border border-emerald-500/50 shadow-md">
-              วางข้อเท้า/ส้นเท้าในกรอบนี้
-            </span>
-          </div>
-        </div>
-
-        <!-- แถบแจ้งเตือนการยกส้นเท้าสด -->
-        <div id="heel-lift-indicator" class="absolute top-2 left-2 px-2.5 py-1 rounded-lg bg-black/80 border border-emerald-500/60 text-[10px] font-bold text-emerald-300 flex items-center gap-1.5">
-          <span id="heel-pulse-dot" class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span id="heel-motion-state-text">พร้อมตรวจจับ</span>
-        </div>
-
-        <!-- ปุ่มสลับกล้องหน้า/หลัง -->
-        <button type="button" onclick="switchCameraFacing()" class="absolute top-2 right-2 px-2.5 py-1 rounded-lg bg-black/75 hover:bg-black border border-amber-600/70 text-amber-200 text-[10px] font-bold flex items-center gap-1 active:scale-95 transition-all">
-          <span>🔄</span> สลับกล้อง
-        </button>
-      </div>
-
-      <!-- แดชบอร์ดสรุปสถิติสด -->
-      <div class="grid grid-cols-3 gap-2 text-center text-xs">
-        <div class="bg-[#140b07] p-2.5 rounded-2xl border-2 border-amber-500/60 shadow-md flex flex-col items-center justify-center">
-          <span class="text-[10px] text-amber-400 font-medium">กระดกส้นเท้าจริง</span>
-          <div class="text-2xl sm:text-3xl font-black font-mono text-amber-300 leading-tight">
-            <span id="heel-rep-count">0</span>
-            <span class="text-[10px] font-sans font-normal text-stone-300">ครั้ง</span>
-          </div>
-        </div>
-
-        <div class="bg-[#0b261e] p-2.5 rounded-2xl border border-emerald-700/60 shadow-md flex flex-col items-center justify-center">
-          <span class="text-[10px] text-emerald-300 font-medium">เผาผลาญกลูโคส</span>
-          <div class="text-lg sm:text-xl font-black font-mono text-emerald-300 leading-tight">
-            <span id="heel-kcal-burned">0.0</span>
-            <span class="text-[10px] font-sans font-normal text-emerald-400">kcal</span>
-          </div>
-        </div>
-
-        <div class="bg-[#140b07] p-2.5 rounded-2xl border border-amber-900 shadow-md flex flex-col items-center justify-center">
-          <span class="text-[10px] text-stone-400 font-medium">จังหวะเฉลี่ย</span>
-          <div class="text-lg sm:text-xl font-black font-mono text-amber-400 leading-tight">
-            <span id="heel-pace-val">1.2</span>
-            <span class="text-[10px] font-sans font-normal text-stone-300">วิ/ครั้ง</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- ปุ่มควบคุมการทำงาน -->
-      <div class="flex gap-2 pt-1">
-        <button type="button" id="heel-start-stop-btn" onclick="toggleHeelCameraDetection()" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5">
-          <span id="heel-btn-icon">▶</span>
-          <span id="heel-btn-text">เริ่มเปิดกล้องนับ</span>
-        </button>
-        <button type="button" onclick="resetHeelRepStats()" class="px-3.5 py-2.5 rounded-xl bg-[#140b07] hover:bg-[#20120a] border border-amber-800/80 text-amber-200 font-bold text-xs active:scale-95 transition-all" title="รีเซ็ตจำนวนรอบ">
-          ↺ ล้างสถิติ
-        </button>
-        <button type="button" onclick="closeHeelCounterModal()" class="px-3.5 py-2.5 rounded-xl bg-[#140b07] border border-amber-900 text-stone-300 font-bold text-xs hover:bg-[#20120a]">
-          ปิด
-        </button>
-      </div>
-
-      <div class="text-[10px] text-stone-400 text-center leading-tight">
-        💡 คำแนะนำ: วางมือถือพิงขาโต๊ะหรือกำแพงใต้โต๊ะทำงาน หันกล้องส่องที่ข้อเท้าเพื่อให้นับรอบแม่นยำที่สุดครับ
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ==================== JavaScript Core Logic ==================== -->
   <script>
     let currentMainTab = 'pacer';
     let currentMeal = 'carb';
@@ -1481,13 +1314,12 @@
     let alertSoundEnabled = true;
     let announcedMilestones = new Set();
     let currentPopupTargetActivity = 'spu';
-    let pendingMealNavigationCallback = null; // คอลแบ็กนำทางเมื่อปิดหรือยืนยันป๊อปอัปผลแคลอรี่
+    let pendingMealNavigationCallback = null;
 
-    /* ==================== ตัวแปรระบบ 1.1: AI สแกนจานข้าว ==================== */
     let currentMealBase64 = null;
     let currentMealMimeType = 'image/jpeg';
     let detectedMealResult = null;
-    let mealLiveCameraStream = null; // สตรีมกล้องถ่ายสด
+
     const mealTitles = {
       carb: '🍚 ข้าว / แป้ง',
       protein: '🥩 เนื้อสัตว์ / โปรตีน',
@@ -2159,8 +1991,10 @@
       });
 
       const activeBtn = document.getElementById('m-' + m);
-      activeBtn.classList.remove('border-[#42291c]', 'bg-[#1a0f0a]', 'text-stone-300', 'font-semibold');
-      activeBtn.classList.add('border-amber-500', 'bg-[#3d2417]', 'text-amber-100', 'font-bold');
+      if (activeBtn) {
+        activeBtn.classList.remove('border-[#42291c]', 'bg-[#1a0f0a]', 'text-stone-300', 'font-semibold');
+        activeBtn.classList.add('border-amber-500', 'bg-[#3d2417]', 'text-amber-100', 'font-bold');
+      }
 
       document.getElementById('meal-badge').innerText = mealTitles[m];
 
@@ -2361,13 +2195,12 @@
     }
 
     /* ==========================================================================
-       ระบบที่ 1.1: AI สแกนจานข้าวอัตโนมัติ (Live Camera & Gallery Image Upload)
+       ระบบ 1.1: AI ถ่ายรูปสแกนจานข้าว & คำนวณแคลอรี่ (รองรับกล้องตรง & พรีวิวแม่นยำ)
        ========================================================================== */
     function openMealScanModal() {
       unlockAudioHardware();
       playPopupChime('alert');
       
-      // รีเซ็ตสถานะหน้าต่างกล้องให้สดใหม่ทุกครั้งที่เปิด
       resetMealScanState();
 
       const modal = document.getElementById('ai-meal-modal');
@@ -2380,7 +2213,6 @@
     }
 
     function closeMealScanModal() {
-      // ปิดกล้องสดและเคลียร์ค่าทันที
       resetMealScanState();
 
       const modal = document.getElementById('ai-meal-modal');
@@ -2398,155 +2230,113 @@
       }
     }
 
-    /* 1.1.1: ฟังก์ชันเริ่มใช้งานกล้องสด (Start Live Camera) */
-    async function startMealLiveCamera() {
+    // ฟังก์ชันสั่งเปิดกล้องมือถือโดยตรงระดับฮาร์ดแวร์ (Direct Hardware Camera Launcher)
+    function triggerCameraCapture() {
       unlockAudioHardware();
-      const cameraBox = document.getElementById('meal-live-camera-container');
-      const dropzone = document.getElementById('meal-dropzone');
-      const videoEl = document.getElementById('meal-live-video');
-
-      try {
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-          throw new Error("เบราว์เซอร์ไม่รองรับการเปิดกล้องสด");
-        }
-
-        // ขอสิทธิ์เปิดกล้องหลัง (Environment Facing)
-        mealLiveCameraStream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: { ideal: "environment" },
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-          },
-          audio: false
-        });
-
-        videoEl.srcObject = mealLiveCameraStream;
-        await videoEl.play();
-
-        dropzone.classList.add('hidden');
-        cameraBox.classList.remove('hidden');
-      } catch (err) {
-        console.warn("Live camera start failed, fallback to file upload:", err);
-        // หากเปิดกล้องสดไม่ได้ (เช่น ผู้ใช้ไม่อนุญาตสิทธิ์) สลับไปเปิดกล้อง/คลังภาพผ่าน file input อัตโนมัติ
-        const fileInput = document.getElementById('meal-file-input');
-        if (fileInput) fileInput.click();
+      const input = document.getElementById('meal-camera-input');
+      if (input) {
+        input.value = '';
+        input.click();
       }
     }
 
-    /* 1.1.2: ฟังก์ชันแตะชัตเตอร์ถ่ายภาพจากกล้องสด (Capture Live Photo) */
-    function captureMealLivePhoto() {
-      const videoEl = document.getElementById('meal-live-video');
-      const canvas = document.getElementById('meal-snap-canvas');
-      if (!videoEl || !canvas) return;
-
-      const width = videoEl.videoWidth || 640;
-      const height = videoEl.videoHeight || 480;
-
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(videoEl, 0, 0, width, height);
-
-      // แปลงภาพถ่ายเป็น DataURL
-      const fullDataUrl = canvas.toDataURL('image/jpeg', 0.85);
-      currentMealBase64 = fullDataUrl.split(',')[1];
-      currentMealMimeType = 'image/jpeg';
-
-      // ปิดกล้องสด
-      stopMealLiveCamera(false);
-
-      // แสดงภาพพรีวิว
-      const previewImg = document.getElementById('meal-preview-img');
-      const placeholder = document.getElementById('meal-placeholder');
-      const dropzone = document.getElementById('meal-dropzone');
-
-      previewImg.src = fullDataUrl;
-      previewImg.classList.remove('hidden');
-      placeholder.classList.add('hidden');
-      dropzone.classList.remove('hidden');
-
-      // ส่งภาพให้ AI วิเคราะห์
-      analyzeMealWithGeminiVision();
-    }
-
-    /* 1.1.3: ฟังก์ชันปิดกล้องสด */
-    function stopMealLiveCamera(restorePlaceholder = true) {
-      if (mealLiveCameraStream) {
-        mealLiveCameraStream.getTracks().forEach(track => track.stop());
-        mealLiveCameraStream = null;
-      }
-
-      const cameraBox = document.getElementById('meal-live-camera-container');
-      const videoEl = document.getElementById('meal-live-video');
-      if (videoEl) videoEl.srcObject = null;
-      if (cameraBox) cameraBox.classList.add('hidden');
-
-      if (restorePlaceholder) {
-        const dropzone = document.getElementById('meal-dropzone');
-        const placeholder = document.getElementById('meal-placeholder');
-        const previewImg = document.getElementById('meal-preview-img');
-        if (dropzone) dropzone.classList.remove('hidden');
-        if (placeholder) placeholder.classList.remove('hidden');
-        if (previewImg) previewImg.classList.add('hidden');
+    // ฟังก์ชันสั่งเปิดเลือกรูปจากคลังภาพ (Gallery Picker Launcher)
+    function triggerGalleryPick() {
+      unlockAudioHardware();
+      const input = document.getElementById('meal-gallery-input');
+      if (input) {
+        input.value = '';
+        input.click();
       }
     }
 
-    /* 1.1.4: ฟังก์ชันรีเซ็ตและรีเฟรชระบบสแกนอาหารให้สดใหม่ 100% พร้อมสแกนใหม่ */
+    // ฟังก์ชันรีเซ็ตและคืนค่าสถานะหน้าต่างสแกนให้สดใหม่ 100% พร้อมสแกนใหม่ได้ทันที
     function resetMealScanState() {
-      // 1. หยุดกล้องวิดีโอสด
-      stopMealLiveCamera(false);
-
-      // 2. ล้างข้อมูลรูปภาพและผลลัพธ์
       currentMealBase64 = null;
       detectedMealResult = null;
 
-      // 3. รีเซ็ตไฟล์อินพุต
-      const fileInput = document.getElementById('meal-file-input');
-      if (fileInput) fileInput.value = '';
+      const camInput = document.getElementById('meal-camera-input');
+      const galInput = document.getElementById('meal-gallery-input');
+      if (camInput) camInput.value = '';
+      if (galInput) galInput.value = '';
 
-      // 4. คืนค่าการแสดงผลหน้าต่างให้อยู่ในสถานะเริ่มต้น
-      const cameraBox = document.getElementById('meal-live-camera-container');
-      const dropzone = document.getElementById('meal-dropzone');
+      const previewContainer = document.getElementById('meal-preview-container');
       const previewImg = document.getElementById('meal-preview-img');
       const placeholder = document.getElementById('meal-placeholder');
       const stateBox = document.getElementById('meal-analyzing-state');
       const resultCard = document.getElementById('meal-result-card');
 
-      if (cameraBox) cameraBox.classList.add('hidden');
-      if (dropzone) dropzone.classList.remove('hidden');
-      if (previewImg) {
-        previewImg.src = '';
-        previewImg.classList.add('hidden');
-      }
+      if (previewImg) previewImg.src = '';
+      if (previewContainer) previewContainer.classList.add('hidden');
       if (placeholder) placeholder.classList.remove('hidden');
       if (stateBox) stateBox.classList.add('hidden');
       if (resultCard) resultCard.classList.add('hidden');
     }
 
+    // รับไฟล์ภาพเมื่อถ่ายเสร็จหรือเลือกเสร็จ แสดงพรีวิวทันที และบีบอัดภาพเพื่อวิเคราะห์
     function handleMealPhotoSelected(event) {
       const file = event.target.files?.[0];
       if (!file) return;
 
       currentMealMimeType = file.type || 'image/jpeg';
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const fullDataUrl = e.target.result;
-        currentMealBase64 = fullDataUrl.split(',')[1];
 
-        stopMealLiveCamera(false);
+      // 1. แสดงภาพพรีวิวทันทีด้วย Object URL (Instant & 100% Guaranteed Preview)
+      const previewImg = document.getElementById('meal-preview-img');
+      const previewContainer = document.getElementById('meal-preview-container');
+      const placeholder = document.getElementById('meal-placeholder');
 
-        const previewImg = document.getElementById('meal-preview-img');
-        const placeholder = document.getElementById('meal-placeholder');
-        const dropzone = document.getElementById('meal-dropzone');
-        
-        previewImg.src = fullDataUrl;
-        previewImg.classList.remove('hidden');
-        placeholder.classList.add('hidden');
-        dropzone.classList.remove('hidden');
+      const objectUrl = URL.createObjectURL(file);
+      previewImg.src = objectUrl;
+      previewContainer.classList.remove('hidden');
+      placeholder.classList.add('hidden');
+
+      // 2. บีบอัดขนาดภาพให้พอดี (Optimize Payload) แล้วส่งวิเคราะห์ทันที
+      compressImageAndAnalyze(file);
+    }
+
+    function compressImageAndAnalyze(file) {
+      const stateBox = document.getElementById('meal-analyzing-state');
+      const resultCard = document.getElementById('meal-result-card');
+      stateBox.classList.remove('hidden');
+      resultCard.classList.add('hidden');
+
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        const maxDim = 800;
+
+        if (width > height && width > maxDim) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else if (height > maxDim) {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        currentMealBase64 = compressedDataUrl.split(',')[1];
+        currentMealMimeType = 'image/jpeg';
 
         analyzeMealWithGeminiVision();
       };
-      reader.readAsDataURL(file);
+      img.onerror = function() {
+        // Fallback กรณีถอดรหัสรูปด้วย Image tag ไม่สำเร็จ ให้ใช้ FileReader
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const fullDataUrl = e.target.result;
+          currentMealBase64 = fullDataUrl.split(',')[1];
+          analyzeMealWithGeminiVision();
+        };
+        reader.readAsDataURL(file);
+      };
+      img.src = URL.createObjectURL(file);
     }
 
     async function analyzeMealWithGeminiVision() {
@@ -2611,7 +2401,7 @@
 
       try {
         let response = null;
-        let delays = [1000, 2000, 4000];
+        let delays = [800, 1500, 2500];
         for (let attempt = 0; attempt < 3; attempt++) {
           try {
             response = await fetch(apiUrl, {
@@ -2658,7 +2448,6 @@
       const badge = document.getElementById('meal-result-badge');
       badge.innerText = mealTitles[res.mealType] || "🍚 ข้าว / แป้ง";
 
-      // แสดงค่าแคลอรี่โดยประมาณใน Result Card
       const calBadge = document.getElementById('meal-calories-val');
       if (calBadge) {
         calBadge.innerText = res.estimatedCalories ? `~${res.estimatedCalories}` : "~500 kcal";
@@ -2674,13 +2463,10 @@
       showMealCalorieSummaryPopup(res);
     }
 
-    // ฟังก์ชันเปิดป๊อปอัปแจ้งเตือนแคลอรี่และแนะนำกิจกรรมที่ควรทำ
     function showMealCalorieSummaryPopup(res) {
       const actConfig = activityConfigs[res.recommendedActivity] || activityConfigs['spu'];
       const calText = res.estimatedCalories || "450 - 550 kcal";
 
-      // ตั้งคอลแบ็ก: เมื่อผู้ใช้ปิดป๊อปอัป (กดปุ่มปิด หรือ แตะนอกกล่อง หรือ กดปุ่มดำเนินการ) 
-      // ระบบจะเด้งนำทางไปยังกิจกรรมที่ควรทำทันที
       pendingMealNavigationCallback = () => {
         applyMealAndNavigateToTargetActivity(res.mealType, res.recommendedActivity, res.mealName);
       };
@@ -2730,27 +2516,22 @@
       });
     }
 
-    // ฟังก์ชันประยุกต์ใช้มื้ออาหาร และเลื่อนหน้าจอโฟกัสไปที่กิจกรรมที่ควรทำทันที
     function applyMealAndNavigateToTargetActivity(mealType, actId, mealName = "") {
       setMeal(mealType);
       selectActivity(actId);
       closeMealScanModal();
 
-      // รีเฟรชและเคลียร์สถานะระบบสแกนอาหารให้พร้อมสำหรับมื้อถัดไป
       resetMealScanState();
 
-      // เริ่มนับเวลาหลังอาหารทันทีหากยังไม่เริ่ม
       if (!isLiveTimerRunning) {
         toggleLiveTimer();
       }
 
-      // นำทางสายตาและเลื่อนหน้าจอไปยังส่วนกิจกรรม พร้อมเอฟเฟกต์เรืองแสงไฮไลต์
       setTimeout(() => {
         const actCol = document.getElementById('col-activity');
         if (actCol) {
           actCol.scrollIntoView({ behavior: 'smooth', block: 'start' });
           actCol.classList.remove('activity-target-highlight');
-          // บังคับ Reflow เพื่อให้แอนิเมชันเริ่มใหม่
           void actCol.offsetWidth;
           actCol.classList.add('activity-target-highlight');
         }
@@ -2766,16 +2547,13 @@
       );
     }
 
-    // ==================== ระบบรีเซ็ตตัวเองอัตโนมัติ 100% ทุกครั้งที่เข้าใช้งาน ====================
     function fullAppResetAndPurge() {
-      // 1. เคลียร์ CacheStorage API ของเบราว์เซอร์
       if ('caches' in window) {
         caches.keys().then((names) => {
           names.forEach((name) => caches.delete(name));
         });
       }
 
-      // 2. หยุดการทำงานของตัวนับเวลาทั้งหมดทันที
       if (liveTimerInterval) {
         clearInterval(liveTimerInterval);
         liveTimerInterval = null;
@@ -2785,36 +2563,30 @@
         sessionTimerInterval = null;
       }
 
-      // 4. รีเซ็ตตัวแปรสถานะทั้งหมดกลับสู่ค่าเริ่มต้นเอี่ยมอ่อง
       liveSeconds = 0;
       isLiveTimerRunning = false;
       isSessionRunning = false;
       announcedMilestones.clear();
 
-      // 5. ปิดเสียง 40Hz หากเปิดค้างไว้
       stop40HzTone();
 
-      // 6. ปิดหน้าต่างป๊อปอัปและคู่มือทั้งหมดที่อาจเปิดค้างอยู่
       closePopupModal();
       closeManualModal();
+      resetMealScanState();
 
-      // 7. รีเซ็ตหน้าจอแสดงผลตัวนับเวลาสด (Live Timer UI)
       const liveTimerDisplay = document.getElementById('live-timer-display');
       if (liveTimerDisplay) liveTimerDisplay.innerText = "00:00";
       const liveBtnText = document.getElementById('live-timer-btn-text');
       if (liveBtnText) liveBtnText.innerText = "เริ่มนับ";
 
-      // 8. รีเซ็ตโหมดการจับเวลาเป็น "นับสด" (Auto Mode)
       switchTimingMode('auto');
       const timeSlider = document.getElementById('time-slider');
       if (timeSlider) timeSlider.value = "20";
       const timeVal = document.getElementById('time-val');
       if (timeVal) timeVal.innerText = "20";
 
-      // 9. รีเซ็ตแท็บหลักกลับสู่หน้า "1. โปรแกรมลดง่วง & ต้านกรด (Pacer)"
       switchMainTab('pacer');
 
-      // 10. รีเซ็ตมื้ออาหารกลับสู่ค่าเริ่มต้น: "ข้าว / แป้ง"
       currentMeal = 'carb';
       document.querySelectorAll('.m-btn').forEach(b => {
         b.classList.remove('border-amber-500', 'bg-[#3d2417]', 'text-amber-100', 'font-bold');
@@ -2828,16 +2600,12 @@
       const mealBadge = document.getElementById('meal-badge');
       if (mealBadge) mealBadge.innerText = mealTitles['carb'];
 
-      // 11. รีเซ็ตกิจกรรมเริ่มต้น: "กระดกส้นเท้า (SPU)" และตั้งเวลารอบใหม่
       selectActivity('spu');
       resetSessionTimer();
 
-      // 12. ประเมินสถานะกลูโคสและกรดไหลย้อนกลับสู่จุดเริ่มต้น (0 นาที)
       evaluateMetabolicAndGERD(0);
     }
 
-    // ฟังก์ชันรีเฟรชหน้าจอ (จะทำงานเฉพาะตอนที่ผู้ใช้กดปุ่ม "รีเฟรช ก่อนเริ่มใช้งาน" เท่านั้น ไม่มีการรีเฟรชเองอัตโนมัติ)
-    // ฟังก์ชันรีเฟรชหน้าจอ (จะทำงาน 1 ครั้งเฉพาะตอนที่ผู้ใช้กดปุ่มเท่านั้น ต้องกดใหม่ถึงจะรีเฟรชอีกครั้ง)
     function forceHardRefresh() {
       try {
         if ('caches' in window) {
@@ -2847,17 +2615,14 @@
         }
       } catch(e){}
 
-      // รีโหลดหน้าจอ 1 ครั้งสะอาดหมดจดตามคำสั่งการกดปุ่ม
       window.location.reload();
     }
 
-    // เมื่อเปิดแอปเข้ามา ให้ตั้งค่าเริ่มต้นและรีเซ็ตระบบให้พร้อมใช้งานทันที (ไม่มีคำสั่งรีเฟรชหน้าจอวนลูป)
     window.addEventListener('DOMContentLoaded', () => {
       initVisitCounter();
       fullAppResetAndPurge();
     });
 
-    // เมื่อสลับแอปกลับมาใช้งาน ให้รีเซ็ตค่าสถานะให้สดใหม่ โดยไม่รีโหลดหน้าจอ
     window.addEventListener('pageshow', (event) => {
       fullAppResetAndPurge();
     });
