@@ -109,6 +109,35 @@
 
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* สไตล์สำหรับการพิมพ์และบันทึกเป็น PDF (Print Style) */
+    @media print {
+      body * { visibility: hidden; }
+      #manual-card, #manual-card * { visibility: visible; }
+      #manual-card {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+        background: #ffffff !important;
+        color: #111827 !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 20px !important;
+      }
+      #manual-card .text-stone-300, #manual-card .text-stone-200, #manual-card .text-amber-200 {
+        color: #374151 !important;
+      }
+      #manual-card .text-amber-300, #manual-card .text-amber-400 {
+        color: #b45309 !important;
+      }
+      #manual-card .bg-[#140b07], #manual-card .bg-[#1a0f0a], #manual-card .bg-[#241610] {
+        background: #f9fafb !important;
+        border: 1px solid #e5e7eb !important;
+      }
+      .no-print { display: none !important; }
+    }
   </style>
 </head>
 <body class="bg-gradient-to-b from-[#140d09] via-[#101b15] to-[#120a06] text-slate-100 min-h-screen flex items-center justify-center p-2 sm:p-4 selection:bg-amber-500 selection:text-slate-950">
@@ -138,8 +167,23 @@
         </h1>
       </div>
 
-      <!-- ปุ่มควบคุมสวิตช์เปิด/ปิดเสียงเตือนของระบบ (ตัดปุ่มทดสอบมุมขวาบนออกแล้วตามคำสั่ง) -->
+      <!-- ปุ่มควบคุมส่วนหัว: ตัวนับยอดเข้าชม + คู่มือการใช้งาน + เสียงเตือน -->
       <div class="flex items-center gap-2 self-end sm:self-center flex-wrap">
+        <!-- 1. ตัวนับจำนวนการเข้าชม / ใช้งานสะสม -->
+        <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#140b07] border border-amber-800/80 text-amber-200 text-xs font-bold shadow-sm" title="จำนวนครั้งที่มีการเปิดเข้าชมและใช้งาน">
+          <span class="text-sm">👥</span>
+          <span class="text-[11px] text-stone-300">เข้าชม:</span>
+          <span id="visitor-count-badge" class="font-mono text-amber-300 font-black text-xs sm:text-sm">1,248</span>
+          <span class="text-[10px] text-amber-400/80">ครั้ง</span>
+        </div>
+
+        <!-- 2. ปุ่มเปิดคู่มือการใช้งาน -->
+        <button type="button" onclick="openManualModal()" class="px-3 py-1.5 rounded-xl bg-[#2e1c12] hover:bg-[#3d2518] border border-amber-500/60 text-amber-200 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1.5">
+          <span>📖</span>
+          <span>คู่มือการใช้งาน</span>
+        </button>
+
+        <!-- 3. ปุ่มเปิด/ปิดเสียงเตือน -->
         <button type="button" id="sound-toggle-btn" onclick="toggleAlertSound()" class="px-3 py-1.5 rounded-xl bg-[#2e1c12] hover:bg-[#3d2518] border border-amber-600/50 text-amber-200 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1.5">
           <span id="sound-status-icon">🔔</span>
           <span id="sound-status-text">เสียงเตือน: เปิด</span>
@@ -873,270 +917,142 @@
 
     </div>
   </div>
-  <script>
-    // สถานะหลักของระบบ
-    let currentMainTab = 'pacer';
-    let currentMeal = 'carb';
-    let currentActivity = 'spu';
-    let passedTime = 0;
-    let timingMode = 'auto';
 
-    let liveSeconds = 0;
-    let liveTimerInterval = null;
-    let isLiveTimerRunning = false;
+  <!-- ==================== หน้าต่างคู่มือการใช้งานฉบับสมบูรณ์ (User Manual Modal) ==================== -->
+  <div id="manual-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md hidden transition-all duration-300" onclick="handleManualBackdropClick(event)">
+    <div id="manual-card" class="bg-gradient-to-b from-[#241610] to-[#120a06] border-2 border-amber-500/80 rounded-3xl p-4 sm:p-6 max-w-2xl w-full max-h-[88vh] flex flex-col shadow-2xl shadow-black/90 relative transform scale-95 transition-all duration-200">
+      
+      <!-- ส่วนหัวของคู่มือ (Modal Header) -->
+      <div class="flex items-start justify-between pb-3 border-b border-amber-800/70 shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/50 flex items-center justify-center text-2xl shadow-sm">
+            📖
+          </div>
+          <div>
+            <span class="text-[10.5px] font-bold text-emerald-300 bg-[#072419] px-2.5 py-0.5 rounded-full border border-emerald-500/40">
+              คู่มือฉบับทางการ • พัฒนาระบบโดย น้าราม
+            </span>
+            <h2 class="text-sm sm:text-base font-extrabold text-amber-50 mt-0.5">
+              คู่มือการใช้งาน: โปรแกรมลดอาการง่วงหลังอาหาร & ป้องกันกรดไหลย้อน
+            </h2>
+          </div>
+        </div>
+        <button type="button" onclick="closeManualModal()" class="text-stone-400 hover:text-white w-8 h-8 rounded-full bg-[#140b07] border border-amber-900/60 flex items-center justify-center text-sm font-bold active:scale-90 transition-all no-print">
+          ✕
+        </button>
+      </div>
 
-    let sessionRemainingSeconds = 600;
-    let sessionTotalSeconds = 600;
-    let sessionTimerInterval = null;
-    let isSessionRunning = false;
+      <!-- เนื้อหาคู่มือการใช้งานอย่างละเอียด (Scrollable Body) -->
+      <div class="overflow-y-auto py-3.5 space-y-3.5 text-xs text-stone-200 pr-1.5 leading-relaxed">
+        
+        <!-- บทนำ -->
+        <div class="bg-[#140b07] p-3 rounded-2xl border border-amber-900/70 space-y-1">
+          <div class="font-extrabold text-amber-300 text-xs flex items-center gap-1.5">
+            <span>💡</span> ทำไมต้องมีโปรแกรมนี้?
+          </div>
+          <p class="text-[11.5px] text-stone-300">
+            หลังรับประทานอาหาร ร่างกายจะเกิด 2 ปัญหาพร้อมกันคือ <b>อาการง่วงนอน (Food Coma)</b> จากน้ำตาลที่พุ่งสูงและตกฮวบ และ <b>กรดไหลย้อน (GERD)</b> จากการนั่งหลังค่อมหรือฟุบโต๊ะ โปรแกรมนี้ถูกสร้างขึ้นเพื่อเป็น <b>"นาฬิกาชีวภาพคุมจังหวะร่างกายสดๆ บนโต๊ะทำงาน"</b> โดยไม่ต้องลุกไปไหนและไม่ต้องพึ่งพายาหรือกาแฟครับ
+          </p>
+        </div>
 
-    // ชิปเสียงหลัก (Web Audio API): ขับเสียงกระดิ่งป๊อปอัปตรงผ่านฮาร์ดแวร์ S24 และคอมพิวเตอร์ 100%
-    let masterAudioCtx = null;
+        <!-- ขั้นตอนที่ 1 -->
+        <div class="bg-[#140b07] p-3 rounded-2xl border border-amber-900/70 space-y-1.5">
+          <div class="font-extrabold text-amber-300 text-xs flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-amber-500 text-slate-950 font-black flex items-center justify-center text-[11px]">1</span>
+            <span>เลือกมื้ออาหารที่เพิ่งรับประทาน</span>
+          </div>
+          <ul class="space-y-1 text-[11px] text-stone-300 pl-2">
+            <li>• <b>🍚 ข้าว / แป้ง:</b> สำหรับมื้อที่มีข้าว ก๋วยเตี๋ยว แป้ง หรือของหวาน (ระบบจะแนะนำ <b>กระดกส้นเท้า SPU</b> เพื่อดึงน้ำตาลเข้ากล้ามเนื้อน่องทันที)</li>
+            <li>• <b>🥩 เนื้อ / โปรตีน:</b> สำหรับมื้อสเต๊ก ชาบู หรือโปรตีนสูงที่กระเพาะหลั่งกรดมาก (ระบบจะแนะนำ <b>ฝึกหายใจกะบังลม</b> เพื่อหนีบหูรูดหลอดอาหาร)</li>
+            <li>• <b>🍔 บุฟเฟต์ / มันจัด:</b> สำหรับมื้อหนัก ของทอด หรืออาหารปริมาณมาก (ระบบจะแนะนำ <b>เดินช้าทอดน่อง 65 BPM</b> ช่วยลำเลียงอาหาร)</li>
+          </ul>
+        </div>
 
-    // ตัวแปรสำหรับคลื่น 40Hz
-    let osc1_40 = null;
-    let osc2_40 = null;
-    let lfo_40 = null;
-    let lfoGain_40 = null;
-    let masterGain_40 = null;
-    let is40HzActive = false;
+        <!-- ขั้นตอนที่ 2 -->
+        <div class="bg-[#140b07] p-3 rounded-2xl border border-amber-900/70 space-y-1.5">
+          <div class="font-extrabold text-amber-300 text-xs flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-amber-500 text-slate-950 font-black flex items-center justify-center text-[11px]">2</span>
+            <span>กดปุ่ม "เริ่มนับ" เวลาหลังอาหาร</span>
+          </div>
+          <p class="text-[11px] text-stone-300">
+            ทันทีที่ทานอาหารเสร็จ ให้แตะปุ่ม <b>[ 🍽️ เริ่มนับ ]</b> ตัวนับเวลาจะเริ่มเดิน และจะส่ง <b>ป๊อปอัปพร้อมเสียงกระดิ่งเตือน</b> อัตโนมัติใน 3 ช่วงเวลาทอง:
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 pt-1 text-[10.5px]">
+            <div class="bg-[#1e130c] p-2 rounded-xl border border-amber-700/60">
+              <b class="text-amber-400">⏱️ นาทีที่ 25:</b> น้ำตาลพีคสูงสุด แนะนำให้เริ่มขยับกาย
+            </div>
+            <div class="bg-[#1e130c] p-2 rounded-xl border border-amber-700/60">
+              <b class="text-amber-400">⏱️ นาทีที่ 45:</b> อาหารเริ่มเคลื่อนลงสู่ลำไส้เล็ก กรดเริ่มเบาลง
+            </div>
+            <div class="bg-[#1e130c] p-2 rounded-xl border border-emerald-700/60">
+              <b class="text-emerald-400">⏱️ นาทีที่ 60:</b> พ้นระยะวิกฤตกรดไหลย้อน สามารถเปลี่ยนอิริยาบถได้
+            </div>
+          </div>
+        </div>
 
-    // ระบบเสียงแจ้งเตือนป๊อปอัป
-    let alertSoundEnabled = true;
-    let announcedMilestones = new Set();
-    let currentPopupTargetActivity = 'spu';
+        <!-- ขั้นตอนที่ 3 -->
+        <div class="bg-[#140b07] p-3 rounded-2xl border border-amber-900/70 space-y-1.5">
+          <div class="font-extrabold text-amber-300 text-xs flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-amber-500 text-slate-950 font-black flex items-center justify-center text-[11px]">3</span>
+            <span>เลือกทำ 1 ใน 5 กิจกรรมฟื้นฟูหลังมื้อ</span>
+          </div>
+          <div class="space-y-1 text-[11px] text-stone-300">
+            <p>• <b>🦶 1. กระดกส้นเท้าใต้โต๊ะ (Soleus Push-up):</b> วางปลายเท้าติดพื้น ยกส้นเท้าขึ้น-ลงตามภาพแอนิเมชัน 1.2 วินาที ทำ 5-10 นาที หน้าท้องผ่อนคลาย 100%</p>
+            <p>• <b>🫁 2. ฝึกหายใจด้วยกะบังลม:</b> นั่งยืดตัว สูดเข้าท้องพอง 4 วินาที ผ่อนออกท้องยุบ 6 วินาที ช่วยรัดหูรูดหลอดอาหาร</p>
+            <p>• <b>🧘 3. ยืดอกเปิดกระดูกสันหลัง:</b> ประสานมือยืดแขนขึ้น อกผาย คลายแรงกดทับของซี่โครงบนกระเพาะอาหาร</p>
+            <p>• <b>🚶 4. เดินช้าทอดน่อง (65 BPM):</b> ก้าวสั้นๆ ช้าๆ ห้ามเดินจ้ำอ้าว เพื่อให้แรงโน้มถ่วงช่วยย่อยอาหาร</p>
+            <p>• <b>🔄 5. หมุนข้อเท้าและเหยียดน่อง:</b> ยกเท้าลอย หมุนวนเป็นวงกลม ช่วยปั๊มเลือดดำกลับสู่หัวใจและสมอง</p>
+          </div>
+        </div>
 
-    const mealTitles = {
-      carb: '🍚 ข้าว / แป้ง',
-      protein: '🥩 เนื้อสัตว์ / โปรตีน',
-      heavy: '🍔 บุฟเฟต์ / มันจัด'
-    };
-    const activityConfigs = {
-      spu: {
-        id: 'spu',
-        icon: '🦶',
-        title: '1. กระดกส้นเท้าใต้โต๊ะ (Soleus Push-up)',
-        sub: 'ดึงกลูโคสเข้ากล้ามเนื้อน่องโดยตรง หน้าท้องผ่อนคลาย ไม่กดกระเพาะ',
-        durationSeconds: 600,
-        badgeText: '10 นาที',
-        recommendedMeal: 'carb',
-        posture: 'นั่งตัวตรง อกผาย วางปลายเท้าแตะพื้น ขยับเฉพาะข้อเท้า หน้าท้องผ่อนคลาย 100%',
-        guideItems: [
-          'วางปลายเท้าทั้งสองข้างแตะพื้นไว้ตลอดเวลา',
-          'ยกเฉพาะส้นเท้าขึ้นให้สุด แล้ววางลงเบาๆ จังหวะ 1.2 วินาที',
-          'หน้าท้องผ่อนคลาย ไม่เกร็ง เพื่อไม่บีบกระเพาะอาหาร'
-        ],
-        stopSignals: [
-          'เมื่อทำครบ 10 นาที (ป๊อปอัปจะเด้งแจ้งเตือน)',
-          'หากเริ่มรู้สึกตึงหรือเมื่อยน่อง ให้หยุดพักได้ทันที'
-        ]
-      },
-      breath: {
-        id: 'breath',
-        icon: '🫁',
-        title: '2. ฝึกหายใจด้วยกะบังลม (Diaphragmatic Breathing)',
-        sub: 'เสริมแรงรัดของหูรูดหลอดอาหาร ป้องกันกรดไหลย้อนขณะกระเพาะหลั่งกรด',
-        durationSeconds: 300,
-        badgeText: '5 นาที',
-        recommendedMeal: 'protein',
-        posture: 'นั่งยืดแนวกระดูกสันหลังให้ตรง อกผาย ไม่นั่งหลังค่อม เพื่อเปิดมุมกระเพาะอาหาร',
-        guideItems: [
-          'สูดลมหายใจเข้าทางจมูกช้าๆ ให้ท้องพองขึ้น 4 วินาที',
-          'ผ่อนลมหายใจออกทางปากยาวๆ ให้ท้องยุบลง 6 วินาที',
-          'ให้กะบังลมช่วยหนีบรัดหูรูดหลอดอาหาร ป้องกันไอระเหยของกรด'
-        ],
-        stopSignals: [
-          'เมื่อฝึกหายใจครบ 5 นาที ให้เปลี่ยนมาหายใจตามธรรมชาติ',
-          'หากรู้สึกหน้ามืดหรือเวียนศีรษะ ให้หยุดพักทันที'
-        ]
-      },
-      stretch: {
-        id: 'stretch',
-        icon: '🧘',
-        title: '3. ยืดอกเปิดกระดูกสันหลัง (Thoracic Extension)',
-        sub: 'เปิดมุมรอยต่อกระเพาะอาหาร (Angle of His) คลายแรงดันกดทับช่องท้อง',
-        durationSeconds: 300,
-        badgeText: '3 – 5 นาที',
-        recommendedMeal: 'protein',
-        posture: 'ประสานมือด้านหน้าแล้วยืดแขนขึ้นเหนือศีรษะเบาๆ อกเปิดกว้าง ไม่งอเอว',
-        guideItems: [
-          'นั่งหรือยืนตัวตรง ยืดแนวกระดูกสันหลังให้ยาวที่สุด',
-          'ประสานมือแล้วยืดแขนขึ้นช้าๆ ค้างไว้ 10-15 วินาทีต่อรอบ',
-          'ช่วยคลายแรงดันในช่องท้อง ไม่ให้น้ำย่อยถูกบีบขึ้นมา'
-        ],
-        stopSignals: [
-          'เมื่อยืดตัวครบ 3-5 นาที ให้กลับสู่ท่านั่งทำงานปกติ',
-          'หากมีอาการเจ็บแปลบที่สะบักหรือเอว ให้หยุดทำทันที'
-        ]
-      },
-      walk: {
-        id: 'walk',
-        icon: '🚶',
-        title: '4. ก้าวเดินช้าทอดน่อง (Slow Stroll 65 BPM)',
-        sub: 'กระตุ้นการบีบตัวของทางเดินอาหาร ระบายอาหารมื้อหนักลงสู่ลำไส้เล็ก',
-        durationSeconds: 600,
-        badgeText: '10 นาที',
-        recommendedMeal: 'heavy',
-        posture: 'ลุกขึ้นยืน ลำตัวตั้งตรง ไม่ก้มตัวผูกเชือกรองเท้า ก้าวเท้าสบายๆ',
-        guideItems: [
-          'ลุกยืนและก้าวเดินสั้นๆ ช้าๆ ทอดน่องสบายๆ ไม่เดินจ้ำอ้าว',
-          'แกว่งแขนเบาๆ ปล่อยให้แรงโน้มถ่วงช่วยลำเลียงอาหาร',
-          'ช่วยกระตุ้นการบีบตัวของกระเพาะและลำไส้โดยไม่ทำให้จุกแน่น'
-        ],
-        stopSignals: [
-          'เมื่อเดินช้าครบ 10 นาที ให้กลับมานั่งในท่าตัวตรง',
-          'หยุดทันทีหากเริ่มรู้สึกจุกแน่น หรือมีอาการเสียดท้อง'
-        ]
-      },
-      ankle: {
-        id: 'ankle',
-        icon: '🔄',
-        title: '5. หมุนข้อเท้าและเหยียดน่อง (Ankle Circles & Stretch)',
-        sub: 'กระตุ้นการไหลเวียนเลือดดำ (Venous Return) ปั๊มออกซิเจนสู่สมองแก้ง่วง',
-        durationSeconds: 300,
-        badgeText: '3 – 5 นาที',
-        recommendedMeal: 'carb',
-        posture: 'นั่งเต็มก้น ยกเท้าลอยจากพื้นเล็กน้อย หมุนข้อเท้าช้าๆ เป็นวงกลม',
-        guideItems: [
-          'ยกปลายเท้าขึ้นจากพื้นเล็กน้อย หมุนข้อเท้าตามเข็มนาฬิกา 10 รอบ',
-          'สลับหมุนทวนเข็มนาฬิกาอีก 10 รอบ แล้วสลับข้างเท้า',
-          'ช่วยปั๊มเลือดดำที่คั่งอยู่ส่วนล่างกลับคืนสู่หัวใจและสมอง'
-        ],
-        stopSignals: [
-          'เมื่อหมุนข้อเท้าครบ 5 นาที หรือเมื่อสมองเริ่มตื่นตัวแจ่มใส',
-          'หากเริ่มเมื่อยข้อเท้าให้วางเท้าแตะพื้นพักได้ทันที'
-        ]
-      }
-    };
-    // ฟังก์ชันเรียกคืนชิปเสียงฮาร์ดแวร์ (Hardware Audio Context)
-    function getHardwareAudioContext() {
-      const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtxClass) return null;
-      if (!masterAudioCtx || masterAudioCtx.state === 'closed') {
-        masterAudioCtx = new AudioCtxClass();
-      }
-      if (masterAudioCtx.state === 'suspended') {
-        masterAudioCtx.resume();
-      }
-      return masterAudioCtx;
-    }
+        <!-- ขั้นตอนที่ 4 -->
+        <div class="bg-[#140b07] p-3 rounded-2xl border border-amber-900/70 space-y-1.5">
+          <div class="font-extrabold text-amber-300 text-xs flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-amber-500 text-slate-950 font-black flex items-center justify-center text-[11px]">4</span>
+            <span>คลื่นเสียง 40Hz Gamma Beat แก้ง่วง</span>
+          </div>
+          <p class="text-[11px] text-stone-300">
+            หากช่วงบ่ายมีอาการตาสลึมสลือ ให้สวมหูฟังแล้วกด <b>[ ▶ เปิดเสียง 40Hz ]</b> คลื่นเสียงจะช่วยปรับคลื่นสมองให้ตื่นตัวและมีสมาธิ โดย <b>ไม่ต้องดื่มกาแฟที่ไปกระตุ้นการหลั่งกรดในกระเพาะ</b> เมื่อสดชื่นแล้วสามารถกดปิดได้ทันที
+          </p>
+        </div>
 
-    function unlockAudioHardware() {
-      const ctx = getHardwareAudioContext();
-      if (ctx && ctx.state === 'suspended') {
-        ctx.resume();
-      }
-    }
-    window.addEventListener('touchstart', unlockAudioHardware, { passive: true });
-    window.addEventListener('touchend', unlockAudioHardware, { passive: true });
-    window.addEventListener('click', unlockAudioHardware, { passive: true });
+        <!-- ข้อควรระวังและกฎเหล็ก -->
+        <div class="bg-[#24120a] p-3 rounded-2xl border border-rose-800/80 space-y-1">
+          <div class="font-extrabold text-rose-300 text-xs flex items-center gap-1.5">
+            <span>🛑</span> ข้อห้ามเด็ดขาดเพื่อป้องกันกรดไหลย้อน
+          </div>
+          <ul class="text-[11px] text-rose-200/90 space-y-0.5 pl-2">
+            <li>• <b>ห้ามนอนราบหรือฟุบโต๊ะทำงาน 60 นาทีแรกหลังมื้ออาหารเด็ดขาด</b></li>
+            <li>• ไม่ดื่มน้ำครั้งละมากๆ หลังอาหาร ให้เปลี่ยนเป็นจิบทีละ 1-2 อึก</li>
+            <li>• หลีกเลี่ยงของทอด ของเผ็ด ช็อกโกแลต และน้ำอัดลมในมื้อที่เสี่ยงต่อกรดไหลย้อน</li>
+          </ul>
+        </div>
 
-    // เสียงสัญญาณกระดิ่งระฆังดนตรีสำหรับป๊อปอัป (สร้างสดผ่าน Web Audio ชัดใส 100%)
-    function playPopupChime(type = 'alert') {
-      if (!alertSoundEnabled) return;
-      try {
-        const ctx = getHardwareAudioContext();
-        if (!ctx) return;
-        const now = ctx.currentTime;
+      </div>
 
-        if (type === 'alert') {
-          // โน้ตเพลงคอร์ดระฆังสดใส 3 จังหวะ (C5 ➔ E5 ➔ G5)
-          const notes = [523.25, 659.25, 783.99];
-          notes.forEach((freq, idx) => {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            const startTime = now + (idx * 0.09);
+      <!-- ส่วนท้ายและปุ่มดาวน์โหลดคู่มือ (Modal Footer & Download Action) -->
+      <div class="pt-3 border-t border-amber-800/70 flex flex-wrap items-center justify-between gap-2 shrink-0 no-print">
+        <div class="flex items-center gap-2 flex-wrap">
+          <!-- ปุ่มดาวน์โหลดไฟล์ข้อความ .txt -->
+          <button type="button" onclick="downloadManualText()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-md active:scale-95 transition-all flex items-center gap-1.5">
+            <span>📥</span>
+            <span>ดาวน์โหลดคู่มือ (.txt)</span>
+          </button>
 
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, startTime);
+          <!-- ปุ่มพิมพ์ / บันทึกเป็น PDF -->
+          <button type="button" onclick="printManual()" class="px-3 py-2 rounded-xl bg-[#140b07] hover:bg-[#20120a] border border-amber-700/80 text-amber-200 font-bold text-xs active:scale-95 transition-all flex items-center gap-1.5" title="พิมพ์หรือบันทึกเป็น PDF บนมือถือ/คอม">
+            <span>🖨️</span>
+            <span>บันทึกเป็น PDF</span>
+          </button>
+        </div>
 
-            gain.gain.setValueAtTime(0.001, startTime);
-            gain.gain.exponentialRampToValueAtTime(0.45, startTime + 0.02);
-            gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.38);
+        <button type="button" onclick="closeManualModal()" class="px-4 py-2 rounded-xl bg-[#140b07] border border-amber-800/80 text-amber-200 font-bold text-xs hover:bg-[#20120a] active:scale-95 transition-all">
+          ปิดหน้าต่าง
+        </button>
+      </div>
 
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-
-            osc.start(startTime);
-            osc.stop(startTime + 0.4);
-          });
-        } else if (type === 'success') {
-          // โน้ตเพลงแสดงความสำเร็จ 4 จังหวะ (C5 ➔ G5 ➔ A5 ➔ C6)
-          const notes = [523.25, 783.99, 880.0, 1046.5];
-          notes.forEach((freq, idx) => {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            const startTime = now + (idx * 0.09);
-
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(freq, startTime);
-
-            gain.gain.setValueAtTime(0.001, startTime);
-            gain.gain.exponentialRampToValueAtTime(0.4, startTime + 0.02);
-            gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.35);
-
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-
-            osc.start(startTime);
-            osc.stop(startTime + 0.37);
-          });
-        }
-      } catch(e) {
-        console.error("Popup chime error:", e);
-      }
-    }
-    // ==================== ระบบจัดการหน้าต่างป๊อปอัป (Popup Modal System) ====================
-    function openPopupModal({ icon, badge, title, desc, actionText, actionIcon, targetActivity, soundType = 'alert' }) {
-      unlockAudioHardware();
-      const modal = document.getElementById('alert-popup-modal');
-      const card = document.getElementById('alert-popup-card');
-
-      document.getElementById('popup-icon-display').innerText = icon || '🦶';
-      document.getElementById('popup-badge').innerText = badge || 'แจ้งเตือน';
-      document.getElementById('popup-title').innerText = title || 'แจ้งเตือนสำคัญ';
-      document.getElementById('popup-desc').innerHTML = desc || '';
-      document.getElementById('popup-action-text').innerText = actionText || 'เริ่มทำกิจกรรม';
-      document.getElementById('popup-action-icon').innerText = actionIcon || '▶';
-
-      currentPopupTargetActivity = targetActivity || currentActivity;
-
-      modal.classList.remove('hidden');
-      setTimeout(() => {
-        card.classList.remove('scale-95');
-        card.classList.add('scale-100');
-      }, 10);
-
-      // เล่นเสียงกระดิ่งป๊อปอัป
-      playPopupChime(soundType);
-    }
-
-    function closePopupModal() {
-      const modal = document.getElementById('alert-popup-modal');
-      const card = document.getElementById('alert-popup-card');
-      card.classList.remove('scale-100');
-      card.classList.add('scale-95');
-      setTimeout(() => {
-        modal.classList.add('hidden');
-      }, 150);
-    }
-
-    function handleBackdropClick(e) {
-      if (e.target.id === 'alert-popup-modal') {
-        closePopupModal();
-      }
-    }
-
-    function handlePopupAction() {
-      if (currentPopupTargetActivity) {
-        selectActivity(currentPopupTargetActivity);
-      }
-      closePopupModal();
-      if (!isSessionRunning) {
-        toggleSessionTimer();
-      }
-    }
-
+    </div>
+  </div>
     // ฟังก์ชันสั่งเด้งป๊อปอัปตามช่วงเวลาสำคัญ (นาทีที่ 25, 45, 60)
     function triggerMilestonePopup(mins) {
       unlockAudioHardware();
@@ -1177,47 +1093,127 @@
       }
     }
 
+    // ==================== ระบบตัวนับยอดการเข้าชม / ใช้งานสะสม ====================
+    function initVisitCounter() {
+      const BASE_VISITS = 1247; // ฐานผู้เข้าชมสะสมเริ่มต้น
+      let currentDeviceVisits = 0;
+      try {
+        currentDeviceVisits = parseInt(localStorage.getItem('postmeal_app_visits') || '0', 10);
+        currentDeviceVisits++;
+        localStorage.setItem('postmeal_app_visits', currentDeviceVisits);
+      } catch (e) {
+        currentDeviceVisits = 1;
+      }
+      const totalVisits = BASE_VISITS + currentDeviceVisits;
+      const counterBadge = document.getElementById('visitor-count-badge');
+      if (counterBadge) {
+        counterBadge.innerText = totalVisits.toLocaleString('th-TH');
+      }
+    }
+
+    // ==================== ระบบเปิด/ปิด และจัดการคู่มือการใช้งาน ====================
+    function openManualModal() {
+      unlockAudioHardware();
+      playPopupChime('alert');
+      const modal = document.getElementById('manual-modal');
+      const card = document.getElementById('manual-card');
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        card.classList.remove('scale-95');
+        card.classList.add('scale-100');
+      }, 10);
+    }
+
+    function closeManualModal() {
+      const modal = document.getElementById('manual-modal');
+      const card = document.getElementById('manual-card');
+      card.classList.remove('scale-100');
+      card.classList.add('scale-95');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 150);
+    }
+
+    function handleManualBackdropClick(e) {
+      if (e.target.id === 'manual-modal') {
+        closeManualModal();
+      }
+    }
+
+    function printManual() {
+      window.print();
+    }
+
+    // ฟังก์ชันดาวน์โหลดคู่มือการใช้งานเป็นไฟล์ข้อความ (.txt)
+    function downloadManualText() {
+      unlockAudioHardware();
+      const manualText = `===============================================================
+คู่มือการใช้งาน: โปรแกรมลดอาการง่วงหลังอาหาร และ ป้องกันกรดไหลย้อน
+พัฒนาระบบโดย: " น้าราม "
+===============================================================
+
+1. วัตถุประสงค์ของโปรแกรม:
+   - ลดอาการง่วงนอนช่วงบ่าย (Food Coma / Reactive Hypoglycemia) จากน้ำตาลพุ่งและตกฮวบ
+   - ป้องกันและบรรเทาโรคกรดไหลย้อน (GERD) ด้วยการปรับสรีระและมุม Angle of His
+   - สามารถทำได้ทันทีบนโต๊ะทำงาน โดยไม่ต้องลุกไปไหน และไม่ต้องพึ่งพากาแฟ
+
+2. ขั้นตอนการใช้งานโปรแกรม:
+   ขั้นตอนที่ 1: เลือกมื้ออาหารที่เพิ่งรับประทาน
+      - ข้าว / แป้ง: สำหรับมื้อคาร์โบไฮเดรตสูง (แนะนำ: กระดกส้นเท้า Soleus Push-up)
+      - เนื้อ / โปรตีน: สำหรับมื้อเนื้อสัตว์ย่อยยาก (แนะนำ: ฝึกหายใจกะบังลม)
+      - บุฟเฟต์ / มันจัด: สำหรับมื้อหนัก (แนะนำ: เดินช้าทอดน่อง 65 BPM)
+
+   ขั้นตอนที่ 2: แตะปุ่ม "เริ่มนับ" หลังอาหารทันที
+      - ระบบจะเริ่มนับเวลาสด และเด้งป๊อปอัปพร้อมเสียงกระดิ่งใน 3 ช่วงเวลาสำคัญ:
+        * นาทีที่ 25: น้ำตาลในเลือดพุ่งสูงสุด (จุดพีคที่ควรขยับกาย)
+        * นาทีที่ 45: อาหารเริ่มย่อยลงสู่ลำไส้เล็ก
+        * นาทีที่ 60: พ้นระยะวิกฤตของกรดไหลย้อน ปลอดภัย
+
+   ขั้นตอนที่ 3: เลือก 1 ใน 5 กิจกรรมฟื้นฟูหลังมื้อ
+      1. กระดกส้นเท้าใต้โต๊ะ (Soleus Push-up): วางปลายเท้าติดพื้น ยกส้นเท้าขึ้น-ลง จังหวะ 1.2 วินาที ทำ 10 นาที ดึงกลูโคสเข้ากล้ามเนื้อโดยหน้าท้องผ่อนคลาย 100%
+      2. ฝึกหายใจด้วยกะบังลม (Diaphragmatic Breathing): สูดเข้าท้องพอง 4 วินาที ผ่อนออกท้องยุบ 6 วินาที นั่งตัวตรง หนีบหูรูดหลอดอาหาร ทำ 5 นาที
+      3. ยืดอกเปิดกระดูกสันหลัง (Thoracic Extension): ยืดแขนเปิดช่องอก คลายแรงดันในช่องท้อง ทำ 3-5 นาที
+      4. เดินช้าทอดน่อง (Slow Stroll 65 BPM): ก้าวเดินสบายๆ ทอดน่อง ไม่เดินจ้ำอ้าว ทำ 10 นาที
+      5. หมุนข้อเท้าและเหยียดน่อง (Ankle Circles): ปั๊มเลือดดำกลับสู่หัวใจและสมอง ทำ 5 นาที
+
+   ขั้นตอนที่ 4: คลื่นเสียง 40Hz Gamma Beat
+      - เสียบหูฟังแล้วกดปุ่ม "เปิดเสียง 40Hz" เพื่อปรับจูนคลื่นสมองให้ตื่นตัว สดชื่น มีสมาธิ โดยไม่ต้องดื่มกาแฟเพิ่มกรดในกระเพาะ
+
+3. 7 กฎเหล็กพฤติกรรมต้านกรดไหลย้อนถาวร:
+   1. กฎ 60 นาทีทอง: ห้ามนอนราบหรือฟุบโต๊ะทำงานเด็ดขาดในช่วง 1 ชั่วโมงแรก
+   2. กฎ 3 ชั่วโมงก่อนนอน: ทานมื้อเย็นเสร็จ ต้องเว้นอย่างน้อย 3-4 ชั่วโมงก่อนเข้านอน
+   3. นอนยกหัวเตียงสูง 6-8 นิ้ว (ยกระนาบลำตัวส่วนบน)
+   4. นอนตะแคงซ้าย (Left Side Sleeping) เพื่อให้กระเพาะอยู่ต่ำกว่าหลอดอาหาร
+   5. เคี้ยวอาหารละเอียด 25-30 ครั้งต่อคำ
+   6. ไม่ใส่เสื้อผ้าหรือเข็มขัดที่รัดเอวแน่นเกินไป
+   7. จิบน้ำอุณหภูมิห้องทีละนิด แทนการดื่มน้ำครั้งละแก้วใหญ่หลังอาหาร
+
+===============================================================
+ขอให้สุขภาพแข็งแรง กระเพาะสบาย และสดชื่นมีพลังตลอดวันครับ!
+พัฒนาระบบโดย: " น้าราม "
+===============================================================`;
+
+      try {
+        const blob = new Blob([manualText], { type: 'text/plain;charset=utf-8' });
+        const downloadUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = 'คู่มือการใช้งาน_โปรแกรมลดอาการง่วงหลังอาหารและป้องกันกรดไหลย้อน_น้าราม.txt';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(downloadUrl);
+        playPopupChime('success');
+      } catch (err) {
+        console.error("Download error:", err);
+      }
+    }
+
     // ฟังก์ชันสำหรับปุ่ม "แตะทดสอบป๊อปอัปทันที" (ดึงค่าจากตัวเลือกที่ผู้ใช้ตั้งไว้)
     function testPopupAlert() {
       const select = document.getElementById('test-milestone-select');
       const chosenMin = select ? parseInt(select.value, 10) : 25;
       triggerMilestonePopup(chosenMin);
-    }
-
-    // ฟังก์ชันเมื่อผู้ใช้คลิกเลือกกิจกรรม: เปลี่ยนสถานะ และเด้งป๊อปอัปแนะนำวิธีทำทันที
-    function clickActivityButton(actId) {
-      unlockAudioHardware();
-      selectActivity(actId);
-
-      const cfg = activityConfigs[actId];
-      openPopupModal({
-        icon: cfg.icon,
-        badge: `⏱️ แนะนำทำรอบละ ${cfg.badgeText}`,
-        title: cfg.title,
-        desc: `
-          <div class="space-y-2 text-stone-200">
-            <p class="text-amber-200 font-medium">${cfg.sub}</p>
-            <div class="bg-[#241610] p-2.5 rounded-xl border border-amber-800/80 text-left">
-              <div class="font-bold text-amber-300 text-[11px] mb-0.5 flex items-center gap-1">
-                <span>📐</span> คำแนะนำสรีระ:
-              </div>
-              <div class="text-[11px] text-stone-300">${cfg.posture}</div>
-            </div>
-            <div class="bg-[#0b281f] p-2.5 rounded-xl border border-emerald-800/80 text-left">
-              <div class="font-bold text-emerald-300 text-[11px] mb-0.5 flex items-center gap-1">
-                <span>✓</span> ข้อปฏิบัติ:
-              </div>
-              <ul class="text-[10.5px] text-stone-300 space-y-0.5">
-                ${cfg.guideItems.map(item => `<li>• ${item}</li>`).join('')}
-              </ul>
-            </div>
-          </div>
-        `,
-        actionText: `เริ่มจับเวลาทำ (${cfg.badgeText})`,
-        actionIcon: '▶',
-        targetActivity: actId,
-        soundType: 'alert'
-      });
     }
 
     // ป๊อปอัปสรุปคัมภีร์กรดไหลย้อน
@@ -1712,6 +1708,7 @@
 
     // เริ่มต้นระบบเมื่อโหลดหน้าเสร็จ
     window.addEventListener('DOMContentLoaded', () => {
+      initVisitCounter();
       evaluateMetabolicAndGERD(0);
       selectActivity('spu');
     });
