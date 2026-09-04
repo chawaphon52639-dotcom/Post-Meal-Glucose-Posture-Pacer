@@ -2280,6 +2280,10 @@
         stateBox.classList.add('hidden');
         detectedMealResult = selected;
         renderMealAnalysisResult(selected);
+        const resultCard = document.getElementById('meal-result-card');
+        if (resultCard) {
+          resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
       }, 500);
     }
 
