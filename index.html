@@ -253,10 +253,10 @@
           <span class="text-[10px] text-amber-400/80">ครั้ง</span>
         </div>
 
-        <!-- ปุ่มแจ้งเตือนเมื่อพับจอ (ทดสอบได้ทันที) -->
+        <!-- ปุ่มแจ้งเตือนเมื่อไม่อยู่หน้าแอป (ปรับข้อความให้เข้าใจง่าย ชัดเจน) -->
         <button type="button" id="notif-perm-btn" onclick="openNotificationPermissionModal()" class="px-3 py-1.5 rounded-xl bg-[#2e1c12] hover:bg-[#3d2518] border border-emerald-500/70 text-emerald-300 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1.5">
           <span id="notif-status-icon">🔔</span>
-          <span id="notif-status-text">เตือนพับจอ: แตะเปิด</span>
+          <span id="notif-status-text">เตือนเมื่อไม่อยู่หน้าแอป: แตะเปิด</span>
         </button>
 
         <button type="button" onclick="openManualModal()" class="px-3 py-1.5 rounded-xl bg-[#2e1c12] hover:bg-[#3d2518] border border-amber-500/60 text-amber-200 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1.5">
@@ -637,7 +637,7 @@
           <div class="bg-[#241610] p-3.5 rounded-2xl border border-amber-700/60 text-xs text-amber-100 space-y-2.5 shadow-sm">
             <div class="flex items-center justify-between border-b border-amber-800/70 pb-2">
               <span class="font-extrabold text-amber-300 flex items-center gap-1.5 text-xs">
-                <span>🔔</span> ระบบป๊อปอัป & แจ้งเตือนพับจอ
+                <span>🔔</span> ระบบป๊อปอัป & เตือนเมื่อไม่อยู่หน้าแอป
               </span>
               <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-700/70">
                 ทำงานอัตโนมัติ ✓
@@ -1026,7 +1026,7 @@
     </div>
   </div>
 
-  <!-- ==================== หน้าต่างขออนุญาตแจ้งเตือนเมื่อพับจอ (Notification Permission Dialog) ==================== -->
+  <!-- ==================== หน้าต่างขออนุญาตแจ้งเตือนเมื่อไม่อยู่หน้าแอป ==================== -->
   <div id="notif-perm-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4 bg-black/85 backdrop-blur-md hidden transition-all duration-300" onclick="handleNotifModalBackdrop(event)">
     <div id="notif-perm-card" class="bg-gradient-to-b from-[#251810] to-[#120a06] border-2 border-emerald-500/80 rounded-3xl p-5 max-w-sm w-full text-center shadow-2xl shadow-black/90 relative transform scale-95 transition-all duration-200 space-y-3.5">
       
@@ -1036,13 +1036,13 @@
 
       <div>
         <span class="inline-block px-3 py-0.5 rounded-full text-[10.5px] font-extrabold bg-emerald-500 text-slate-950 shadow-sm">
-          📱 ฟังก์ชันแจ้งเตือนพับหน้าจอ
+          📱 ฟังก์ชันแจ้งเตือนอัจฉริยะ
         </span>
         <h3 class="text-sm font-black text-white mt-1.5">
-          เปิดการแจ้งเตือนเมื่อสลับไปใช้แอปอื่น
+          อนุญาตให้แจ้งเตือนเมื่อไม่อยู่หน้าแอป
         </h3>
         <p class="text-xs text-stone-300 mt-1 leading-relaxed">
-          เมื่อถึงนาทีที่ 25, 45 และ 60 ระบบจะส่งการแจ้งเตือนเด้งลงมาจากขอบจอด้านบน แม้คุณจะพับหน้าจอหรือเปิดดู LINE/Facebook อยู่ครับ
+          เมื่อถึงนาทีที่ 25, 45, 60 หรือเมื่อทำกิจกรรมครบเวลา ระบบจะส่งการแจ้งเตือนเด้งลงมาจากขอบจอด้านบน แม้คุณจะสลับไปใช้ LINE หรือล็อกหน้าจออยู่ครับ
         </p>
       </div>
 
@@ -1322,6 +1322,7 @@
     let sessionTotalSeconds = 600;
     let sessionTimerInterval = null;
     let isSessionRunning = false;
+    let sessionEndTime = 0;
 
     let masterAudioCtx = null;
     let osc1_40 = null;
@@ -1568,6 +1569,31 @@
       unlockAudioHardware();
       const modal = document.getElementById('notif-perm-modal');
       const card = document.getElementById('notif-perm-card');
+      const badge = document.getElementById('notif-perm-badge');
+      const actionBtn = document.getElementById('notif-perm-action-btn');
+
+      // ตรวจสอบว่าระบบเปิดใช้งานอยู่แล้วหรือไม่
+      const isAlreadyActive = document.getElementById('notif-status-text')?.innerText.includes('เปิดแล้ว') ||
+                              ("Notification" in window && Notification.permission === "granted");
+
+      if (isAlreadyActive) {
+        if (badge) {
+          badge.innerText = "✅ ระบบแจ้งเตือนเปิดใช้งานอยู่แล้ว";
+          badge.className = "inline-block px-3 py-0.5 rounded-full text-[10.5px] font-extrabold bg-emerald-400 text-slate-950 shadow-sm";
+        }
+        if (actionBtn) {
+          actionBtn.innerHTML = "<span>🔔</span><span>ทดสอบส่งการแจ้งเตือนทันที</span>";
+        }
+      } else {
+        if (badge) {
+          badge.innerText = "📱 ฟังก์ชันแจ้งเตือนอัจฉริยะ";
+          badge.className = "inline-block px-3 py-0.5 rounded-full text-[10.5px] font-extrabold bg-emerald-500 text-slate-950 shadow-sm";
+        }
+        if (actionBtn) {
+          actionBtn.innerHTML = "<span>🔔</span><span>แตะอนุญาต & ทดสอบเตือนทันที</span>";
+        }
+      }
+
       modal.classList.remove('hidden');
       setTimeout(() => {
         card.classList.remove('scale-95');
@@ -1599,13 +1625,13 @@
       // 1. เด้งแถบแจ้งเตือนด้านบนให้เห็นผลทันทีในเสี้ยววินาทีนี้
       showFloatingToastNotification(
         "🔔 เปิดระบบแจ้งเตือนสำเร็จ!",
-        "ระบบจะแจ้งเตือนเมื่อถึงนาทีที่ 25 (น้ำตาลพีค), นาทีที่ 45 และ 60 ครับ"
+        "ระบบพร้อมเตือนแล้วครับ (กรุณาอย่าปิดแอป สลับไป LINE หรือล็อกจอได้เลย)"
       );
 
       // 2. ปรับข้อความปุ่มด้านบน
       const btnText = document.getElementById('notif-status-text');
       const btnIcon = document.getElementById('notif-status-icon');
-      if (btnText) btnText.innerText = "เตือนพับจอ: เปิดแล้ว";
+      if (btnText) btnText.innerText = "เตือนเมื่อไม่อยู่หน้าแอป: เปิดแล้ว";
       if (btnIcon) btnIcon.innerText = "✅";
 
       // 3. ขอสิทธิ์เบราว์เซอร์จริงหากทำได้
@@ -1617,7 +1643,7 @@
           if (Notification.permission === "granted") {
             try {
               new Notification("PostMeal Pacer (น้าราม)", {
-                body: "ระบบพร้อมแจ้งเตือนเมื่อพับหน้าจอแล้วครับ",
+                body: "ระบบพร้อมแจ้งเตือนแล้วครับ (กรุณาอย่าปิดแอป สลับไป LINE หรือล็อกจอได้เลย)",
                 icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%23241610'/><text y='68' x='50' font-size='56' text-anchor='middle'>🦶</text></svg>"
               });
             } catch(e){}
@@ -2101,17 +2127,25 @@
         btn.classList.add('bg-stone-700', 'hover:bg-stone-600', 'text-white');
         label.innerText = "พักเวลา";
 
+        // กำหนดเวลาสิ้นสุดด้วย Timestamp ระดับฮาร์ดแวร์เพื่อไม่ให้เวลาค้างหรือสะดุดเมื่อพับจอ
+        sessionEndTime = Date.now() + (sessionRemainingSeconds * 1000);
+
         sessionTimerInterval = setInterval(() => {
-          if (sessionRemainingSeconds > 0) {
-            sessionRemainingSeconds--;
-            updateSessionDisplay();
-          } else {
+          const now = Date.now();
+          const remaining = Math.max(0, Math.ceil((sessionEndTime - now) / 1000));
+          sessionRemainingSeconds = remaining;
+          updateSessionDisplay();
+
+          if (sessionRemainingSeconds <= 0) {
             finishSessionTimer();
           }
-        }, 1000);
+        }, 500);
       } else {
         isSessionRunning = false;
         clearInterval(sessionTimerInterval);
+        const now = Date.now();
+        sessionRemainingSeconds = Math.max(0, Math.ceil((sessionEndTime - now) / 1000));
+        updateSessionDisplay();
         btn.classList.remove('bg-stone-700', 'hover:bg-stone-600', 'text-white');
         btn.classList.add('bg-amber-500', 'hover:bg-amber-400', 'text-slate-950');
         label.innerText = "ทำต่อ";
@@ -2136,6 +2170,14 @@
       label.innerText = "✓ ครบเวลาแล้ว";
 
       const config = activityConfigs[currentActivity];
+
+      // 1. ส่งการแจ้งเตือนระดับเครื่องเด้งลงมาจากขอบจอด้านบนเมื่อพับหน้าจอ หรือสลับไปใช้แอปอื่น
+      sendSystemNotification(
+        `🏆 ทำกิจกรรมครบเวลาแล้ว! (${config.badgeText})`,
+        `คุณได้ทำ ${config.title} ครบกำหนดแล้วครับ สามารถหยุดพักและนั่งทำงานต่อได้อย่างสดชื่น!`
+      );
+
+      // 2. แสดงป๊อปอัปยินดีภายในหน้าเว็บ พร้อมเล่นเสียงกระดิ่งแห่งความสำเร็จ
       openPopupModal({
         icon: '🏆',
         badge: '🎉 ยอดเยี่ยมมาก!',
@@ -2154,6 +2196,7 @@
       const config = activityConfigs[currentActivity];
       sessionTotalSeconds = config.durationSeconds;
       sessionRemainingSeconds = config.durationSeconds;
+      sessionEndTime = Date.now() + (sessionRemainingSeconds * 1000);
       updateSessionDisplay();
 
       const btn = document.getElementById('session-btn');
@@ -2747,6 +2790,37 @@
 
       window.location.reload();
     }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        // เมื่อสลับกลับเข้ามาในแอป ตรวจสอบว่าเวลากิจกรรมหมดไปแล้วขณะพับจอหรือไม่
+        if (isSessionRunning) {
+          const now = Date.now();
+          const remaining = Math.max(0, Math.ceil((sessionEndTime - now) / 1000));
+          sessionRemainingSeconds = remaining;
+          updateSessionDisplay();
+          if (sessionRemainingSeconds <= 0) {
+            finishSessionTimer();
+          }
+        }
+        // ตรวจสอบเวลาหลังอาหารหลัก
+        if (isLiveTimerRunning) {
+          const now = Date.now();
+          liveSeconds = Math.floor((now - liveTimerStartTime) / 1000);
+          const mins = Math.floor(liveSeconds / 60);
+          const secs = liveSeconds % 60;
+          const displayEl = document.getElementById('live-timer-display');
+          if (displayEl) {
+            displayEl.innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+          }
+          if (timingMode === 'auto') {
+            passedTime = mins;
+            evaluateMetabolicAndGERD(passedTime);
+          }
+          checkPopupMilestones(mins, secs);
+        }
+      }
+    });
 
     window.addEventListener('DOMContentLoaded', () => {
       initVisitCounter();
