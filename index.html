@@ -2038,8 +2038,8 @@
       }
     }
 
-    // ==================== ระบบรีเฟรชสดใหม่และล้างแคชอัตโนมัติทุกครั้งเมื่อเข้าแอป ====================
-    function purgeBrowserCacheAndState() {
+    // ==================== ระบบรีเซ็ตตัวเองอัตโนมัติ 100% ทุกครั้งที่เข้าใช้งาน ====================
+    function fullAppResetAndPurge() {
       // 1. เคลียร์ CacheStorage API ของเบราว์เซอร์
       if ('caches' in window) {
         caches.keys().then((names) => {
@@ -2052,41 +2052,89 @@
         sessionStorage.clear();
       } catch(e){}
 
-      // 3. รีเซ็ตตัวนับเวลาและสถานะทั้งหมดให้เริ่มใหม่เอี่ยม 100%
-      resetLiveTimer();
-      resetSessionTimer();
+      // 3. หยุดการทำงานของตัวนับเวลาทั้งหมดทันที
+      if (liveTimerInterval) {
+        clearInterval(liveTimerInterval);
+        liveTimerInterval = null;
+      }
+      if (sessionTimerInterval) {
+        clearInterval(sessionTimerInterval);
+        sessionTimerInterval = null;
+      }
+
+      // 4. รีเซ็ตตัวแปรสถานะทั้งหมดกลับสู่ค่าเริ่มต้นเอี่ยมอ่อง
+      liveSeconds = 0;
+      isLiveTimerRunning = false;
+      isSessionRunning = false;
+      announcedMilestones.clear();
+
+      // 5. ปิดเสียง 40Hz หากเปิดค้างไว้
       stop40HzTone();
-      evaluateMetabolicAndGERD(0);
+
+      // 6. ปิดหน้าต่างป๊อปอัปและคู่มือทั้งหมดที่อาจเปิดค้างอยู่
+      closePopupModal();
+      closeManualModal();
+
+      // 7. รีเซ็ตหน้าจอแสดงผลตัวนับเวลาสด (Live Timer UI)
+      const liveTimerDisplay = document.getElementById('live-timer-display');
+      if (liveTimerDisplay) liveTimerDisplay.innerText = "00:00";
+      const liveBtnText = document.getElementById('live-timer-btn-text');
+      if (liveBtnText) liveBtnText.innerText = "เริ่มนับ";
+
+      // 8. รีเซ็ตโหมดการจับเวลาเป็น "นับสด" (Auto Mode)
+      switchTimingMode('auto');
+      const timeSlider = document.getElementById('time-slider');
+      if (timeSlider) timeSlider.value = "20";
+      const timeVal = document.getElementById('time-val');
+      if (timeVal) timeVal.innerText = "20";
+
+      // 9. รีเซ็ตแท็บหลักกลับสู่หน้า "1. โปรแกรมลดง่วง & ต้านกรด (Pacer)"
+      switchMainTab('pacer');
+
+      // 10. รีเซ็ตมื้ออาหารกลับสู่ค่าเริ่มต้น: "ข้าว / แป้ง"
+      currentMeal = 'carb';
+      document.querySelectorAll('.m-btn').forEach(b => {
+        b.classList.remove('border-amber-500', 'bg-[#3d2417]', 'text-amber-100', 'font-bold');
+        b.classList.add('border-[#42291c]', 'bg-[#1a0f0a]', 'text-stone-300', 'font-semibold');
+      });
+      const mCarbBtn = document.getElementById('m-carb');
+      if (mCarbBtn) {
+        mCarbBtn.classList.remove('border-[#42291c]', 'bg-[#1a0f0a]', 'text-stone-300', 'font-semibold');
+        mCarbBtn.classList.add('border-amber-500', 'bg-[#3d2417]', 'text-amber-100', 'font-bold');
+      }
+      const mealBadge = document.getElementById('meal-badge');
+      if (mealBadge) mealBadge.innerText = mealTitles['carb'];
+
+      // 11. รีเซ็ตกิจกรรมเริ่มต้น: "กระดกส้นเท้า (SPU)" และตั้งเวลารอบใหม่
       selectActivity('spu');
+      resetSessionTimer();
+
+      // 12. ประเมินสถานะกลูโคสและกรดไหลย้อนกลับสู่จุดเริ่มต้น (0 นาที)
+      evaluateMetabolicAndGERD(0);
     }
 
-    // เมื่อเปิดแอปขึ้นมาจาก Back-Forward Cache ของมือถือ หรือเปิดหน้านี้ใหม่
-    window.addEventListener('pageshow', (event) => {
-      // หากพบว่าเปิดมาจากแคชที่ค้างไว้ (persisted = true) ให้รีโหลดหน้าจอใหม่สดทันที
-      if (event.persisted) {
-        window.location.reload();
-      } else {
-        purgeBrowserCacheAndState();
-      }
-    });
-
-    // เมื่อผู้ใช้สลับแอปไปทำอย่างอื่น แล้วสลับหน้าจอกลับเข้ามาที่แอปนี้
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') {
-        const lastHiddenTime = parseInt(sessionStorage.getItem('postmeal_last_hidden') || '0', 10);
-        const currentTime = Date.now();
-        // หากพักหน้าจอไปเกิน 2 นาที แล้วเปิดกลับเข้ามา ให้รีเฟรชหน้าจอใหม่เอี่ยมทันที
-        if (lastHiddenTime > 0 && (currentTime - lastHiddenTime > 120000)) {
-          window.location.reload();
-        }
-      } else {
-        sessionStorage.setItem('postmeal_last_hidden', Date.now().toString());
-      }
-    });
-
+    // ดักจับการเปิดแอปใหม่จากทุกทิศทาง:
+    // ก. เมื่อโหลดหน้าเว็บเสร็จ
     window.addEventListener('DOMContentLoaded', () => {
       initVisitCounter();
-      purgeBrowserCacheAndState();
+      fullAppResetAndPurge();
+    });
+
+    // ข. เมื่อเปิดแอปขึ้นมาจากประวัติแคชเบราว์เซอร์ หรือ Back-Forward Cache (เช่น มือถือกดกลับมา)
+    window.addEventListener('pageshow', (event) => {
+      fullAppResetAndPurge();
+    });
+
+    // ค. เมื่อผู้ใช้สลับหน้าจอกลับเข้ามาที่แอป (App Re-entry / Tab Focus)
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        fullAppResetAndPurge();
+      }
+    });
+
+    // ง. เมื่อหน้าต่างเบราว์เซอร์ได้รับโฟกัสอีกครั้ง (Window Focus)
+    window.addEventListener('focus', () => {
+      fullAppResetAndPurge();
     });
   </script>
 </body>
