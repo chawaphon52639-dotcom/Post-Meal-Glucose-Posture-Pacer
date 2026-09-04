@@ -5,10 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>โปรแกรมลดอาการง่วงหลังอาหาร และ ป้องกันกรดไหลย้อน - พัฒนาระบบโดย น้าราม</title>
   
-  <!-- ป้องกันเบราว์เซอร์จำแคชค้าง (Cache Buster) -->
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <!-- ป้องกันเบราว์เซอร์จำแคชค้าง (Ultra Cache Buster & No-Cache Directives) -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
+
+  <script>
+    // 1. เคลียร์แคชระบบ CacheStorage ทันทีตั้งแต่เสี้ยววินาทีแรกที่เริ่มโหลดหน้าเว็บ
+    if ('caches' in window) {
+      caches.keys().then(function(cacheNames) {
+        cacheNames.forEach(function(cacheName) {
+          caches.delete(cacheName);
+        });
+      });
+    }
+  </script>
 
   <meta name="theme-color" content="#140d09">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -200,6 +211,9 @@
           </span>
           <span class="inline-flex items-center gap-1 px-3.5 py-0.5 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-emerald-400 text-slate-950 text-[11px] font-black shadow-md tracking-wide">
             ✨ พัฒนาระบบโดย " น้าราม "
+          </span>
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#170e09] border border-amber-600/40 text-[10px] text-amber-300/90 font-medium">
+            ⚡ สดใหม่ ไร้แคชค้าง
           </span>
         </div>
         <h1 class="text-base sm:text-xl font-extrabold tracking-tight text-amber-50 mt-1.5 drop-shadow-sm">
@@ -2020,18 +2034,55 @@
       }
     }
 
-    // ป้องกันการค้างแคชในเบราว์เซอร์มือถือ
+    // ==================== ระบบรีเฟรชสดใหม่และล้างแคชอัตโนมัติทุกครั้งเมื่อเข้าแอป ====================
+    function purgeBrowserCacheAndState() {
+      // 1. เคลียร์ CacheStorage API ของเบราว์เซอร์
+      if ('caches' in window) {
+        caches.keys().then((names) => {
+          names.forEach((name) => caches.delete(name));
+        });
+      }
+      
+      // 2. ล้าง Session Storage ค้างเก่า
+      try {
+        sessionStorage.clear();
+      } catch(e){}
+
+      // 3. รีเซ็ตตัวนับเวลาและสถานะทั้งหมดให้เริ่มใหม่เอี่ยม 100%
+      resetLiveTimer();
+      resetSessionTimer();
+      stop40HzTone();
+      evaluateMetabolicAndGERD(0);
+      selectActivity('spu');
+    }
+
+    // เมื่อเปิดแอปขึ้นมาจาก Back-Forward Cache ของมือถือ หรือเปิดหน้านี้ใหม่
     window.addEventListener('pageshow', (event) => {
+      // หากพบว่าเปิดมาจากแคชที่ค้างไว้ (persisted = true) ให้รีโหลดหน้าจอใหม่สดทันที
       if (event.persisted) {
         window.location.reload();
+      } else {
+        purgeBrowserCacheAndState();
+      }
+    });
+
+    // เมื่อผู้ใช้สลับแอปไปทำอย่างอื่น แล้วสลับหน้าจอกลับเข้ามาที่แอปนี้
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        const lastHiddenTime = parseInt(sessionStorage.getItem('postmeal_last_hidden') || '0', 10);
+        const currentTime = Date.now();
+        // หากพักหน้าจอไปเกิน 2 นาที แล้วเปิดกลับเข้ามา ให้รีเฟรชหน้าจอใหม่เอี่ยมทันที
+        if (lastHiddenTime > 0 && (currentTime - lastHiddenTime > 120000)) {
+          window.location.reload();
+        }
+      } else {
+        sessionStorage.setItem('postmeal_last_hidden', Date.now().toString());
       }
     });
 
     window.addEventListener('DOMContentLoaded', () => {
       initVisitCounter();
-      resetLiveTimer();
-      evaluateMetabolicAndGERD(0);
-      selectActivity('spu');
+      purgeBrowserCacheAndState();
     });
   </script>
 </body>
