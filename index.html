@@ -2197,7 +2197,7 @@
     }
 
     /* ==========================================================================
-       ระบบ 1.1: AI ถ่ายรูปสแกนจานข้าว & คำนวณแคลอรี่ (รองรับกล้องตรง & พรีวิวแม่นยำ)
+       ระบบ 1.1: AI วิเคราะห์รูปภาพอาหาร & คำนวณแคลอรี่ (เน้นอัปโหลดรูปภาพ มาตรฐาน 100%)
        ========================================================================== */
     function openMealScanModal() {
       unlockAudioHardware();
@@ -2212,23 +2212,6 @@
         card.classList.remove('scale-95');
         card.classList.add('scale-100');
       }, 50);
-    }
-
-    // ฟังก์ชันสั่งเปิดกล้องและคลังภาพโดยตรง (รองรับทั้งการคลิกผ่านโค้ดและ label)
-    function triggerCameraCapture() {
-      const camInput = document.getElementById('meal-camera-input');
-      if (camInput) {
-        camInput.value = '';
-        camInput.click();
-      }
-    }
-
-    function triggerGalleryPick() {
-      const galInput = document.getElementById('meal-gallery-input');
-      if (galInput) {
-        galInput.value = '';
-        galInput.click();
-      }
     }
 
     function closeMealScanModal() {
@@ -2249,15 +2232,13 @@
       }
     }
 
-    // ฟังก์ชันรีเซ็ตและคืนค่าสถานะหน้าต่างสแกนให้สดใหม่ 100% พร้อมสแกนใหม่ได้ทันที
+    // ฟังก์ชันรีเซ็ตเมนูสแกนอาหารให้สดใหม่ 100% พร้อมเลือกรูปใหม่ได้ทันที
     function resetMealScanState() {
       currentMealBase64 = null;
       detectedMealResult = null;
 
-      const camInput = document.getElementById('meal-camera-input');
-      const galInput = document.getElementById('meal-gallery-input');
-      if (camInput) camInput.value = '';
-      if (galInput) galInput.value = '';
+      const photoInput = document.getElementById('meal-photo-input');
+      if (photoInput) photoInput.value = '';
 
       const previewContainer = document.getElementById('meal-preview-container');
       const previewImg = document.getElementById('meal-preview-img');
@@ -2272,7 +2253,7 @@
       if (resultCard) resultCard.classList.add('hidden');
     }
 
-    // รับไฟล์ภาพเมื่อถ่ายเสร็จหรือเลือกเสร็จ แสดงพรีวิวทันที และบีบอัดภาพเพื่อวิเคราะห์ (เสถียร 100% บนมือถือ)
+    // รับไฟล์รูปภาพอาหารจากโทรศัพท์มือถือหรือคอมพิวเตอร์
     function handleMealPhotoSelected(event) {
       const file = event.target.files?.[0];
       if (!file) return;
@@ -2283,7 +2264,7 @@
       const previewContainer = document.getElementById('meal-preview-container');
       const placeholder = document.getElementById('meal-placeholder');
 
-      // 1. อ่านไฟล์ด้วย FileReader เพื่อแสดงภาพพรีวิวทันที ไม่ติดข้อจำกัด Blob URL บนมือถือ
+      // 1. แสดงรูปภาพพรีวิวทันที
       const reader = new FileReader();
       reader.onload = function(e) {
         const fullDataUrl = e.target.result;
@@ -2291,11 +2272,10 @@
         if (previewContainer) previewContainer.classList.remove('hidden');
         if (placeholder) placeholder.classList.add('hidden');
 
-        // 2. ส่งภาพเข้ากระบวนการบีบอัดและส่งให้ AI วิเคราะห์
+        // 2. บีบอัดขนาดภาพและส่งให้ AI วิเคราะห์
         compressAndAnalyzeDataUrl(fullDataUrl);
       };
       reader.onerror = function() {
-        // แผนสำรองกรณีเครื่องบล็อก FileReader
         try {
           const objUrl = URL.createObjectURL(file);
           if (previewImg) previewImg.src = objUrl;
@@ -2309,7 +2289,7 @@
       reader.readAsDataURL(file);
     }
 
-    // บีบอัดขนาดรูปภาพจากกล้องความละเอียดสูง (เช่น 50MP-200MP บน Samsung S24) ให้เบาและส่งวิเคราะห์ไว
+    // บีบอัดขนาดรูปภาพให้พอดีกับ AI (เพื่อความเร็วและประหยัดเน็ตมือถือ)
     function compressAndAnalyzeDataUrl(dataUrl) {
       const stateBox = document.getElementById('meal-analyzing-state');
       const resultCard = document.getElementById('meal-result-card');
@@ -2342,7 +2322,6 @@
           currentMealMimeType = 'image/jpeg';
           analyzeMealWithGeminiVision();
         } catch(err) {
-          // หาก Canvas มีปัญหา ให้ใช้ base64 ดั้งเดิมทันที
           currentMealBase64 = dataUrl.split(',')[1];
           analyzeMealWithGeminiVision();
         }
