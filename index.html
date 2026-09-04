@@ -2630,5 +2630,90 @@
       fullAppResetAndPurge();
     });
   </script>
+
+  <!-- ระบบเชื่อมโยงฐานข้อมูลคลาวด์ส่วนกลางแบบเรียลไทม์ (Cloud Real-Time Visitor Sync) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'postmeal-pacer-app';
+    const BASE_INITIAL_VISITS = 2548; // ยอดฐานเริ่มต้นสองพันกว่าตามสถิติจริงของน้าราม
+
+    async function setupRealtimeVisitorSync() {
+      if (typeof __firebase_config === 'undefined') {
+        return;
+      }
+
+      try {
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // เข้าสู่ระบบเพื่อสิทธิ์การเข้าถึงข้อมูลคลาวด์
+        let user = null;
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+        user = auth.currentUser;
+        if (!user) return;
+
+        // ชี้ไปยังเอกสารส่วนกลาง: /artifacts/{appId}/public/data/analytics/visitors
+        const counterDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'analytics', 'visitors');
+
+        // นับเพิ่ม 1 ครั้งต่อ 1 เซสชัน (เปิดแอป 1 รอบ นับ 1 ครั้ง ไม่นับเบิ้ลเวลากดรีเฟรช)
+        let hasCountedThisSession = false;
+        try {
+          hasCountedThisSession = sessionStorage.getItem('postmeal_cloud_session_counted') === 'true';
+        } catch(e) {}
+
+        if (!hasCountedThisSession) {
+          try {
+            sessionStorage.setItem('postmeal_cloud_session_counted', 'true');
+          } catch(e) {}
+
+          try {
+            const docSnap = await getDoc(counterDocRef);
+            if (!docSnap.exists()) {
+              await setDoc(counterDocRef, { totalVisits: BASE_INITIAL_VISITS + 1 });
+            } else {
+              await updateDoc(counterDocRef, { totalVisits: increment(1) });
+            }
+          } catch(err) {
+            try {
+              await setDoc(counterDocRef, { totalVisits: BASE_INITIAL_VISITS + 1 }, { merge: true });
+            } catch(e) {}
+          }
+        }
+
+        // ฟังการอัปเดตแบบเรียลไทม์ (onSnapshot): ทั้งคอมพิวเตอร์และมือถือจะเปลี่ยนตัวเลขพร้อมกันทันที
+        onSnapshot(counterDocRef, (docSnap) => {
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            const count = data.totalVisits || BASE_INITIAL_VISITS;
+            const counterBadge = document.getElementById('visitor-count-badge');
+            if (counterBadge) {
+              counterBadge.innerText = Number(count).toLocaleString('th-TH');
+            }
+          }
+        }, (error) => {
+          console.error("Cloud visitor sync error:", error);
+        });
+
+      } catch (err) {
+        console.warn("Real-time cloud counter note:", err);
+      }
+    }
+
+    // เริ่มการซิงก์เมื่อหน้าเว็บโหลดเสร็จ
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupRealtimeVisitorSync);
+    } else {
+      setupRealtimeVisitorSync();
+    }
+  </script>
 </body>
 </html>
