@@ -1319,6 +1319,8 @@
     let currentMealBase64 = null;
     let currentMealMimeType = 'image/jpeg';
     let detectedMealResult = null;
+    let mealCameraStream = null;
+    let currentCameraFacing = 'environment';
 
     const mealTitles = {
       carb: '🍚 ข้าว / แป้ง',
@@ -2209,10 +2211,113 @@
       setTimeout(() => {
         card.classList.remove('scale-95');
         card.classList.add('scale-100');
-      }, 10);
+        // เปิดกล้องสดทันทีทั้งบนมือถือและคอมพิวเตอร์
+        startLiveCameraStream();
+      }, 50);
+    }
+
+    async function startLiveCameraStream() {
+      stopLiveCameraStream();
+
+      const liveContainer = document.getElementById('meal-live-container');
+      const placeholder = document.getElementById('meal-placeholder');
+      const previewContainer = document.getElementById('meal-preview-container');
+      const video = document.getElementById('meal-live-video');
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showNativeCameraFallback();
+        return;
+      }
+
+      try {
+        const constraints = {
+          video: {
+            facingMode: { ideal: currentCameraFacing },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          },
+          audio: false
+        };
+
+        mealCameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+        if (video) {
+          video.srcObject = mealCameraStream;
+          video.setAttribute('playsinline', 'true');
+          video.setAttribute('webkit-playsinline', 'true');
+          await video.play();
+
+          if (liveContainer) liveContainer.classList.remove('hidden');
+          if (placeholder) placeholder.classList.add('hidden');
+          if (previewContainer) previewContainer.classList.add('hidden');
+        }
+      } catch (err) {
+        console.warn("Live camera auto-start fallback to native camera button:", err);
+        showNativeCameraFallback();
+      }
+    }
+
+    function captureLivePhoto() {
+      const video = document.getElementById('meal-live-video');
+      if (!video || !mealCameraStream) return;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      stopLiveCameraStream();
+
+      // แสดงภาพพรีวิว
+      const previewImg = document.getElementById('meal-preview-img');
+      const previewContainer = document.getElementById('meal-preview-container');
+      const liveContainer = document.getElementById('meal-live-container');
+      const placeholder = document.getElementById('meal-placeholder');
+
+      if (previewImg) previewImg.src = dataUrl;
+      if (previewContainer) previewContainer.classList.remove('hidden');
+      if (liveContainer) liveContainer.classList.add('hidden');
+      if (placeholder) placeholder.classList.add('hidden');
+
+      currentMealBase64 = dataUrl.split(',')[1];
+      currentMealMimeType = 'image/jpeg';
+      analyzeMealWithGeminiVision();
+    }
+
+    async function switchCameraFacing() {
+      currentCameraFacing = (currentCameraFacing === 'environment') ? 'user' : 'environment';
+      await startLiveCameraStream();
+    }
+
+    function stopLiveCameraStream() {
+      if (mealCameraStream) {
+        mealCameraStream.getTracks().forEach(track => track.stop());
+        mealCameraStream = null;
+      }
+      const video = document.getElementById('meal-live-video');
+      if (video) {
+        video.srcObject = null;
+      }
+    }
+
+    function stopLiveCameraStreamAndShowFallback() {
+      stopLiveCameraStream();
+      showNativeCameraFallback();
+    }
+
+    function showNativeCameraFallback() {
+      const liveContainer = document.getElementById('meal-live-container');
+      const placeholder = document.getElementById('meal-placeholder');
+      const previewContainer = document.getElementById('meal-preview-container');
+
+      if (liveContainer) liveContainer.classList.add('hidden');
+      if (previewContainer) previewContainer.classList.add('hidden');
+      if (placeholder) placeholder.classList.remove('hidden');
     }
 
     function closeMealScanModal() {
+      stopLiveCameraStream();
       resetMealScanState();
 
       const modal = document.getElementById('ai-meal-modal');
@@ -2230,28 +2335,9 @@
       }
     }
 
-    // ฟังก์ชันสั่งเปิดกล้องมือถือโดยตรงระดับฮาร์ดแวร์ (Direct Hardware Camera Launcher)
-    function triggerCameraCapture() {
-      unlockAudioHardware();
-      const input = document.getElementById('meal-camera-input');
-      if (input) {
-        input.value = '';
-        input.click();
-      }
-    }
-
-    // ฟังก์ชันสั่งเปิดเลือกรูปจากคลังภาพ (Gallery Picker Launcher)
-    function triggerGalleryPick() {
-      unlockAudioHardware();
-      const input = document.getElementById('meal-gallery-input');
-      if (input) {
-        input.value = '';
-        input.click();
-      }
-    }
-
     // ฟังก์ชันรีเซ็ตและคืนค่าสถานะหน้าต่างสแกนให้สดใหม่ 100% พร้อมสแกนใหม่ได้ทันที
     function resetMealScanState() {
+      stopLiveCameraStream();
       currentMealBase64 = null;
       detectedMealResult = null;
 
@@ -2262,12 +2348,14 @@
 
       const previewContainer = document.getElementById('meal-preview-container');
       const previewImg = document.getElementById('meal-preview-img');
+      const liveContainer = document.getElementById('meal-live-container');
       const placeholder = document.getElementById('meal-placeholder');
       const stateBox = document.getElementById('meal-analyzing-state');
       const resultCard = document.getElementById('meal-result-card');
 
       if (previewImg) previewImg.src = '';
       if (previewContainer) previewContainer.classList.add('hidden');
+      if (liveContainer) liveContainer.classList.add('hidden');
       if (placeholder) placeholder.classList.remove('hidden');
       if (stateBox) stateBox.classList.add('hidden');
       if (resultCard) resultCard.classList.add('hidden');
@@ -2278,19 +2366,22 @@
       const file = event.target.files?.[0];
       if (!file) return;
 
+      stopLiveCameraStream();
       currentMealMimeType = file.type || 'image/jpeg';
 
-      // 1. แสดงภาพพรีวิวทันทีด้วย Object URL (Instant & 100% Guaranteed Preview)
+      // 1. แสดงภาพพรีวิวทันทีด้วย Object URL
       const previewImg = document.getElementById('meal-preview-img');
       const previewContainer = document.getElementById('meal-preview-container');
       const placeholder = document.getElementById('meal-placeholder');
+      const liveContainer = document.getElementById('meal-live-container');
 
       const objectUrl = URL.createObjectURL(file);
       previewImg.src = objectUrl;
       previewContainer.classList.remove('hidden');
-      placeholder.classList.add('hidden');
+      if (placeholder) placeholder.classList.add('hidden');
+      if (liveContainer) liveContainer.classList.add('hidden');
 
-      // 2. บีบอัดขนาดภาพให้พอดี (Optimize Payload) แล้วส่งวิเคราะห์ทันที
+      // 2. บีบอัดขนาดภาพให้พอดีแล้วส่งวิเคราะห์ทันที
       compressImageAndAnalyze(file);
     }
 
@@ -2553,6 +2644,8 @@
           names.forEach((name) => caches.delete(name));
         });
       }
+
+      stopLiveCameraStream();
 
       if (liveTimerInterval) {
         clearInterval(liveTimerInterval);
