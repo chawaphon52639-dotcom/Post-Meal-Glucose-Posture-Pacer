@@ -2033,16 +2033,29 @@
     function toggleLiveTimer() {
       unlockAudioHardware();
       const btnText = document.getElementById('live-timer-btn-text');
+      
       if (!isLiveTimerRunning) {
+        // หากผู้ใช้ยังไม่ได้เปิดการแจ้งเตือนพับจอ ให้แสดงหน้าต่างถามเปิดสิทธิ์ทันที
+        if ("Notification" in window && Notification.permission === "default") {
+          openNotificationPermissionModal();
+        }
+
         isLiveTimerRunning = true;
         btnText.innerText = "พัก";
 
+        liveTimerStartTime = Date.now() - (liveSeconds * 1000);
+
         liveTimerInterval = setInterval(() => {
-          liveSeconds++;
+          const now = Date.now();
+          liveSeconds = Math.floor((now - liveTimerStartTime) / 1000);
+
           const mins = Math.floor(liveSeconds / 60);
           const secs = liveSeconds % 60;
-          document.getElementById('live-timer-display').innerText = 
-            `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+          
+          const displayEl = document.getElementById('live-timer-display');
+          if (displayEl) {
+            displayEl.innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+          }
 
           if (timingMode === 'auto') {
             passedTime = mins;
@@ -2064,12 +2077,24 @@
       if (mins === 25 && !announcedMilestones.has(25)) {
         announcedMilestones.add(25);
         triggerMilestonePopup(25);
+        sendSystemNotification(
+          "⚠️ นาทีที่ 25: น้ำตาลในเลือดพุ่งสูงสุด!",
+          "แนะนำให้เริ่มกระดกส้นเท้า (Soleus Push-up) เพื่อดึงน้ำตาลเข้ากล้ามเนื้อน่องทันทีครับ"
+        );
       } else if (mins === 45 && !announcedMilestones.has(45)) {
         announcedMilestones.add(45);
         triggerMilestonePopup(45);
+        sendSystemNotification(
+          "⚡ นาทีที่ 45: อาหารเริ่มย่อยลงสู่ลำไส้เล็ก",
+          "ระบบย่อยทำงานได้ดี ความเสี่ยงกรดไหลย้อนเริ่มลดลงแล้ว ให้นั่งตัวตรงต่ออีกสักนิดครับ"
+        );
       } else if (mins === 60 && !announcedMilestones.has(60)) {
         announcedMilestones.add(60);
         triggerMilestonePopup(60);
+        sendSystemNotification(
+          "✅ ครบ 60 นาที: พ้นระยะวิกฤตของกรดไหลย้อนแล้ว!",
+          "กระเพาะอาหารเริ่มว่างลงแล้ว ร่างกายปรับสมดุลเรียบร้อย สามารถเปลี่ยนอิริยาบถได้ครับ"
+        );
       }
     }
 
