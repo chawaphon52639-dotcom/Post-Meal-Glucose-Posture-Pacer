@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>โปรแกรมลดอาการง่วงหลังอาหาร และ ป้องกันกรดไหลย้อน</title>
+  <title>โปรแกรมลดอาการง่วงหลังอาหาร และ ป้องกันกรดไหลย้อน - พัฒนาระบบโดย น้าราม</title>
   
   <!-- ตั้งค่าแอปพลิเคชันบนมือถือ (PWA & Standalone) -->
-  <meta name="theme-color" content="#1c130e">
+  <meta name="theme-color" content="#140d09">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="PostMeal">
   <meta name="mobile-web-app-capable" content="yes">
 
   <!-- ไอคอนแอปพลิเคชันแบบ Vector SVG -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%232e1a12'/><text y='68' x='50' font-size='56' text-anchor='middle'>🦶</text></svg>">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%232e1a12'/><text y='68' x='50' font-size='56' text-anchor='middle'>🦶</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%23241610'/><text y='68' x='50' font-size='56' text-anchor='middle'>🦶</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%23241610'/><text y='68' x='50' font-size='56' text-anchor='middle'>🦶</text></svg>">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -60,7 +60,6 @@
     .calf-glow-animated {
       animation: calfMuscleGlowAmber 1.2s infinite cubic-bezier(0.4, 0.0, 0.2, 1);
     }
-
     /* 2. แอนิเมชันปอดและกะบังลม */
     @keyframes lungBreathCycle {
       0% { transform: scale(0.9); opacity: 0.85; }
@@ -139,15 +138,11 @@
         </h1>
       </div>
 
-      <!-- ปุ่มควบคุมระบบแจ้งเตือนป๊อปอัป และปุ่มทดสอบ -->
+      <!-- ปุ่มควบคุมสวิตช์เปิด/ปิดเสียงเตือนของระบบ (ตัดปุ่มทดสอบมุมขวาบนออกแล้วตามคำสั่ง) -->
       <div class="flex items-center gap-2 self-end sm:self-center flex-wrap">
         <button type="button" id="sound-toggle-btn" onclick="toggleAlertSound()" class="px-3 py-1.5 rounded-xl bg-[#2e1c12] hover:bg-[#3d2518] border border-amber-600/50 text-amber-200 text-xs font-bold active:scale-95 transition-all shadow-sm flex items-center gap-1.5">
           <span id="sound-status-icon">🔔</span>
           <span id="sound-status-text">เสียงเตือน: เปิด</span>
-        </button>
-        <button type="button" onclick="testPopupAlert()" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black active:scale-95 transition-all shadow-md flex items-center gap-1.5" title="ทดสอบหน้าต่างป๊อปอัป">
-          <span>✨</span>
-          <span>ทดสอบป๊อปอัป</span>
         </button>
       </div>
     </header>
@@ -187,7 +182,6 @@
           </button>
         </div>
       </section>
-
       <!-- แท็บสลับหน้าจอสำหรับโทรศัพท์มือถือ -->
       <div class="flex sm:hidden bg-[#140b07] p-1 rounded-xl border border-[#382115] text-xs font-bold">
         <button type="button" id="m-tab-timer" onclick="switchMobileSubTab('timer')" class="flex-1 py-2 rounded-lg bg-[#0c382b] text-emerald-100 border border-emerald-600/50 shadow-xs transition-all flex items-center justify-center gap-1">
@@ -197,6 +191,7 @@
           <span>🏃</span> 5 กิจกรรมแนะนำ
         </button>
       </div>
+
       <!-- โครงสร้าง 2 คอลัมน์เคียงข้างกัน: ซ้ายเขียวเข้ม (Forest) / ขวาน้ำตาลเข้ม (Mocha) -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
         
@@ -238,7 +233,6 @@
                 </button>
               </div>
             </div>
-
             <!-- โหมดปรับเวลาเอง -->
             <div id="panel-manual" class="space-y-2 hidden pt-0.5">
               <div class="flex justify-between items-center text-xs">
@@ -283,7 +277,7 @@
             <span class="text-emerald-800">•</span>
             <span class="flex items-center gap-1.5 font-medium"><span class="text-sky-400 font-bold">💧</span> จิบน้ำอุณหภูมิห้อง</span>
           </div>
-          <!-- การ์ดศูนย์กลางระบบป๊อปอัปแจ้งเตือนอัจฉริยะ (แทนที่กล่องคำบรรยายเสียงเดิม) -->
+          <!-- การ์ดศูนย์กลางระบบป๊อปอัปแจ้งเตือนอัจฉริยะ -->
           <div class="bg-[#241610] p-3.5 rounded-2xl border border-amber-700/60 text-xs text-amber-100 space-y-2.5 shadow-sm">
             <div class="flex items-center justify-between border-b border-amber-800/70 pb-2">
               <span class="font-extrabold text-amber-300 flex items-center gap-1.5 text-xs">
@@ -294,37 +288,48 @@
               </span>
             </div>
 
-            <!-- รายการกำหนดการแจ้งเตือน 3 ช่วงเวลาสำคัญ -->
+            <!-- รายการกำหนดการแจ้งเตือน 3 ช่วงเวลาสำคัญ (แตะปุ่มเพื่อดูป๊อปอัปแต่ละช่วงเวลาได้ทันที) -->
             <div class="space-y-1.5 text-[11px] text-stone-200">
               <div class="flex items-center justify-between bg-[#140b07] px-2.5 py-1.5 rounded-xl border border-amber-900/60">
                 <span class="flex items-center gap-1.5">
                   <span class="text-amber-400 font-bold">⏱️ นาทีที่ 25:</span>
                   <span>ช่วงน้ำตาลในเลือดพุ่งสูงสุด</span>
                 </span>
-                <span class="text-[10px] font-bold text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-700/50">ป๊อปอัปเตือน</span>
+                <button type="button" onclick="triggerMilestonePopup(25)" class="text-[10px] font-bold text-amber-200 bg-amber-950/80 hover:bg-amber-900 px-2 py-0.5 rounded border border-amber-700/70 active:scale-95 transition-all flex items-center gap-1">
+                  <span>🔔</span> แสดงป๊อปอัป
+                </button>
               </div>
               <div class="flex items-center justify-between bg-[#140b07] px-2.5 py-1.5 rounded-xl border border-amber-900/60">
                 <span class="flex items-center gap-1.5">
                   <span class="text-amber-400 font-bold">⏱️ นาทีที่ 45:</span>
                   <span>อาหารเริ่มย่อยลงสู่ลำไส้เล็ก</span>
                 </span>
-                <span class="text-[10px] font-bold text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-700/50">ป๊อปอัปเตือน</span>
+                <button type="button" onclick="triggerMilestonePopup(45)" class="text-[10px] font-bold text-amber-200 bg-amber-950/80 hover:bg-amber-900 px-2 py-0.5 rounded border border-amber-700/70 active:scale-95 transition-all flex items-center gap-1">
+                  <span>🔔</span> แสดงป๊อปอัป
+                </button>
               </div>
               <div class="flex items-center justify-between bg-[#140b07] px-2.5 py-1.5 rounded-xl border border-amber-900/60">
                 <span class="flex items-center gap-1.5">
                   <span class="text-emerald-400 font-bold">⏱️ นาทีที่ 60:</span>
                   <span>พ้นระยะวิกฤตของกรดไหลย้อน</span>
                 </span>
-                <span class="text-[10px] font-bold text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-700/50">ป๊อปอัปเตือน</span>
+                <button type="button" onclick="triggerMilestonePopup(60)" class="text-[10px] font-bold text-emerald-300 bg-emerald-950/80 hover:bg-emerald-900 px-2 py-0.5 rounded border border-emerald-700/70 active:scale-95 transition-all flex items-center gap-1">
+                  <span>🔔</span> แสดงป๊อปอัป
+                </button>
               </div>
             </div>
 
-            <!-- ปุ่มแตะทดสอบป๊อปอัปบนหน้าจอโดยตรง -->
-            <div class="pt-1 flex items-center justify-between gap-2">
-              <span class="text-[10.5px] text-amber-300/80">
-                ทดสอบหน้าต่างและเสียงระฆัง:
-              </span>
-              <button type="button" onclick="testPopupAlert()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black active:scale-95 transition-all shadow-md flex items-center gap-1.5">
+            <!-- ปุ่มแตะทดสอบป๊อปอัปตามเวลาที่เลือกได้ (แก้ไขให้กดแล้วเด้งจริง 100%) -->
+            <div class="pt-1 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 border-t border-amber-900/50">
+              <div class="flex items-center gap-1.5 text-[10.5px] text-amber-200/90">
+                <span>เลือกช่วงเวลา:</span>
+                <select id="test-milestone-select" class="bg-[#140b07] text-amber-300 border border-amber-700/80 rounded-lg px-2 py-1 text-[11px] font-bold outline-none cursor-pointer">
+                  <option value="25">นาทีที่ 25 (น้ำตาลพีค)</option>
+                  <option value="45">นาทีที่ 45 (ย่อยสู่ลำไส้)</option>
+                  <option value="60">นาทีที่ 60 (พ้นระยะวิกฤต)</option>
+                </select>
+              </div>
+              <button type="button" onclick="testPopupAlert()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black active:scale-95 transition-all shadow-md flex items-center justify-center gap-1.5">
                 <span>✨</span>
                 <span>แตะทดสอบป๊อปอัปทันที</span>
               </button>
@@ -337,7 +342,7 @@
           
           <div class="bg-[#241610] p-3.5 rounded-2xl border border-amber-700/60 shadow-sm space-y-2.5">
             
-            <!-- ส่วนเลือกกิจกรรม 5 รูปแบบ -->
+            <!-- ส่วนเลือกกิจกรรม 5 รูปแบบ: แตะแล้วเด้งป๊อปอัปทันที -->
             <div class="space-y-2">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-bold text-amber-100 flex items-center gap-1.5">
@@ -348,25 +353,25 @@
                 </span>
               </div>
               
-              <!-- เมนูกิจกรรม 5 แบบ กดเลือกได้ทันที ไร้เสียงกดแทรกกวนใจ -->
+              <!-- เมนูกิจกรรม 5 แบบ กดเลือกแล้วป๊อปอัปจะเด้งขึ้นมาทันที -->
               <div class="grid grid-cols-5 gap-1.5 text-center">
-                <button type="button" onclick="selectActivity('spu')" id="act-btn-spu" class="act-btn p-2 rounded-xl border-2 border-amber-500 bg-[#3d2417] text-white transition-all flex flex-col items-center gap-0.5 shadow-md">
+                <button type="button" onclick="clickActivityButton('spu')" id="act-btn-spu" class="act-btn p-2 rounded-xl border-2 border-amber-500 bg-[#3d2417] text-white transition-all flex flex-col items-center gap-0.5 shadow-md">
                   <span class="text-base">🦶</span>
                   <span class="text-[9.5px] font-bold leading-tight">กระดกส้น</span>
                 </button>
-                <button type="button" onclick="selectActivity('breath')" id="act-btn-breath" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
+                <button type="button" onclick="clickActivityButton('breath')" id="act-btn-breath" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
                   <span class="text-base">🫁</span>
                   <span class="text-[9.5px] font-medium leading-tight">กะบังลม</span>
                 </button>
-                <button type="button" onclick="selectActivity('stretch')" id="act-btn-stretch" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
+                <button type="button" onclick="clickActivityButton('stretch')" id="act-btn-stretch" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
                   <span class="text-base">🧘</span>
                   <span class="text-[9.5px] font-medium leading-tight">ยืดอกเปิด</span>
                 </button>
-                <button type="button" onclick="selectActivity('walk')" id="act-btn-walk" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
+                <button type="button" onclick="clickActivityButton('walk')" id="act-btn-walk" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
                   <span class="text-base">🚶</span>
                   <span class="text-[9.5px] font-medium leading-tight">เดินช้า</span>
                 </button>
-                <button type="button" onclick="selectActivity('ankle')" id="act-btn-ankle" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
+                <button type="button" onclick="clickActivityButton('ankle')" id="act-btn-ankle" class="act-btn p-2 rounded-xl border-2 border-[#45281a] bg-[#170e0a] text-stone-300 hover:bg-[#2b1910] transition-all flex flex-col items-center gap-0.5">
                   <span class="text-base">🔄</span>
                   <span class="text-[9.5px] font-medium leading-tight">หมุนข้อเท้า</span>
                 </button>
@@ -427,7 +432,6 @@
                   จังหวะ: <span class="font-bold text-teal-300">หายใจเข้าท้องพอง (4 วิ) ➔ ผ่อนออกท้องยุบ (6 วิ) หนีบหูรูดกระเพาะ</span>
                 </div>
               </div>
-
               <!-- 3. ภาพยืดอกเปิดแนวกระดูกสันหลัง -->
               <div id="vis-stretch" class="w-full hidden flex-col items-center justify-center space-y-1">
                 <div class="relative w-36 h-20 flex items-center justify-center spine-stretch-animated">
@@ -1135,14 +1139,59 @@
     function handlePopupAction() {
       if (currentPopupTargetActivity) {
         selectActivity(currentPopupTargetActivity);
-        // สลับมุมมองมือถือไปที่แท็บกิจกรรม
         switchMobileSubTab('activity');
       }
       closePopupModal();
-      // หากยังไม่ได้เริ่มจับเวลา ให้เริ่มจับเวลากิจกรรมทันที
       if (!isSessionRunning) {
         toggleSessionTimer();
       }
+    }
+
+    // ฟังก์ชันสั่งเด้งป๊อปอัปตามช่วงเวลาสำคัญ (นาทีที่ 25, 45, 60)
+    function triggerMilestonePopup(mins) {
+      unlockAudioHardware();
+      if (mins === 25) {
+        const config = activityConfigs[currentActivity];
+        openPopupModal({
+          icon: config.icon,
+          badge: '⚠️ ช่วงวิกฤต (นาทีที่ 25)',
+          title: 'น้ำตาลในเลือดพุ่งสูงสุด (Peak Surge)',
+          desc: `ขณะนี้น้ำตาลในเลือดกำลังแตะระดับสูงสุด แนะนำให้เริ่มทำ <b>${config.title}</b> ทันที เพื่อดึงน้ำตาลไปเผาผลาญและแก้อาการง่วงนอนครับ`,
+          actionText: 'เริ่มจับเวลาทำทันที',
+          actionIcon: '▶',
+          targetActivity: currentActivity,
+          soundType: 'alert'
+        });
+      } else if (mins === 45) {
+        openPopupModal({
+          icon: '⚡',
+          badge: '⏱️ ผ่านไป 45 นาทีแล้ว',
+          title: 'อาหารเริ่มย่อยลงสู่ลำไส้เล็ก',
+          desc: `ระบบย่อยอาหารกำลังทำงานได้อย่างราบรื่น ความเสี่ยงกรดไหลย้อนลดลงแล้ว ให้นั่งยืดตัวตรงต่ออีกสักนิดนะครับ`,
+          actionText: 'รับทราบ',
+          actionIcon: '✓',
+          targetActivity: null,
+          soundType: 'alert'
+        });
+      } else if (mins === 60) {
+        openPopupModal({
+          icon: '✅',
+          badge: '🎉 ครบ 1 ชั่วโมงแล้ว',
+          title: 'พ้นระยะอันตรายของกรดไหลย้อนแล้ว',
+          desc: `กระเพาะอาหารเริ่มว่างลงแล้วครับ ร่างกายปรับสมดุลพลังงานได้อย่างยอดเยี่ยม คุณสามารถเปลี่ยนอิริยาบถและทำงานต่อได้อย่างสบายใจครับ`,
+          actionText: 'ยอดเยี่ยมมาก',
+          actionIcon: '✓',
+          targetActivity: null,
+          soundType: 'success'
+        });
+      }
+    }
+
+    // ฟังก์ชันสำหรับปุ่ม "แตะทดสอบป๊อปอัปทันที" (ดึงค่าจากตัวเลือกที่ผู้ใช้ตั้งไว้)
+    function testPopupAlert() {
+      const select = document.getElementById('test-milestone-select');
+      const chosenMin = select ? parseInt(select.value, 10) : 25;
+      triggerMilestonePopup(chosenMin);
     }
 
     // ฟังก์ชันเมื่อผู้ใช้คลิกเลือกกิจกรรม: เปลี่ยนสถานะ และเด้งป๊อปอัปแนะนำวิธีทำทันที
@@ -1445,15 +1494,20 @@
 
       document.getElementById('meal-badge').innerText = mealTitles[m];
 
+      // กำหนดกิจกรรมที่เหมาะสมกับมื้ออาหาร
+      let targetAct = 'spu';
       if (m === 'carb') {
-        selectActivity('spu');
+        targetAct = 'spu';
       } else if (m === 'protein') {
-        selectActivity('breath');
+        targetAct = 'breath';
       } else if (m === 'heavy') {
-        selectActivity('walk');
+        targetAct = 'walk';
       }
 
       evaluateMetabolicAndGERD(passedTime);
+
+      // เมื่อแตะเลือกมื้ออาหาร จะเด้งป๊อปอัปของกิจกรรมที่ตรงกันขึ้นมาโชว์อัตโนมัติทันที
+      clickActivityButton(targetAct);
     }
 
     function switchTimingMode(mode) {
@@ -1637,7 +1691,6 @@
         });
       }
     }
-
     function resetLiveTimer() {
       if (liveTimerInterval) clearInterval(liveTimerInterval);
       isLiveTimerRunning = false;
