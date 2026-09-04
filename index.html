@@ -1852,19 +1852,6 @@
         isLiveTimerRunning = true;
         btnText.innerText = "พัก";
 
-        if (liveSeconds === 0) {
-          openPopupModal({
-            icon: '🍽️',
-            badge: '⏱️ เริ่มนับเวลาหลังอาหาร',
-            title: 'นาทีทองป้องกันกรดไหลย้อน',
-            desc: `ระบบเริ่มนับเวลาแล้วครับ ในช่วง 60 นาทีแรก <b>ห้ามนอนราบหรือฟุบโต๊ะทำงานเด็ดขาด</b> ให้นั่งยืดตัวตรงเพื่อป้องกันกรดไหลย้อนนะครับ`,
-            actionText: 'เข้าใจแล้ว',
-            actionIcon: '✓',
-            targetActivity: null,
-            soundType: 'alert'
-          });
-        }
-
         liveTimerInterval = setInterval(() => {
           liveSeconds++;
           const mins = Math.floor(liveSeconds / 60);
@@ -1948,8 +1935,16 @@
       }
     }
 
+    // ป้องกันการค้างแคชในเบราว์เซอร์มือถือ (รีเฟรชใหม่อัตโนมัติเมื่อย้อนกลับมาเปิดแอป)
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    });
+
     window.addEventListener('DOMContentLoaded', () => {
       initVisitCounter();
+      resetLiveTimer();
       evaluateMetabolicAndGERD(0);
       selectActivity('spu');
     });
