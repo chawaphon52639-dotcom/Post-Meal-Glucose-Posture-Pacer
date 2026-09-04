@@ -2211,113 +2211,27 @@
       setTimeout(() => {
         card.classList.remove('scale-95');
         card.classList.add('scale-100');
-        // เปิดกล้องสดทันทีทั้งบนมือถือและคอมพิวเตอร์
-        startLiveCameraStream();
       }, 50);
     }
 
-    async function startLiveCameraStream() {
-      stopLiveCameraStream();
-
-      const liveContainer = document.getElementById('meal-live-container');
-      const placeholder = document.getElementById('meal-placeholder');
-      const previewContainer = document.getElementById('meal-preview-container');
-      const video = document.getElementById('meal-live-video');
-
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        showNativeCameraFallback();
-        return;
-      }
-
-      try {
-        const constraints = {
-          video: {
-            facingMode: { ideal: currentCameraFacing },
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-          },
-          audio: false
-        };
-
-        mealCameraStream = await navigator.mediaDevices.getUserMedia(constraints);
-        if (video) {
-          video.srcObject = mealCameraStream;
-          video.setAttribute('playsinline', 'true');
-          video.setAttribute('webkit-playsinline', 'true');
-          await video.play();
-
-          if (liveContainer) liveContainer.classList.remove('hidden');
-          if (placeholder) placeholder.classList.add('hidden');
-          if (previewContainer) previewContainer.classList.add('hidden');
-        }
-      } catch (err) {
-        console.warn("Live camera auto-start fallback to native camera button:", err);
-        showNativeCameraFallback();
+    // ฟังก์ชันสั่งเปิดกล้องและคลังภาพโดยตรง (รองรับทั้งการคลิกผ่านโค้ดและ label)
+    function triggerCameraCapture() {
+      const camInput = document.getElementById('meal-camera-input');
+      if (camInput) {
+        camInput.value = '';
+        camInput.click();
       }
     }
 
-    function captureLivePhoto() {
-      const video = document.getElementById('meal-live-video');
-      if (!video || !mealCameraStream) return;
-
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth || 640;
-      canvas.height = video.videoHeight || 480;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-      stopLiveCameraStream();
-
-      // แสดงภาพพรีวิว
-      const previewImg = document.getElementById('meal-preview-img');
-      const previewContainer = document.getElementById('meal-preview-container');
-      const liveContainer = document.getElementById('meal-live-container');
-      const placeholder = document.getElementById('meal-placeholder');
-
-      if (previewImg) previewImg.src = dataUrl;
-      if (previewContainer) previewContainer.classList.remove('hidden');
-      if (liveContainer) liveContainer.classList.add('hidden');
-      if (placeholder) placeholder.classList.add('hidden');
-
-      currentMealBase64 = dataUrl.split(',')[1];
-      currentMealMimeType = 'image/jpeg';
-      analyzeMealWithGeminiVision();
-    }
-
-    async function switchCameraFacing() {
-      currentCameraFacing = (currentCameraFacing === 'environment') ? 'user' : 'environment';
-      await startLiveCameraStream();
-    }
-
-    function stopLiveCameraStream() {
-      if (mealCameraStream) {
-        mealCameraStream.getTracks().forEach(track => track.stop());
-        mealCameraStream = null;
+    function triggerGalleryPick() {
+      const galInput = document.getElementById('meal-gallery-input');
+      if (galInput) {
+        galInput.value = '';
+        galInput.click();
       }
-      const video = document.getElementById('meal-live-video');
-      if (video) {
-        video.srcObject = null;
-      }
-    }
-
-    function stopLiveCameraStreamAndShowFallback() {
-      stopLiveCameraStream();
-      showNativeCameraFallback();
-    }
-
-    function showNativeCameraFallback() {
-      const liveContainer = document.getElementById('meal-live-container');
-      const placeholder = document.getElementById('meal-placeholder');
-      const previewContainer = document.getElementById('meal-preview-container');
-
-      if (liveContainer) liveContainer.classList.add('hidden');
-      if (previewContainer) previewContainer.classList.add('hidden');
-      if (placeholder) placeholder.classList.remove('hidden');
     }
 
     function closeMealScanModal() {
-      stopLiveCameraStream();
       resetMealScanState();
 
       const modal = document.getElementById('ai-meal-modal');
@@ -2337,7 +2251,6 @@
 
     // ฟังก์ชันรีเซ็ตและคืนค่าสถานะหน้าต่างสแกนให้สดใหม่ 100% พร้อมสแกนใหม่ได้ทันที
     function resetMealScanState() {
-      stopLiveCameraStream();
       currentMealBase64 = null;
       detectedMealResult = null;
 
@@ -2348,49 +2261,100 @@
 
       const previewContainer = document.getElementById('meal-preview-container');
       const previewImg = document.getElementById('meal-preview-img');
-      const liveContainer = document.getElementById('meal-live-container');
       const placeholder = document.getElementById('meal-placeholder');
       const stateBox = document.getElementById('meal-analyzing-state');
       const resultCard = document.getElementById('meal-result-card');
 
       if (previewImg) previewImg.src = '';
       if (previewContainer) previewContainer.classList.add('hidden');
-      if (liveContainer) liveContainer.classList.add('hidden');
       if (placeholder) placeholder.classList.remove('hidden');
       if (stateBox) stateBox.classList.add('hidden');
       if (resultCard) resultCard.classList.add('hidden');
     }
 
-    // รับไฟล์ภาพเมื่อถ่ายเสร็จหรือเลือกเสร็จ แสดงพรีวิวทันที และบีบอัดภาพเพื่อวิเคราะห์
+    // รับไฟล์ภาพเมื่อถ่ายเสร็จหรือเลือกเสร็จ แสดงพรีวิวทันที และบีบอัดภาพเพื่อวิเคราะห์ (เสถียร 100% บนมือถือ)
     function handleMealPhotoSelected(event) {
       const file = event.target.files?.[0];
       if (!file) return;
 
-      stopLiveCameraStream();
       currentMealMimeType = file.type || 'image/jpeg';
 
-      // 1. แสดงภาพพรีวิวทันทีด้วย Object URL
       const previewImg = document.getElementById('meal-preview-img');
       const previewContainer = document.getElementById('meal-preview-container');
       const placeholder = document.getElementById('meal-placeholder');
-      const liveContainer = document.getElementById('meal-live-container');
 
-      const objectUrl = URL.createObjectURL(file);
-      previewImg.src = objectUrl;
-      previewContainer.classList.remove('hidden');
-      if (placeholder) placeholder.classList.add('hidden');
-      if (liveContainer) liveContainer.classList.add('hidden');
+      // 1. อ่านไฟล์ด้วย FileReader เพื่อแสดงภาพพรีวิวทันที ไม่ติดข้อจำกัด Blob URL บนมือถือ
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const fullDataUrl = e.target.result;
+        if (previewImg) previewImg.src = fullDataUrl;
+        if (previewContainer) previewContainer.classList.remove('hidden');
+        if (placeholder) placeholder.classList.add('hidden');
 
-      // 2. บีบอัดขนาดภาพให้พอดีแล้วส่งวิเคราะห์ทันที
-      compressImageAndAnalyze(file);
+        // 2. ส่งภาพเข้ากระบวนการบีบอัดและส่งให้ AI วิเคราะห์
+        compressAndAnalyzeDataUrl(fullDataUrl);
+      };
+      reader.onerror = function() {
+        // แผนสำรองกรณีเครื่องบล็อก FileReader
+        try {
+          const objUrl = URL.createObjectURL(file);
+          if (previewImg) previewImg.src = objUrl;
+          if (previewContainer) previewContainer.classList.remove('hidden');
+          if (placeholder) placeholder.classList.add('hidden');
+          compressImageAndAnalyze(file);
+        } catch(err) {
+          console.error("Preview fallback error:", err);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // บีบอัดขนาดรูปภาพจากกล้องความละเอียดสูง (เช่น 50MP-200MP บน Samsung S24) ให้เบาและส่งวิเคราะห์ไว
+    function compressAndAnalyzeDataUrl(dataUrl) {
+      const stateBox = document.getElementById('meal-analyzing-state');
+      const resultCard = document.getElementById('meal-result-card');
+      if (stateBox) stateBox.classList.remove('hidden');
+      if (resultCard) resultCard.classList.add('hidden');
+
+      const img = new Image();
+      img.onload = function() {
+        try {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 800;
+
+          if (width > height && width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+          currentMealBase64 = compressedDataUrl.split(',')[1];
+          currentMealMimeType = 'image/jpeg';
+          analyzeMealWithGeminiVision();
+        } catch(err) {
+          // หาก Canvas มีปัญหา ให้ใช้ base64 ดั้งเดิมทันที
+          currentMealBase64 = dataUrl.split(',')[1];
+          analyzeMealWithGeminiVision();
+        }
+      };
+      img.onerror = function() {
+        currentMealBase64 = dataUrl.split(',')[1];
+        analyzeMealWithGeminiVision();
+      };
+      img.src = dataUrl;
     }
 
     function compressImageAndAnalyze(file) {
-      const stateBox = document.getElementById('meal-analyzing-state');
-      const resultCard = document.getElementById('meal-result-card');
-      stateBox.classList.remove('hidden');
-      resultCard.classList.add('hidden');
-
       const img = new Image();
       img.onload = function() {
         const canvas = document.createElement('canvas');
@@ -2416,16 +2380,6 @@
         currentMealMimeType = 'image/jpeg';
 
         analyzeMealWithGeminiVision();
-      };
-      img.onerror = function() {
-        // Fallback กรณีถอดรหัสรูปด้วย Image tag ไม่สำเร็จ ให้ใช้ FileReader
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const fullDataUrl = e.target.result;
-          currentMealBase64 = fullDataUrl.split(',')[1];
-          analyzeMealWithGeminiVision();
-        };
-        reader.readAsDataURL(file);
       };
       img.src = URL.createObjectURL(file);
     }
