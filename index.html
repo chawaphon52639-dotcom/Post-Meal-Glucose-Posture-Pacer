@@ -11,7 +11,15 @@
   <meta http-equiv="Expires" content="0">
 
   <script>
-    // 1. เคลียร์แคชระบบ CacheStorage ทันทีตั้งแต่เสี้ยววินาทีแรกที่เริ่มโหลดหน้าเว็บ
+    // 1. ตรวจสอบการเข้าแอป: รีเฟรชอัตโนมัติ 1 ครั้งถ้วนเมื่อกดเข้าแอป แล้วหยุดนิ่งทันที ไม่วนลูป
+    try {
+      if (!sessionStorage.getItem('postmeal_entry_refreshed')) {
+        sessionStorage.setItem('postmeal_entry_refreshed', 'true');
+        window.location.reload();
+      }
+    } catch(e) {}
+
+    // 2. เคลียร์แคชระบบ CacheStorage ทันทีตั้งแต่เสี้ยววินาทีแรกที่เริ่มโหลดหน้าเว็บ
     if ('caches' in window) {
       caches.keys().then(function(cacheNames) {
         cacheNames.forEach(function(cacheName) {
@@ -2052,13 +2060,8 @@
           names.forEach((name) => caches.delete(name));
         });
       }
-      
-      // 2. ล้าง Session Storage ค้างเก่า
-      try {
-        sessionStorage.clear();
-      } catch(e){}
 
-      // 3. หยุดการทำงานของตัวนับเวลาทั้งหมดทันที
+      // 2. หยุดการทำงานของตัวนับเวลาทั้งหมดทันที
       if (liveTimerInterval) {
         clearInterval(liveTimerInterval);
         liveTimerInterval = null;
@@ -2119,7 +2122,8 @@
       evaluateMetabolicAndGERD(0);
     }
 
-    // ฟังก์ชันบังคับรีเฟรชหน้าจอใหม่เอี่ยม (ทะลวง Disk Cache มือถือ 100%)
+    // ฟังก์ชันรีเฟรชหน้าจอ (จะทำงานเฉพาะตอนที่ผู้ใช้กดปุ่ม "รีเฟรช ก่อนเริ่มใช้งาน" เท่านั้น ไม่มีการรีเฟรชเองอัตโนมัติ)
+    // ฟังก์ชันรีเฟรชหน้าจอ (จะทำงาน 1 ครั้งเฉพาะตอนที่ผู้ใช้กดปุ่มเท่านั้น ต้องกดใหม่ถึงจะรีเฟรชอีกครั้ง)
     function forceHardRefresh() {
       try {
         if ('caches' in window) {
@@ -2127,80 +2131,21 @@
             names.forEach((name) => caches.delete(name));
           });
         }
-        // บันทึกเวลาที่ทำการรีเฟรชล่าสุด เพื่อป้องกันการรีเฟรชวนลูป
-        sessionStorage.setItem('postmeal_last_refresh', Date.now().toString());
       } catch(e){}
 
-      // แนบค่าเวลาเสี้ยววินาที (?v=...) เพื่อบังคับให้มือถือดาวน์โหลดไฟล์ใหม่ล่าสุดโดยไม่ใช้ภาพหรือหน้าจอที่แคชค้างไว้
-      const timestamp = Date.now();
-      const cleanUrl = window.location.origin + window.location.pathname;
-      window.location.replace(`${cleanUrl}?v=${timestamp}`);
+      // รีโหลดหน้าจอ 1 ครั้งสะอาดหมดจดตามคำสั่งการกดปุ่ม
+      window.location.reload();
     }
 
-    // ฟังก์ชันตรวจสอบและสั่งรีเฟรชอัตโนมัติเมื่อเข้าแอปใหม่
-    function autoRefreshIfNewSession() {
-      try {
-        const lastRefresh = sessionStorage.getItem('postmeal_last_refresh');
-        const now = Date.now();
-
-        // หากเป็นการเปิดใช้งานเซสชันใหม่เอี่ยม หรือเปิดทิ้งไว้เกิน 3 นาทีแล้วกลับเข้ามาใหม่
-        // ให้ทำการ Hard Refresh ล้างแคชค้างทันทีอัตโนมัติ 1 ครั้ง
-        if (!lastRefresh || (now - parseInt(lastRefresh, 10)) > 180000) {
-          sessionStorage.setItem('postmeal_last_refresh', now.toString());
-          forceHardRefresh();
-          return true;
-        }
-      } catch(e) {
-        console.warn("Auto-refresh error:", e);
-      }
-      return false;
-    }
-
-    // ดักจับการเปิดแอปใหม่จากทุกทิศทาง:
-    // ก. เมื่อโหลดหน้าเว็บเสร็จ
+    // เมื่อเปิดแอปเข้ามา ให้ตั้งค่าเริ่มต้นและรีเซ็ตระบบให้พร้อมใช้งานทันที (ไม่มีคำสั่งรีเฟรชหน้าจอวนลูป)
     window.addEventListener('DOMContentLoaded', () => {
-      // ตรวจสอบว่าต้องรีเฟรชใหม่ทันทีหรือไม่ หากไม่ต้อง ให้เริ่มระบบและรีเซ็ตค่า
-      const isRefreshing = autoRefreshIfNewSession();
-      if (!isRefreshing) {
-        initVisitCounter();
-        fullAppResetAndPurge();
-      }
+      initVisitCounter();
+      fullAppResetAndPurge();
     });
 
-    // ข. เมื่อเปิดแอปขึ้นมาจากประวัติแคชเบราว์เซอร์ หรือ Back-Forward Cache (เช่น มือถือกดกลับมา)
+    // เมื่อสลับแอปกลับมาใช้งาน ให้รีเซ็ตค่าสถานะให้สดใหม่ โดยไม่รีโหลดหน้าจอ
     window.addEventListener('pageshow', (event) => {
-      // หากเบราว์เซอร์ดึงภาพจากหน่วยความจำเดิม (bfcache / freeze) ให้บังคับโหลดสดใหม่ทันที
-      if (event.persisted) {
-        forceHardRefresh();
-      } else {
-        autoRefreshIfNewSession();
-        fullAppResetAndPurge();
-      }
-    });
-
-    // ค. เมื่อผู้ใช้สลับหน้าจอกลับเข้ามาที่แอป (App Re-entry / Tab Focus)
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') {
-        const lastRefresh = sessionStorage.getItem('postmeal_last_refresh');
-        const now = Date.now();
-        // ถ้าพับหน้าจอไปทำอย่างอื่นเกิน 3 นาที แล้วเปิดกลับมา ให้รีเฟรชหน้าสดใหม่ทันที
-        if (!lastRefresh || (now - parseInt(lastRefresh, 10)) > 180000) {
-          forceHardRefresh();
-        } else {
-          fullAppResetAndPurge();
-        }
-      }
-    });
-
-    // ง. เมื่อหน้าต่างเบราว์เซอร์ได้รับโฟกัสอีกครั้ง (Window Focus)
-    window.addEventListener('focus', () => {
-      const lastRefresh = sessionStorage.getItem('postmeal_last_refresh');
-      const now = Date.now();
-      if (!lastRefresh || (now - parseInt(lastRefresh, 10)) > 180000) {
-        forceHardRefresh();
-      } else {
-        fullAppResetAndPurge();
-      }
+      fullAppResetAndPurge();
     });
   </script>
 </body>
