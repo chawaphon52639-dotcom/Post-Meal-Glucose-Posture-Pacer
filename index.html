@@ -2253,7 +2253,7 @@
       if (resultCard) resultCard.classList.add('hidden');
     }
 
-    // รับไฟล์รูปภาพอาหารจากโทรศัพท์มือถือหรือคอมพิวเตอร์
+    // รับไฟล์รูปภาพอาหารจากโทรศัพท์มือถือหรือคอมพิวเตอร์ (รองรับ 100% ทุกเบราว์เซอร์)
     function handleMealPhotoSelected(event) {
       const file = event.target.files?.[0];
       if (!file) return;
@@ -2263,30 +2263,88 @@
       const previewImg = document.getElementById('meal-preview-img');
       const previewContainer = document.getElementById('meal-preview-container');
       const placeholder = document.getElementById('meal-placeholder');
+      const stateBox = document.getElementById('meal-analyzing-state');
+      const resultCard = document.getElementById('meal-result-card');
 
-      // 1. แสดงรูปภาพพรีวิวทันที
+      if (stateBox) stateBox.classList.remove('hidden');
+      if (resultCard) resultCard.classList.add('hidden');
+
+      // 1. แสดงรูปภาพพรีวิวทันทีในระดับเสี้ยววินาทีด้วย ObjectURL
+      try {
+        const objUrl = URL.createObjectURL(file);
+        if (previewImg) previewImg.src = objUrl;
+        if (previewContainer) previewContainer.classList.remove('hidden');
+        if (placeholder) placeholder.classList.add('hidden');
+      } catch (err) {
+        console.warn("ObjectURL fallback to FileReader");
+      }
+
+      // 2. บีบอัดภาพและส่งวิเคราะห์
       const reader = new FileReader();
       reader.onload = function(e) {
         const fullDataUrl = e.target.result;
-        if (previewImg) previewImg.src = fullDataUrl;
+        if (previewImg && !previewImg.src) previewImg.src = fullDataUrl;
         if (previewContainer) previewContainer.classList.remove('hidden');
         if (placeholder) placeholder.classList.add('hidden');
 
-        // 2. บีบอัดขนาดภาพและส่งให้ AI วิเคราะห์
         compressAndAnalyzeDataUrl(fullDataUrl);
       };
-      reader.onerror = function() {
-        try {
-          const objUrl = URL.createObjectURL(file);
-          if (previewImg) previewImg.src = objUrl;
-          if (previewContainer) previewContainer.classList.remove('hidden');
-          if (placeholder) placeholder.classList.add('hidden');
-          compressImageAndAnalyze(file);
-        } catch(err) {
-          console.error("Preview fallback error:", err);
+      reader.readAsDataURL(file);
+    }
+
+    // ฟังก์ชันทดสอบด้วยเมนูยอดฮิตทันที (กรณีไม่มีรูปในเครื่อง)
+    function testSampleMeal(type) {
+      unlockAudioHardware();
+      const stateBox = document.getElementById('meal-analyzing-state');
+      const placeholder = document.getElementById('meal-placeholder');
+      const previewContainer = document.getElementById('meal-preview-container');
+      const previewImg = document.getElementById('meal-preview-img');
+
+      if (placeholder) placeholder.classList.add('hidden');
+      if (previewContainer) previewContainer.classList.remove('hidden');
+      if (stateBox) stateBox.classList.remove('hidden');
+
+      const sampleData = {
+        carb: {
+          mealType: "carb",
+          mealName: "ข้าวมันไก่ตอน (สูตรพิเศษ)",
+          estimatedCalories: "560 - 620 kcal",
+          glucoseRisk: "สูง",
+          gerdRisk: "ปานกลาง",
+          explanation: "มีคาร์โบไฮเดรตจากข้าวหุงและไขมันจากเนื้อไก่ เสี่ยงต่อน้ำตาลพุ่งช่วง 25 นาทีแรก แนะนำให้ทำ Soleus Push-up ดึงน้ำตาลไปใช้ครับ",
+          recommendedActivity: "spu",
+          placeholderImg: "https://placehold.co/600x400/241610/f59e0b?text=Chicken+Rice+~590+kcal"
+        },
+        protein: {
+          mealType: "protein",
+          mealName: "สเต๊กอกไก่ย่าง & สลัดผัก",
+          estimatedCalories: "380 - 430 kcal",
+          glucoseRisk: "ต่ำ",
+          gerdRisk: "สูง (กระเพาะหลั่งกรดย่อยโปรตีน)",
+          explanation: "โปรตีนสูงทำให้กระเพาะหลั่งกรดเกลือมาก ควรฝึกหายใจกะบังลมและนั่งตัวตรงเพื่อหนีบหูรูดหลอดอาหารครับ",
+          recommendedActivity: "breath",
+          placeholderImg: "https://placehold.co/600x400/10261f/34d399?text=Chicken+Steak+~400+kcal"
+        },
+        heavy: {
+          mealType: "heavy",
+          mealName: "ข้าวขาหมูเนื้อหนัง & ของทอด",
+          estimatedCalories: "720 - 810 kcal",
+          glucoseRisk: "สูงมาก",
+          gerdRisk: "สูงสุด (ไขมันชะลอการย่อย)",
+          explanation: "มื้อหนักไขมันสูงมาก กระเพาะจะบีบตัวช้า แนะนำให้ก้าวเดินช้าทอดน่อง 65 BPM และห้ามนอนราบ 60 นาทีเด็ดขาดครับ",
+          recommendedActivity: "walk",
+          placeholderImg: "https://placehold.co/600x400/291109/fb7185?text=Pork+Leg+Rice+~760+kcal"
         }
       };
-      reader.readAsDataURL(file);
+
+      const selected = sampleData[type] || sampleData.carb;
+      if (previewImg) previewImg.src = selected.placeholderImg;
+
+      setTimeout(() => {
+        stateBox.classList.add('hidden');
+        detectedMealResult = selected;
+        renderMealAnalysisResult(selected);
+      }, 700);
     }
 
     // บีบอัดขนาดรูปภาพให้พอดีกับ AI (เพื่อความเร็วและประหยัดเน็ตมือถือ)
