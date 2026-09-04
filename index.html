@@ -182,21 +182,12 @@
           </button>
         </div>
       </section>
-      <!-- แท็บสลับหน้าจอสำหรับโทรศัพท์มือถือ -->
-      <div class="flex sm:hidden bg-[#140b07] p-1 rounded-xl border border-[#382115] text-xs font-bold">
-        <button type="button" id="m-tab-timer" onclick="switchMobileSubTab('timer')" class="flex-1 py-2 rounded-lg bg-[#0c382b] text-emerald-100 border border-emerald-600/50 shadow-xs transition-all flex items-center justify-center gap-1">
-          <span>⏱️</span> เวลา & สถานะ
-        </button>
-        <button type="button" id="m-tab-activity" onclick="switchMobileSubTab('activity')" class="flex-1 py-2 rounded-lg text-amber-300/80 transition-all flex items-center justify-center gap-1">
-          <span>🏃</span> 5 กิจกรรมแนะนำ
-        </button>
-      </div>
 
-      <!-- โครงสร้าง 2 คอลัมน์เคียงข้างกัน: ซ้ายเขียวเข้ม (Forest) / ขวาน้ำตาลเข้ม (Mocha) -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
+      <!-- โครงสร้างแสดงผลพร้อมกันทั้ง 2 ฝั่งตลอดเวลา (ไม่ซ่อนตัวนับเวลาเด็ดขาด) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
         
-        <!-- คอลัมน์ที่ 1 (ซ้าย): สีเขียวเข้มลึก (Deep Forest) - ตัวนับเวลาสด + สถานะน้ำตาลและกรดไหลย้อน + คลื่น 40Hz -->
-        <div id="col-timer" class="space-y-2.5">
+        <!-- ฝั่งที่ 1: สีเขียวเข้มลึก (Deep Forest) - ตัวนับเวลาสด + สถานะน้ำตาลและกรดไหลย้อน + คลื่น 40Hz -->
+        <div id="col-timer" class="space-y-2.5 w-full">
           
           <!-- การ์ดตัวนับเวลาสด -->
           <div class="bg-[#0b281f] p-3.5 rounded-2xl border border-emerald-700/60 shadow-sm space-y-2.5">
@@ -337,8 +328,8 @@
           </div>
 
         </div>
-        <!-- คอลัมน์ที่ 2 (ขวา): สีน้ำตาลเข้มอบอุ่น (Mocha Brown) - 5 กิจกรรม + แอนิเมชัน + ตัวจับเวลารอบ -->
-        <div id="col-activity" class="space-y-2.5 hidden sm:block">
+        <!-- ฝั่งที่ 2: สีน้ำตาลเข้มอบอุ่น (Mocha Brown) - 5 กิจกรรม + แอนิเมชัน + ตัวจับเวลารอบ (แสดงผลร่วมตลอดเวลา) -->
+        <div id="col-activity" class="space-y-2.5 w-full">
           
           <div class="bg-[#241610] p-3.5 rounded-2xl border border-amber-700/60 shadow-sm space-y-2.5">
             
@@ -1139,7 +1130,6 @@
     function handlePopupAction() {
       if (currentPopupTargetActivity) {
         selectActivity(currentPopupTargetActivity);
-        switchMobileSubTab('activity');
       }
       closePopupModal();
       if (!isSessionRunning) {
@@ -1413,24 +1403,6 @@
       }
     }
 
-    function switchMobileSubTab(tab) {
-      const btnTimer = document.getElementById('m-tab-timer');
-      const btnActivity = document.getElementById('m-tab-activity');
-      const colTimer = document.getElementById('col-timer');
-      const colActivity = document.getElementById('col-activity');
-
-      if (tab === 'timer') {
-        btnTimer.className = "flex-1 py-2 rounded-lg bg-[#0c382b] text-emerald-100 border border-emerald-600/50 shadow-xs transition-all flex items-center justify-center gap-1 font-bold";
-        btnActivity.className = "flex-1 py-2 rounded-lg text-amber-300/80 transition-all flex items-center justify-center gap-1 font-medium";
-        colTimer.classList.remove('hidden');
-        colActivity.classList.add('hidden');
-      } else {
-        btnActivity.className = "flex-1 py-2 rounded-lg bg-amber-600 text-slate-950 font-black shadow-xs transition-all flex items-center justify-center gap-1";
-        btnTimer.className = "flex-1 py-2 rounded-lg text-emerald-300/80 transition-all flex items-center justify-center gap-1 font-medium";
-        colActivity.classList.remove('hidden');
-        colTimer.classList.add('hidden');
-      }
-    }
     // ==================== การเลือกกิจกรรมและมื้ออาหาร ====================
     function selectActivity(actId) {
       currentActivity = actId;
