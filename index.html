@@ -281,11 +281,11 @@
         </div>
       </section>
 
-      <!-- โครงสร้างแสดงผลพร้อมกันทั้ง 2 ฝั่งตลอดเวลา -->
+      <!-- โครงสร้างแสดงผลพร้อมกันทั้ง 2 ฝั่งตลอดเวลา (จัดลำดับอัจฉริยะ: มือถือกิจกรรมขึ้นก่อน / คอมพิวเตอร์อยู่คู่กัน) -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
         
-        <!-- ฝั่งซ้าย: ตัวนับเวลา และระบบเตือนจังหวะชีวภาพ -->
-        <div id="col-timer" class="space-y-2.5 w-full">
+        <!-- ฝั่งซ้าย: ตัวนับเวลา และระบบเตือนจังหวะชีวภาพ (บนมือถือแสดงด้านล่าง order-2 / บนคอมพิวเตอร์แสดงฝั่งซ้าย md:order-1) -->
+        <div id="col-timer" class="order-2 md:order-1 space-y-2.5 w-full">
           
           <div class="bg-[#0b281f] p-3.5 rounded-2xl border border-emerald-700/60 shadow-sm space-y-2.5">
             <div class="flex items-center justify-between pb-2 border-b border-emerald-800/60">
@@ -426,8 +426,8 @@
 
         </div>
 
-        <!-- ฝั่งขวา: 5 กิจกรรม พร้อมกราฟิกแอนิเมชันคนทำจริง -->
-        <div id="col-activity" class="space-y-2.5 w-full">
+        <!-- ฝั่งขวา: 5 กิจกรรม พร้อมกราฟิกแอนิเมชันคนทำจริง (บนมือถือขึ้นมาอยู่บนสุดทันที order-1 / บนคอมพิวเตอร์แสดงฝั่งขวา md:order-2) -->
+        <div id="col-activity" class="order-1 md:order-2 space-y-2.5 w-full">
           
           <div class="bg-[#241610] p-3.5 rounded-2xl border border-amber-700/60 shadow-sm space-y-2.5">
             
